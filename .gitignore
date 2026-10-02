@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+artifacts/
+
+# Visual Studio / VS Code local
+.vs/
+*.user
+*.suo
+
+# Secrets / local configuration
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.Development.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

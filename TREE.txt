@@ -1,0 +1,51 @@
+dac-learning-ai-dotnet/
+├── .vscode/
+│   ├── extensions.json
+│   └── settings.json
+├── docs/
+│   ├── 00-vision-y-alcance.md
+│   ├── 01-entorno-vscode-insiders.md
+│   ├── 02-mapa-java-dotnet.md
+│   └── 03-roadmap-labs.md
+├── labs/
+│   ├── lab-01-hello-llm/
+│   │   ├── Lab01.HelloLlm.csproj
+│   │   ├── Program.cs
+│   │   └── README.md
+│   ├── lab-02-chat-history/
+│   │   └── README.md
+│   ├── lab-03-services-di/
+│   │   └── README.md
+│   ├── lab-04-prompt-templates/
+│   │   └── README.md
+│   ├── lab-05-structured-output/
+│   │   └── README.md
+│   ├── lab-06-memory-advanced/
+│   │   └── README.md
+│   ├── lab-07-embeddings/
+│   │   └── README.md
+│   ├── lab-08-document-loading/
+│   │   └── README.md
+│   ├── lab-09-rag-basic/
+│   │   └── README.md
+│   ├── lab-10-rag-advanced/
+│   │   └── README.md
+│   ├── lab-11-tools/
+│   │   └── README.md
+│   ├── lab-12-function-calling/
+│   │   └── README.md
+│   ├── lab-13-agents/
+│   │   └── README.md
+│   ├── lab-14-multi-agent/
+│   │   └── README.md
+│   ├── lab-15-workflows/
+│   │   └── README.md
+│   ├── lab-16-mcp/
+│   │   └── README.md
+│   └── lab-17-final-project/
+│       └── README.md
+├── .editorconfig
+├── .gitignore
+├── LICENSE
+├── README.md
+└── TREE.txt
