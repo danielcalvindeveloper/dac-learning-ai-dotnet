@@ -1,14 +1,14 @@
 using DotNetEnv;
 using Microsoft.Extensions.AI;
 using OpenAI;
-using OpenAI.Chat;
 using System.ClientModel;
 
 const string DefaultProvider = "openai";
 const string DefaultOpenAiModel = "gpt-4o-mini";
-const string DefaultGeminiModel = "gemini-3.8-flash";
+const string DefaultGeminiModel = "gemini-3.5-flash-lite";
 const string DefaultOpenRouterModel = "openrouter/free";
 
+// Busca el .env común del proyecto recorriendo los directorios padres.
 Env.TraversePath().Load();
 
 string provider = (Environment.GetEnvironmentVariable("AI_PROVIDER") ?? DefaultProvider)
@@ -36,24 +36,65 @@ if (string.IsNullOrWhiteSpace(apiKey))
 {
     Console.Error.WriteLine(
         $"Error: no se encontró la variable de entorno {config.ApiKeyVariable}.");
-    Console.Error.WriteLine(
-        $"Configúrala antes de ejecutar el laboratorio con AI_PROVIDER={provider}.");
     return;
 }
 
 IChatClient chatClient = CreateChatClient(config, model, apiKey);
 
-const string prompt = "Explica en una sola oración qué es un modelo de lenguaje.";
-
 Console.WriteLine($"Proveedor: {config.Name}");
 Console.WriteLine($"Modelo: {model}");
-Console.WriteLine($"Prompt: {prompt}");
 Console.WriteLine();
-Console.WriteLine("Respuesta:");
 
-ChatResponse response = await chatClient.GetResponseAsync(prompt);
+const string firstMessage = "Mi nombre es Daniel";
+const string secondMessage = "¿Cómo me llamo?";
 
-Console.WriteLine(response.Text);
+Console.WriteLine("=== SIN MEMORIA ===");
+
+Console.WriteLine($"Usuario: {firstMessage}");
+ChatResponse r1 = await chatClient.GetResponseAsync(firstMessage);
+Console.WriteLine($"Asistente: {r1.Text}");
+Console.WriteLine();
+
+Console.WriteLine($"Usuario: {secondMessage}");
+ChatResponse r2 = await chatClient.GetResponseAsync(secondMessage);
+Console.WriteLine($"Asistente: {r2.Text}");
+Console.WriteLine();
+
+Console.WriteLine("=== CON MEMORIA ===");
+
+List<ChatMessage> history = [];
+
+await ChatWithMemoryAsync(
+    firstMessage,
+    history,
+    chatClient);
+
+await ChatWithMemoryAsync(
+    secondMessage,
+    history,
+    chatClient);
+
+static async Task ChatWithMemoryAsync(
+    string message,
+    List<ChatMessage> history,
+    IChatClient chatClient)
+{
+    Console.WriteLine($"Usuario: {message}");
+
+    history.Add(
+        new ChatMessage(ChatRole.User, message));
+
+    ChatResponse response =
+        await chatClient.GetResponseAsync(history);
+
+    Console.WriteLine($"Asistente: {response.Text}");
+    Console.WriteLine();
+
+    foreach (ChatMessage responseMessage in response.Messages)
+    {
+        history.Add(responseMessage);
+    }
+}
 
 static ProviderConfiguration ResolveProviderConfiguration(string provider)
 {
@@ -89,7 +130,7 @@ static IChatClient CreateChatClient(
 {
     if (config.Endpoint is null)
     {
-        return new ChatClient(model, apiKey).AsIChatClient();
+        return new OpenAI.Chat.ChatClient(model, apiKey).AsIChatClient();
     }
 
     OpenAIClientOptions options = new()
@@ -97,7 +138,7 @@ static IChatClient CreateChatClient(
         Endpoint = config.Endpoint
     };
 
-    ChatClient client = new(
+    OpenAI.Chat.ChatClient client = new(
         model,
         new ApiKeyCredential(apiKey),
         options);

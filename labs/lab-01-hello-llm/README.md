@@ -128,6 +128,33 @@ No es necesario agregar un paquete diferente para Gemini u OpenRouter en este la
 
 ---
 
+
+## Ubicación del `.env`
+
+El laboratorio **no utiliza un `.env` propio**.
+
+La configuración se comparte con el resto del proyecto mediante un único archivo ubicado en la raíz:
+
+```text
+dac-learning-ai-dotnet/
+├── .env
+├── .env.example
+└── labs/
+    └── lab-01-hello-llm/
+        ├── Lab01.HelloLlm.csproj
+        └── Program.cs
+```
+
+Esto permite que todos los laboratorios reutilicen las mismas API keys y la misma selección de proveedor.
+
+`.env` no debe subirse a Git.
+
+`.env.example` sí debe formar parte del repositorio porque documenta las variables necesarias.
+
+Cuando el Lab 01 incorpore la carga automática de configuración, buscará este `.env` común desde la carpeta del laboratorio hacia la raíz.
+
+---
+
 ## 4. Elegir proveedor
 
 La variable:

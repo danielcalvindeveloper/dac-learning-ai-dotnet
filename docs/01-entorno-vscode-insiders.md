@@ -32,6 +32,86 @@ git --version
 code-insiders --version
 ```
 
+---
+
+## Configuración común del repositorio
+
+El proyecto utiliza **un único archivo `.env` en la raíz del repositorio**.
+
+No se utilizará un `.env` independiente por laboratorio salvo que, en el futuro, exista una necesidad concreta que lo justifique.
+
+La estructura esperada es:
+
+```text
+dac-learning-ai-dotnet/
+├── .env
+├── .env.example
+├── README.md
+├── ROADMAP.md
+├── docs/
+└── labs/
+    ├── lab-01-hello-llm/
+    │   ├── Lab01.HelloLlm.csproj
+    │   └── Program.cs
+    ├── lab-02-chat-history/
+    └── ...
+```
+
+### Motivo
+
+Centralizar la configuración permite:
+
+- evitar duplicación de API keys;
+- mantener una configuración consistente entre laboratorios;
+- cambiar de proveedor una sola vez;
+- reducir el riesgo de dejar secretos distribuidos en múltiples carpetas.
+
+### `.env`
+
+Contiene la configuración real del desarrollador.
+
+Ejemplo:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=
+
+OPENAI_API_KEY=
+GEMINI_API_KEY=tu-api-key-real
+OPENROUTER_API_KEY=
+```
+
+Este archivo **no debe versionarse**.
+
+Debe permanecer incluido en `.gitignore`.
+
+### `.env.example`
+
+Documenta las variables necesarias sin contener secretos reales.
+
+Ejemplo:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=
+
+OPENAI_API_KEY=tu-openai-api-key
+GEMINI_API_KEY=tu-gemini-api-key
+OPENROUTER_API_KEY=tu-openrouter-api-key
+```
+
+Este archivo **sí debe versionarse**.
+
+Cuando otra persona clone el repositorio podrá copiarlo:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+y completar únicamente los valores que necesite.
+
+---
+
 ## Proveedores de modelos
 
 El proyecto no debe exigir una cuenta paga de un proveedor concreto para poder comenzar.
@@ -60,6 +140,8 @@ AI_MODEL=<modelo>
 
 Los planes gratuitos y sus límites pueden modificarse por decisión de cada proveedor.
 
+---
+
 ## Criterio de accesibilidad
 
 El costo de una API no debería impedir completar el recorrido educativo.
@@ -73,9 +155,9 @@ Por ese motivo:
 
 Esta política es transversal y no modifica el roadmap pedagógico.
 
-## Privacidad
+---
 
-Los niveles gratuitos de servicios externos pueden tener políticas de tratamiento de datos diferentes de los niveles pagos.
+## Privacidad
 
 Los laboratorios deben utilizar exclusivamente datos ficticios o públicos.
 
@@ -88,19 +170,18 @@ No utilizar:
 - documentos internos;
 - información protegida de clientes.
 
+---
+
 ## Variables y secretos
 
 Las claves de API nunca deberán guardarse en el repositorio.
 
-Utilizar:
+Para este proyecto la configuración común se centraliza en:
 
-- variables de entorno;
-- User Secrets de .NET cuando un laboratorio lo justifique;
-- archivos locales ignorados por Git.
-
-Ejemplo PowerShell:
-
-```powershell
-$env:AI_PROVIDER="gemini"
-$env:GEMINI_API_KEY="tu-api-key"
+```text
+<raíz-del-repositorio>/.env
 ```
+
+Los laboratorios deben reutilizar ese archivo.
+
+Más adelante podrá utilizarse `User Secrets` de .NET si algún laboratorio lo justifica, pero no es necesario para los primeros ejercicios.

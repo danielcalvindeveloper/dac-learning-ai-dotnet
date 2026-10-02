@@ -53,6 +53,43 @@ Cada laboratorio tendrá su propio `README.md` y será autocontenido.
 - ✅ Lab 01 - Hello LLM: implementado
 - ⏳ Labs 02-17: estructura preparada, pendientes de implementación
 
+
+## Configuración común mediante `.env`
+
+El repositorio utiliza **un único archivo `.env` en la raíz** para centralizar la configuración común de todos los laboratorios.
+
+```text
+dac-learning-ai-dotnet/
+├── .env
+├── .env.example
+├── README.md
+├── ROADMAP.md
+├── docs/
+└── labs/
+    ├── lab-01-hello-llm/
+    ├── lab-02-chat-history/
+    └── ...
+```
+
+No es necesario crear un `.env` dentro de cada laboratorio.
+
+`.env` contiene los valores reales de cada desarrollador y **no debe versionarse**.
+
+`.env.example` documenta las variables necesarias y **sí debe versionarse**.
+
+Ejemplo:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=
+
+OPENAI_API_KEY=
+GEMINI_API_KEY=
+OPENROUTER_API_KEY=
+```
+
+Cada laboratorio que necesite configuración deberá reutilizar este archivo común ubicado en la raíz.
+
 ## Acceso a los modelos
 
 El proyecto busca que el costo de una API no sea una barrera para aprender.
