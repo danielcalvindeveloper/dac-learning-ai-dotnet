@@ -2,7 +2,7 @@
 
 **Proyecto:** dac-learning-ai-dotnet
 
-> Roadmap de aprendizaje incremental para construir aplicaciones con IA generativa en .NET, manteniendo una correspondencia conceptual con `dac-learning-langchain4j`.
+> Roadmap de aprendizaje incremental para construir aplicaciones con IA generativa utilizando herramientas y patrones propios del ecosistema .NET.
 
 ---
 
@@ -63,7 +63,7 @@ timeline
 | Hito | Tema | Labs | Estado |
 |---|---|---:|---|
 | M1 | Primer contacto con LLM | 01 | ✅ Implementado |
-| M2 | Conversación, DI y prompts | 02–04 | ⏳ Pendiente |
+| M2 | Conversación, DI y prompts | 02–04 | ✅ Implementado |
 | M3 | Structured Output y memoria | 05–06 | ⏳ Pendiente |
 | M4 | Embeddings | 07 | ⏳ Pendiente |
 | M5 | Documentos y RAG | 08–10 | ⏳ Pendiente |
@@ -125,46 +125,57 @@ Respuesta
 
 # M2 — Conversación, servicios y prompts
 
-**Objetivo:** pasar de una llamada aislada a una pequeña aplicación conversacional correctamente estructurada.
+**Objetivo:** evolucionar desde llamadas aisladas hacia una aplicación con contexto conversacional, servicios desacoplados mediante DI y prompts parametrizados.
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
 ### Lab 02 — Chat History
 
 | # | Estado | Alcance |
 |---|---|---|
-| 2.1 | ⏳ | Introducir una colección de mensajes |
-| 2.2 | ⏳ | Diferenciar roles `system`, `user` y `assistant` |
-| 2.3 | ⏳ | Mantener contexto entre preguntas |
-| 2.4 | ⏳ | Mostrar la diferencia entre llamada aislada e historial |
+| 2.1 | ✅ | Comparar llamadas independientes con una conversación que conserva contexto |
+| 2.2 | ✅ | Introducir una colección de `ChatMessage` |
+| 2.3 | ✅ | Reenviar el historial completo en cada nuevo turno |
+| 2.4 | ✅ | Diferenciar historial conversacional de memoria persistente |
 
 ### Lab 03 — Services y Dependency Injection
 
 | # | Estado | Alcance |
 |---|---|---|
-| 3.1 | ⏳ | Incorporar el contenedor de DI de .NET |
-| 3.2 | ⏳ | Registrar `IChatClient` |
-| 3.3 | ⏳ | Crear un servicio consumidor |
-| 3.4 | ⏳ | Separar configuración, infraestructura y lógica de aplicación |
+| 3.1 | ✅ | Incorporar `ServiceCollection` y el contenedor de DI de .NET |
+| 3.2 | ✅ | Registrar `IChatClient` y resolverlo mediante inyección por constructor |
+| 3.3 | ✅ | Introducir `IAssistant` y su implementación `Assistant` |
+| 3.4 | ✅ | Separar creación del cliente, configuración y lógica de aplicación |
 
 ### Lab 04 — Prompt Templates
 
 | # | Estado | Alcance |
 |---|---|---|
-| 4.1 | ⏳ | Crear prompts parametrizados |
-| 4.2 | ⏳ | Separar contenido del prompt del código |
-| 4.3 | ⏳ | Reutilizar una plantilla con distintos valores |
-| 4.4 | ⏳ | Incorporar instrucciones de sistema cuando corresponda |
+| 4.1 | ✅ | Crear prompts parametrizados |
+| 4.2 | ✅ | Extraer la construcción de prompts a `PromptTemplates` |
+| 4.3 | ✅ | Reutilizar templates con distintos valores |
+| 4.4 | ✅ | Variar instrucciones dinámicamente mediante parámetros como idioma, cantidad de líneas y rol |
 
-### Resultado esperado
+### Resultado alcanzado
 
 ```mermaid
 flowchart LR
-    A[Aplicación] --> S[Servicio]
-    S --> C[IChatClient]
+    A[Aplicación] --> S[IAssistant]
+    S --> I[Assistant]
+    I --> P[PromptTemplates]
+    I --> C[IChatClient]
     H[Chat History] --> C
-    P[Prompt Template] --> C
     C --> L[LLM]
+```
+
+Al completar M2 ya están incorporados los tres bloques que preparan los siguientes laboratorios:
+
+```text
+contexto conversacional
++
+servicios desacoplados mediante DI
++
+prompts dinámicos reutilizables
 ```
 
 ---
@@ -511,7 +522,6 @@ Un laboratorio se considera completo cuando dispone de:
 - [ ] resultado esperado;
 - [ ] README propio;
 - [ ] explicación de las piezas principales;
-- [ ] comparación conceptual con LangChain4j, cuando aporte valor;
 - [ ] commit estable en Git.
 
 ---

@@ -2,7 +2,7 @@
 
 Laboratorio incremental para aprender desarrollo de aplicaciones con LLMs en .NET.
 
-Este repositorio nace como proyecto paralelo de `dac-learning-langchain4j`, manteniendo una progresión conceptual equivalente pero utilizando herramientas naturales del ecosistema .NET.
+Este repositorio propone un recorrido incremental y autónomo para aprender integración de modelos de lenguaje utilizando herramientas naturales del ecosistema .NET.
 
 ## Objetivo
 
@@ -51,7 +51,10 @@ Cada laboratorio tendrá su propio `README.md` y será autocontenido.
 ## Estado actual
 
 - ✅ Lab 01 - Hello LLM: implementado
-- ⏳ Labs 02-17: estructura preparada, pendientes de implementación
+- ✅ Lab 02 - Chat History: implementado
+- ✅ Lab 03 - Services y Dependency Injection: implementado
+- ✅ Lab 04 - Prompt Templates: implementado
+- ⏳ Labs 05-17: estructura preparada, pendientes de implementación
 
 
 ## Configuración común mediante `.env`
@@ -94,7 +97,7 @@ Cada laboratorio que necesite configuración deberá reutilizar este archivo com
 
 El proyecto busca que el costo de una API no sea una barrera para aprender.
 
-El Lab 01 admite actualmente:
+Los laboratorios implementados admiten actualmente:
 
 - **OpenAI**;
 - **Gemini**, como alternativa online con nivel gratuito;
@@ -114,16 +117,24 @@ Los planes gratuitos, modelos y límites dependen de cada proveedor y pueden cam
 
 ## Criterio pedagógico
 
-La versión .NET no intentará traducir las APIs de LangChain4j línea por línea.
+El proyecto está pensado como una progresión propia de .NET.
 
-La correspondencia será conceptual:
+Cada laboratorio introduce una idea principal y reutiliza lo aprendido anteriormente:
 
 ```text
-Concepto Java/LangChain4j
+Lab 01
+IChatClient + primera llamada
         ↓
-Mismo problema
+Lab 02
+historial conversacional
         ↓
-Solución idiomática en .NET
+Lab 03
+servicios + Dependency Injection
+        ↓
+Lab 04
+Prompt Templates
 ```
 
-De esta forma ambos repositorios pueden recorrerse en paralelo sin convertir uno en una copia artificial del otro.
+La prioridad es comprender primero el concepto y recién después incorporar abstracciones de mayor nivel.
+
+Los frameworks y APIs concretas son herramientas del recorrido, no el objetivo final del aprendizaje.
