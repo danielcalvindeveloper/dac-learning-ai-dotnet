@@ -2,103 +2,110 @@
 
 ## Objetivo
 
-Comprender cómo construir prompts dinámicos y reutilizables a partir de parámetros.
+Comprender cómo construir **prompts dinámicos y reutilizables** a partir de parámetros, sin mezclar su estructura con la lógica del servicio.
 
-En el Lab 03, `Assistant` construía los prompts directamente dentro de cada método:
+Este laboratorio continúa exactamente desde el diseño alcanzado en el Lab 03:
+
+```text
+Program.cs
+   ↓ usa
+IAssistant
+   ↓ implementado por
+Assistant
+   ↓ necesita
+IChatClient
+```
+
+Ahora incorporamos una nueva responsabilidad:
+
+```text
+PromptTemplates
+```
+
+La evolución queda así:
+
+```text
+Program.cs
+   ↓
+IAssistant
+   ↓
+Assistant
+   ├── usa PromptTemplates
+   └── usa IChatClient
+```
+
+El foco del Lab 04 no es DI ni configuración.
+
+Eso ya fue introducido en el Lab 03.
+
+El concepto nuevo es:
+
+> separar la estructura del prompt de la lógica del servicio.
+
+---
+
+## Qué cambia respecto del Lab 03
+
+En el Lab 03, `Assistant` construía prompts directamente:
 
 ```csharp
 string prompt =
     $"Traduce al inglés: {texto}";
 ```
 
-Eso funciona, pero mezcla dos responsabilidades:
+Eso era suficiente para introducir servicios.
+
+Pero ahora queremos que:
+
+```text
+Assistant
+```
+
+se concentre en coordinar la operación, mientras:
+
+```text
+PromptTemplates
+```
+
+se ocupa de construir el texto del prompt.
+
+---
+
+# 1. El problema
+
+Si cada método del servicio construye prompts completos, `Assistant` empieza a acumular dos responsabilidades:
 
 ```text
 Assistant
 ├── coordina la llamada al modelo
-└── define la estructura del prompt
+└── define el formato de los prompts
 ```
 
-En este laboratorio separamos ambas cosas.
-
-La nueva estructura es:
+En este laboratorio separamos ambas:
 
 ```text
 Assistant
-    ↓
+    ↓ solicita
 PromptTemplates
+    ↓ devuelve
+string prompt
     ↓
+Assistant
+    ↓ envía
 IChatClient
 ```
 
 ---
 
-## Qué es un Prompt Template
+# 2. `PromptTemplates`
 
-Un Prompt Template es una estructura de texto que contiene partes fijas y partes variables.
-
-Ejemplo:
-
-```text
-Traduce al {idioma}.
-
-Texto:
-{texto}
-```
-
-Las variables:
-
-```text
-idioma
-texto
-```
-
-cambian en cada llamada.
-
-La estructura del prompt se mantiene.
-
----
-
-## 1. Primer ejemplo — Traducción
-
-Queremos llamar:
-
-```csharp
-await assistant.TraducirAsync(
-    "inglés",
-    "Las abstracciones describen el prompt."
-);
-```
-
-El template es:
-
-```text
-Traduce al {idioma}.
-
-Texto:
-{texto}
-```
-
-Con esos valores se transforma en:
-
-```text
-Traduce al inglés.
-
-Texto:
-Las abstracciones describen el prompt.
-```
-
----
-
-## 2. PromptTemplates
-
-Creamos una clase dedicada:
+Definimos:
 
 ```csharp
 public static class PromptTemplates
 ```
 
-Su responsabilidad es construir prompts.
+con métodos dedicados a construir prompts.
 
 Por ejemplo:
 
@@ -116,75 +123,30 @@ public static string Traducir(
 }
 ```
 
-La sintaxis:
-
-```csharp
-$$"""
-...
-{{variable}}
-...
-"""
-```
-
-permite utilizar raw string literals con interpolación.
-
----
-
-## 3. Assistant deja de conocer el formato
-
-Ahora `Assistant` no arma el texto directamente.
-
-Hace:
-
-```csharp
-string prompt =
-    PromptTemplates.Traducir(
-        idioma,
-        texto);
-```
-
-y luego:
-
-```csharp
-ChatResponse response =
-    await _chatClient.GetResponseAsync(prompt);
-```
-
-La responsabilidad queda separada:
-
-```text
-Assistant
-  │
-  │ pide un prompt
-  ▼
-PromptTemplates
-  │
-  │ devuelve texto
-  ▼
-IChatClient
-```
-
----
-
-# Ejemplo 1 — Traducción
-
-El método recibe:
+El método recibe valores variables:
 
 ```text
 idioma
 texto
 ```
 
-Código:
+pero conserva una estructura fija.
 
-```csharp
-await assistant.TraducirAsync(
-    "inglés",
-    "Las abstracciones describen el prompt."
-);
+---
+
+# 3. Template = estructura fija + variables
+
+Podemos pensar un Prompt Template como:
+
+```text
+estructura fija
+      +
+valores dinámicos
+      =
+prompt final
 ```
 
-Template:
+Ejemplo:
 
 ```text
 Traduce al {idioma}.
@@ -193,7 +155,112 @@ Texto:
 {texto}
 ```
 
-La misma operación puede utilizar:
+Si:
+
+```text
+idioma = inglés
+texto  = Las abstracciones describen el prompt.
+```
+
+el resultado será:
+
+```text
+Traduce al inglés.
+
+Texto:
+Las abstracciones describen el prompt.
+```
+
+---
+
+# 4. `Assistant` sigue siendo el servicio
+
+Este punto es importante para mantener continuidad con el Lab 03.
+
+No reemplazamos:
+
+```text
+IAssistant / Assistant
+```
+
+por `PromptTemplates`.
+
+Cumplen responsabilidades distintas.
+
+`IAssistant` continúa definiendo las capacidades disponibles:
+
+```csharp
+Task<string> TraducirAsync(
+    string idioma,
+    string texto);
+
+Task<string> ResumirAsync(
+    int lineas,
+    string texto);
+
+Task<string> ConsultarAsync(
+    string rol,
+    string pregunta);
+```
+
+`Assistant` implementa esas operaciones.
+
+`PromptTemplates` solamente ayuda a construir el texto que luego será enviado al modelo.
+
+---
+
+## Ejemplo: traducción
+
+`Assistant` hace:
+
+```csharp
+string prompt =
+    PromptTemplates.Traducir(
+        idioma,
+        texto);
+
+ChatResponse response =
+    await _chatClient.GetResponseAsync(prompt);
+
+return response.Text;
+```
+
+La responsabilidad queda así:
+
+```text
+IAssistant
+    define TraducirAsync
+
+Assistant
+    coordina la operación
+
+PromptTemplates
+    construye el prompt
+
+IChatClient
+    envía el prompt
+```
+
+---
+
+# 5. Traducción parametrizada
+
+Ahora la operación recibe:
+
+```text
+idioma
+texto
+```
+
+Por ejemplo:
+
+```csharp
+await assistant.TraducirAsync(
+    "inglés",
+    "Las abstracciones describen el prompt.");
+```
+
+El mismo servicio puede utilizar:
 
 ```text
 inglés
@@ -202,20 +269,13 @@ italiano
 portugués
 ```
 
-sin cambiar el template.
+sin modificar la estructura del template.
 
 ---
 
-# Ejemplo 2 — Resumen
+# 6. Resumen parametrizado
 
-El método recibe:
-
-```text
-lineas
-texto
-```
-
-La firma es:
+El método:
 
 ```csharp
 Task<string> ResumirAsync(
@@ -223,7 +283,13 @@ Task<string> ResumirAsync(
     string texto);
 ```
 
-El template:
+permite incorporar otra variable:
+
+```text
+cantidad máxima de líneas
+```
+
+El template es:
 
 ```text
 Resume el siguiente texto en un máximo de {lineas} líneas:
@@ -239,26 +305,19 @@ await assistant.ResumirAsync(
     texto);
 ```
 
-produce un prompt donde:
-
-```text
-{lineas} = 2
-```
-
-La cantidad máxima forma parte de la instrucción dinámica.
-
 ---
 
-# Ejemplo 3 — Cambio de rol
+# 7. Cambio de rol
 
-La tercera operación recibe:
+La operación:
 
-```text
-rol
-pregunta
+```csharp
+ConsultarAsync(
+    string rol,
+    string pregunta)
 ```
 
-Template:
+utiliza:
 
 ```text
 Actúa como un {rol}.
@@ -268,58 +327,131 @@ Pregunta:
 {pregunta}
 ```
 
-Podemos ejecutar:
+Podemos llamar al mismo método con:
 
-```csharp
-await assistant.ConsultarAsync(
-    "profesor de matemáticas",
-    "¿Qué es una derivada?"
-);
+```text
+rol = profesor de matemáticas
 ```
 
-y después:
+o:
 
-```csharp
-await assistant.ConsultarAsync(
-    "abogado",
-    "¿Qué es un contrato?"
-);
+```text
+rol = abogado
 ```
 
-El método es exactamente el mismo.
+La estructura se mantiene.
 
-Lo que cambia son los valores del template.
+Cambian los parámetros.
 
 ---
 
-## Flujo
+# 8. Flujo de ejecución
 
 ```mermaid
 flowchart LR
-    P[Program.cs]
-    A[IAssistant]
-    I[Assistant]
-    T[PromptTemplates]
-    C[IChatClient]
-    L[LLM]
-
-    P --> A
-    A --> I
-    I --> T
-    T --> I
-    I --> C
-    C --> L
+    P[Program.cs] --> S[IAssistant]
+    S --> A[Assistant]
+    A --> T[PromptTemplates]
+    T --> A
+    A --> C[IChatClient]
+    C --> R[ChatResponse]
 ```
+
+El flujo relevante del Lab 04 es:
+
+```text
+operación
+   ↓
+servicio
+   ↓
+template
+   ↓
+prompt
+   ↓
+modelo
+```
+
+DI sigue existiendo, pero no aparece como protagonista porque ya fue explicado en el laboratorio anterior.
 
 ---
 
-## Estructura
+# 9. Dependency Injection continúa igual
+
+La composición del Lab 03 se conserva:
+
+```csharp
+services.AddSingleton<IChatClient>(
+    _ => AiClientFactory.CreateFromEnvironment());
+
+services.AddTransient<IAssistant, Assistant>();
+```
+
+No agregamos `PromptTemplates` al contenedor porque actualmente es una clase:
+
+```csharp
+static
+```
+
+sin estado ni dependencias.
+
+En este laboratorio basta con utilizarla directamente.
+
+No agregamos una interfaz ni un servicio adicional porque no resolvería un problema real y complicaría el ejemplo.
+
+---
+
+# 10. Configuración
+
+La configuración es exactamente la misma adoptada desde los laboratorios anteriores:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+```
+
+Variables:
+
+| Variable | Obligatoria | Objetivo |
+|---|---:|---|
+| `AI_PROVIDER` | Sí | Identifica el proveedor activo |
+| `AI_MODEL` | Sí | Modelo utilizado |
+| `AI_API_KEY` | Sí | Credencial |
+| `AI_URL` | No | Endpoint alternativo |
+
+`Program.cs` no carga el `.env`.
+
+La creación de:
+
+```text
+IChatClient
+```
+
+continúa encapsulada en:
+
+```text
+LabConfiguration
+        ↓
+AiClientFactory
+```
+
+igual que en el Lab 03.
+
+---
+
+# 11. Estructura
 
 ```text
 lab-04-prompt-templates/
+├── docs/
+│   ├── 01-prompt-templates.md
+│   ├── 02-evolucion-del-servicio.md
+│   └── 03-configuracion-y-aiclientfactory.md
 ├── AiClientFactory.cs
 ├── Assistant.cs
 ├── IAssistant.cs
+├── LabConfiguration.cs
 ├── PromptTemplates.cs
 ├── Lab04.PromptTemplates.csproj
 ├── Program.cs
@@ -328,130 +460,117 @@ lab-04-prompt-templates/
 
 ---
 
-## Responsabilidad de cada archivo
-
-### `Program.cs`
-
-Ejecuta los tres ejemplos:
-
-```text
-traducción
-resumen
-cambio de rol
-```
+# 12. Responsabilidad de cada archivo
 
 ### `IAssistant.cs`
 
-Define las operaciones disponibles.
+Define las capacidades del servicio:
+
+```text
+chat
+traducir
+resumir
+consultar con rol
+```
+
+---
 
 ### `Assistant.cs`
+
+Implementa esas operaciones.
 
 Coordina:
 
 ```text
-template
-↓
-IChatClient
-↓
-respuesta
-```
-
-### `PromptTemplates.cs`
-
-Contiene la estructura de los prompts.
-
-### `AiClientFactory.cs`
-
-Mantiene aislada la creación del cliente de IA.
-
----
-
-## Evolución desde el Lab 03
-
-### Lab 03
-
-```text
-Assistant
-   ↓
-construye prompt inline
-   ↓
-IChatClient
-```
-
-### Lab 04
-
-```text
-Assistant
+parámetros
    ↓
 PromptTemplates
    ↓
+prompt
+   ↓
 IChatClient
-```
-
-La diferencia parece pequeña, pero introduce una idea importante:
-
-```text
-el prompt también es una pieza de la aplicación
-```
-
-y merece una responsabilidad propia.
-
----
-
-## Configuración
-
-El laboratorio reutiliza el `.env` común de la raíz:
-
-```text
-dac-learning-ai-dotnet/
-├── .env
-├── .env.example
-└── labs/
-    ├── lab-01-hello-llm/
-    ├── lab-02-chat-history/
-    ├── lab-03-services-di/
-    └── lab-04-prompt-templates/
-```
-
-Ejemplo:
-
-```env
-AI_PROVIDER=gemini
-AI_MODEL=
-
-OPENAI_API_KEY=
-GEMINI_API_KEY=tu-api-key
-OPENROUTER_API_KEY=
+   ↓
+respuesta
 ```
 
 ---
 
-## Ejecutar
+### `PromptTemplates.cs`
 
-Desde:
+Define exclusivamente la estructura de los prompts.
+
+No llama al modelo.
+
+No conoce `IChatClient`.
+
+No contiene configuración.
+
+---
+
+### `AiClientFactory.cs`
+
+Construye `IChatClient`.
+
+Es infraestructura heredada del Lab 03.
+
+---
+
+### `LabConfiguration.cs`
+
+Carga y valida:
+
+```text
+AI_PROVIDER
+AI_MODEL
+AI_API_KEY
+AI_URL
+```
+
+Es infraestructura.
+
+---
+
+### `Program.cs`
+
+Configura DI y ejecuta ejemplos.
+
+No construye prompts ni clientes de IA.
+
+---
+
+# 13. Lecturas opcionales
+
+No necesitás leer estos documentos para completar el laboratorio.
+
+Si querés profundizar:
+
+- [Prompt Templates: qué problema resuelven y cómo funcionan](docs/01-prompt-templates.md)
+- [Evolución del servicio desde Lab 03 a Lab 04](docs/02-evolucion-del-servicio.md)
+- [`LabConfiguration` y `AiClientFactory`](docs/03-configuracion-y-aiclientfactory.md)
+
+La idea es:
+
+```text
+primero ejecutar
+      ↓
+entender el template
+      ↓
+profundizar sólo si hace falta
+```
+
+---
+
+# 14. Ejecutar
 
 ```powershell
 cd labs\lab-04-prompt-templates
-```
-
-ejecutar:
-
-```powershell
 dotnet restore
-dotnet build
 dotnet run
 ```
 
----
-
-## Salida esperada
-
-La salida tendrá una forma similar a:
+Una salida aproximada:
 
 ```text
-Proveedor: Gemini
-Modelo: gemini-3.5-flash-lite
-
 === TRADUCCIÓN ===
 Idioma: inglés
 Texto: Las abstracciones describen el prompt.
@@ -472,22 +591,19 @@ Asistente: ...
 Rol: abogado
 Pregunta: ¿Qué es un contrato?
 Asistente: ...
-
-=== CONCLUSIÓN ===
-Los Prompt Templates permiten construir prompts dinámicos...
 ```
 
-La redacción exacta depende del modelo.
+La respuesta exacta depende del modelo.
 
 ---
 
-## Por qué no usamos todavía un framework de templates
+# 15. ¿Por qué no usamos un framework de templates?
 
-Podríamos introducir una biblioteca adicional para gestionar prompts.
+Podríamos agregar otra biblioteca.
 
-No lo hacemos todavía.
+No lo hacemos.
 
-El objetivo de este laboratorio es entender primero el concepto:
+El objetivo es entender primero:
 
 ```text
 estructura fija
@@ -497,53 +613,56 @@ variables
 prompt dinámico
 ```
 
-La implementación con raw interpolated strings permite ver el mecanismo sin incorporar otra abstracción.
+Los raw interpolated strings de C# permiten ver el mecanismo directamente:
 
-Más adelante, si necesitamos:
+```csharp
+$$"""
+Traduce al {{idioma}}.
 
-- archivos externos;
-- versionado de prompts;
-- templates complejos;
-- composición;
-- distintos tipos de mensajes;
+Texto:
+{{texto}}
+"""
+```
 
-podremos introducir herramientas de mayor nivel.
+Aplicamos KISS:
+
+> no agregar una abstracción hasta que exista una necesidad concreta.
 
 ---
 
-## Qué aprendemos
+# 16. Qué aprendemos
 
-Al finalizar este laboratorio deberías poder explicar:
+Al finalizar deberías poder explicar:
 
 1. qué es un Prompt Template;
-2. qué parte del prompt permanece fija;
+2. qué parte permanece fija;
 3. qué partes son variables;
-4. por qué conviene separar prompts del servicio;
-5. cómo reutilizar un mismo template con distintos parámetros;
-6. cómo un parámetro puede modificar el rol o comportamiento pedido al modelo;
-7. qué ventaja aporta `PromptTemplates.cs`.
+4. por qué `PromptTemplates` tiene una responsabilidad diferente a `Assistant`;
+5. por qué `Assistant` sigue siendo el servicio;
+6. cómo reutilizar un template con distintos parámetros;
+7. por qué `PromptTemplates` no necesita DI en este ejemplo;
+8. cómo el Lab 04 evoluciona el diseño del Lab 03 sin reemplazarlo.
 
 ---
 
-## Qué NO hacemos todavía
+# 17. Qué NO hacemos todavía
 
 No incorporamos:
 
-- structured output;
+- Structured Output;
 - JSON tipado;
 - validación de respuestas;
 - templates externos;
+- persistencia de prompts;
 - Semantic Kernel;
 - RAG;
 - tools.
 
-La respuesta sigue siendo:
+La respuesta continúa siendo:
 
 ```text
 string
 ```
-
-Ese será precisamente el problema que abordaremos en el siguiente laboratorio.
 
 ---
 
@@ -551,18 +670,14 @@ Ese será precisamente el problema que abordaremos en el siguiente laboratorio.
 
 **Lab 05 - Structured Output**
 
-Hasta ahora pedimos respuestas en lenguaje natural:
-
-```text
-prompt → texto
-```
-
-El siguiente paso será pedir una estructura concreta y mapearla a tipos C#:
+Hasta ahora:
 
 ```text
 prompt
-  ↓
-respuesta estructurada
-  ↓
-record / class
+   ↓
+modelo
+   ↓
+texto libre
 ```
+
+El siguiente paso será pedir una estructura concreta y mapearla a tipos C#.

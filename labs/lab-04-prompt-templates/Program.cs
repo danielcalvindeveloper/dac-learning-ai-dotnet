@@ -1,9 +1,5 @@
-using DotNetEnv;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
-
-// Busca el .env común del proyecto recorriendo los directorios padres.
-Env.TraversePath().Load();
 
 ServiceCollection services = new();
 
@@ -15,8 +11,18 @@ services.AddTransient<IAssistant, Assistant>();
 using ServiceProvider serviceProvider =
     services.BuildServiceProvider();
 
-IAssistant assistant =
-    serviceProvider.GetRequiredService<IAssistant>();
+IAssistant assistant;
+
+try
+{
+    assistant =
+        serviceProvider.GetRequiredService<IAssistant>();
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine(ex.Message);
+    return;
+}
 
 /*
  * ==========================================================
@@ -106,10 +112,3 @@ response = await assistant.ConsultarAsync(
     preguntaAbogado);
 
 Console.WriteLine($"Asistente: {response}");
-Console.WriteLine();
-
-Console.WriteLine("=== CONCLUSIÓN ===");
-Console.WriteLine(
-    "Los Prompt Templates permiten construir prompts dinámicos " +
-    "a partir de parámetros. El mismo método puede generar " +
-    "distintos prompts según los valores recibidos.");
