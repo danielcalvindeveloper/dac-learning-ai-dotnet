@@ -57,12 +57,10 @@ como abstracción común.
 lab-01-hello-llm/
 ├── docs/
 │   ├── 01-lab-configuration.md
-│   ├── 02-chat-client-factory.md
-│   └── 03-lab-console.md
+│   └── 02-chat-client-factory.md
 ├── Lab01.HelloLlm.csproj
 ├── LabConfiguration.cs
 ├── ChatClientFactory.cs
-├── LabConsole.cs
 ├── Program.cs
 └── README.md
 ```
@@ -104,6 +102,8 @@ AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 No existen modelos por defecto escondidos en el código.
 
 El modelo utilizado queda visible en el `.env`.
+
+Si `AI_URL` tiene contenido, debe ser una URL absoluta válida. Si está vacía, el cliente utiliza el endpoint estándar del proveedor.
 
 ---
 
@@ -155,10 +155,9 @@ Una salida aproximada será:
 ```text
 Proveedor: gemini
 Modelo: gemini-3.5-flash-lite
-Prompt: Explica en una sola oración qué es un modelo de lenguaje.
 
-Respuesta:
-Un modelo de lenguaje es ...
+Prompt: Explica en una sola oración qué es un modelo de lenguaje.
+Respuesta: Un modelo de lenguaje es ...
 ```
 
 La respuesta exacta puede variar.
@@ -176,10 +175,12 @@ IChatClient chatClient =
 const string prompt =
     "Explica en una sola oración qué es un modelo de lenguaje.";
 
+Console.WriteLine($"Prompt: {prompt}");
+
 ChatResponse response =
     await chatClient.GetResponseAsync(prompt);
 
-LabConsole.WriteResponse(response.Text);
+Console.WriteLine($"Respuesta: {response.Text}");
 ```
 
 El concepto central está a la vista:
@@ -204,9 +205,8 @@ flowchart LR
     CFG --> FACTORY[ChatClientFactory]
     FACTORY --> CLIENT[IChatClient]
     PROMPT[Prompt] --> CLIENT
-    CLIENT --> MODEL[Modelo]
-    MODEL --> RESPONSE[ChatResponse]
-    RESPONSE --> CONSOLE[Consola]
+    CLIENT --> RESPONSE[ChatResponse]
+    RESPONSE --> OUT[Console.WriteLine]
 ```
 
 El diagrama muestra dos caminos que se unen:
@@ -218,11 +218,13 @@ Una vez creado `IChatClient`, el resto del laboratorio ya no necesita conocer de
 
 ---
 
-## ¿Por qué hay clases auxiliares?
+## ¿Por qué hay dos clases auxiliares?
 
 `Program.cs` podría contener toda la configuración, validación y construcción del cliente.
 
 No lo hacemos porque ese código es **necesario para ejecutar**, pero no es el objetivo pedagógico del Lab 01.
+
+En cambio, la salida por consola permanece directamente en `Program.cs`: encapsular simples llamadas a `Console.WriteLine` agregaría una abstracción sin aportar valor al ejercicio.
 
 La separación busca distinguir:
 

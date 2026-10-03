@@ -1,16 +1,15 @@
 ---
 references:
   - "File: /labs/lab-01-hello-llm/Program.cs"
-generationTime: 2026-10-03T13:33:15.291Z
 ---
 flowchart TD
-    A(["Start"]) --> B["Load configuration"]
-    B --> C{"Did loading throw InvalidOperationException?"}
-    C -->|Yes| D["Write error message"]
-    D --> E(["Return"])
-    C -->|No| F["Create chat client using configuration"]
-    F --> G["Set prompt"]
-    G --> H["Write request using configuration and prompt"]
-    H --> I["Await GetResponseAsync with prompt"]
-    I --> J["Write response text"]
-    J --> K(["Exit"])
+    A(["Inicio"]) --> B["Cargar configuración"]
+    B --> C{"¿Configuración válida?"}
+    C -->|No| D["Mostrar error"]
+    D --> E(["Fin"])
+    C -->|Sí| F["Crear IChatClient"]
+    F --> G["Definir prompt"]
+    G --> H["Mostrar prompt"]
+    H --> I["GetResponseAsync(prompt)"]
+    I --> J["Mostrar respuesta"]
+    J --> K(["Fin"])

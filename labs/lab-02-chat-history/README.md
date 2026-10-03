@@ -2,112 +2,166 @@
 
 ## Objetivo
 
-Comprender la diferencia entre realizar llamadas independientes a un modelo y mantener el historial de una conversación.
+Comprender la diferencia entre:
 
-Este laboratorio replica el mismo ejercicio conceptual utilizado en la versión Java con LangChain4j.
+```text
+llamadas independientes
+```
 
-La comparación se realiza con exactamente los mismos mensajes:
+y:
+
+```text
+una conversación que reenvía su historial
+```
+
+Vamos a utilizar exactamente los mismos mensajes en ambos casos:
 
 ```text
 Mi nombre es Daniel
 ¿Cómo me llamo?
 ```
 
+La diferencia estará únicamente en el contexto enviado al modelo.
+
 ---
 
-## Caso 1 — Sin memoria
+## Antes de empezar
 
-En este primer bloque se realizan dos llamadas completamente independientes.
+El Lab 01 mostró una llamada simple:
 
 ```text
-=== SIN MEMORIA ===
-
-Usuario: Mi nombre es Daniel
-Asistente: ...
-
-Usuario: ¿Cómo me llamo?
-Asistente: ...
+prompt → modelo → respuesta
 ```
 
-El modelo recibe cada llamada por separado.
+En este laboratorio damos el siguiente paso:
+
+```text
+varios mensajes → historial → modelo
+```
+
+La configuración y la creación del cliente siguen separadas del concepto principal.
+
+---
+
+## Estructura
+
+```text
+lab-02-chat-history/
+├── docs/
+│   ├── 01-lab-configuration.md
+│   └── 02-chat-client-factory.md
+├── ChatClientFactory.cs
+├── LabConfiguration.cs
+├── Lab02.ChatHistory.csproj
+├── Program.cs
+├── Program.cs.mmd
+└── README.md
+```
+
+Las clases auxiliares permiten que `Program.cs` se concentre en lo que queremos observar:
+
+```text
+sin historial
+vs
+con historial
+```
+
+---
+
+## Configuración
+
+El laboratorio utiliza el `.env` común ubicado en la raíz del repositorio:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+```
+
+### Variables
+
+| Variable | Obligatoria | Objetivo |
+|---|---:|---|
+| `AI_PROVIDER` | Sí | Identifica el proveedor activo |
+| `AI_MODEL` | Sí | Modelo utilizado |
+| `AI_API_KEY` | Sí | Credencial de acceso |
+| `AI_URL` | No | Endpoint alternativo |
+
+No existen modelos por defecto escondidos en el código.
+
+Si `AI_URL` está vacío, se utiliza el endpoint estándar del cliente.
+
+---
+
+# Caso 1 - Sin historial
+
+Primero hacemos dos llamadas independientes.
+
+```csharp
+ChatResponse r1 =
+    await chatClient.GetResponseAsync(firstMessage);
+
+ChatResponse r2 =
+    await chatClient.GetResponseAsync(secondMessage);
+```
+
+La segunda llamada recibe solamente:
+
+```text
+¿Cómo me llamo?
+```
+
+No recibe el mensaje anterior.
 
 Conceptualmente:
 
 ```text
-Llamada 1
-Usuario: Mi nombre es Daniel
-          ↓
-         LLM
+Mi nombre es Daniel
+        ↓
+      modelo
+        ↓
+    respuesta
 
-Llamada 2
-Usuario: ¿Cómo me llamo?
-          ↓
-         LLM
+
+¿Cómo me llamo?
+        ↓
+      modelo
+        ↓
+    respuesta
 ```
 
-La segunda llamada no contiene el mensaje anterior.
-
-Por eso el modelo no debería poder saber que el nombre informado era Daniel.
-
-El código es:
-
-```csharp
-Console.WriteLine($"Usuario: {firstMessage}");
-
-ChatResponse r1 =
-    await chatClient.GetResponseAsync(firstMessage);
-
-Console.WriteLine($"Asistente: {r1.Text}");
-```
-
-y luego otra llamada independiente:
-
-```csharp
-Console.WriteLine($"Usuario: {secondMessage}");
-
-ChatResponse r2 =
-    await chatClient.GetResponseAsync(secondMessage);
-
-Console.WriteLine($"Asistente: {r2.Text}");
-```
+Por eso el modelo no dispone del dato `"Daniel"` en la segunda llamada.
 
 ---
 
-## Caso 2 — Con memoria
+# Caso 2 - Con historial
 
-Ahora mantenemos explícitamente el historial de mensajes:
+Ahora creamos:
 
 ```csharp
 List<ChatMessage> history = [];
 ```
 
-La salida queda visible como diálogo:
+y agregamos los mensajes a esa colección.
 
-```text
-=== CON MEMORIA ===
-
-Usuario: Mi nombre es Daniel
-Asistente: ...
-
-Usuario: ¿Cómo me llamo?
-Asistente: Te llamas Daniel.
-```
-
-Cada nuevo mensaje del usuario se agrega al historial:
+Primer mensaje:
 
 ```csharp
 history.Add(
-    new ChatMessage(ChatRole.User, message));
+    new ChatMessage(
+        ChatRole.User,
+        firstMessage));
 ```
 
-Luego se envía todo el historial al modelo:
+Luego enviamos el historial completo:
 
 ```csharp
 ChatResponse response =
     await chatClient.GetResponseAsync(history);
 ```
 
-y finalmente se agrega también la respuesta del asistente:
+La respuesta también se incorpora al historial:
 
 ```csharp
 foreach (ChatMessage responseMessage in response.Messages)
@@ -116,155 +170,84 @@ foreach (ChatMessage responseMessage in response.Messages)
 }
 ```
 
-Conceptualmente:
+Cuando llega la siguiente pregunta:
+
+```text
+¿Cómo me llamo?
+```
+
+el modelo recibe algo equivalente a:
 
 ```text
 Usuario: Mi nombre es Daniel
-            ↓
-        historial
-            ↓
-           LLM
-            ↓
 Asistente: ...
-
 Usuario: ¿Cómo me llamo?
-            ↓
-      historial completo
-            ↓
-           LLM
-            ↓
-Asistente: Te llamas Daniel
 ```
+
+Ahora sí dispone del contexto anterior.
 
 ---
 
-## Comparación directa
+## Flujo de ejecución
+
+```mermaid
+flowchart LR
+    A[Mensaje actual] --> B{¿Usamos historial?}
+
+    B -->|No| C[IChatClient]
+    B -->|Sí| H[List ChatMessage]
+    H --> C
+
+    C --> R[ChatResponse]
+    R --> O[Console.WriteLine]
+
+    R -->|si hay historial| H
+```
+
+La idea importante es sencilla:
 
 ```text
-SIN MEMORIA
-───────────
-Usuario: Mi nombre es Daniel
-Asistente: Mucho gusto, Daniel.
+sin historial
+    ↓
+solo se envía el mensaje actual
 
-Usuario: ¿Cómo me llamo?
-Asistente: No tengo forma de saberlo.
-
-
-CON MEMORIA
-───────────
-Usuario: Mi nombre es Daniel
-Asistente: Mucho gusto, Daniel.
-
-Usuario: ¿Cómo me llamo?
-Asistente: Te llamas Daniel.
+con historial
+    ↓
+se envían también los mensajes anteriores
 ```
-
-La diferencia no está en el modelo.
-
-La diferencia está en **qué contexto envía la aplicación en cada llamada**.
 
 ---
 
-## Relación con la versión Java
+## El código que importa
 
-La versión Java utiliza:
+### Sin historial
 
-```java
-System.out.println("=== SIN MEMORIA ===");
+```csharp
+ChatResponse r1 =
+    await chatClient.GetResponseAsync(firstMessage);
 
-String r1 = model.chat(
-        "Mi nombre es Daniel"
-);
-
-String r2 = model.chat(
-        "¿Como me llamo?"
-);
+ChatResponse r2 =
+    await chatClient.GetResponseAsync(secondMessage);
 ```
 
-y luego:
-
-```java
-System.out.println("=== CON MEMORIA ===");
-
-Assistant assistant =
-        AiServices.builder(Assistant.class)
-                .chatModel(model)
-                .chatMemory(
-                        MessageWindowChatMemory.withMaxMessages(20)
-                )
-                .build();
-
-String r3 = assistant.chat(
-        "Mi nombre es Daniel"
-);
-
-String r4 = assistant.chat(
-        "¿Como me llamo?"
-);
-```
-
-En .NET todavía no introducimos una abstracción equivalente a `AiServices`.
-
-Para que el mecanismo quede visible, mantenemos el historial explícitamente:
+### Con historial
 
 ```csharp
 List<ChatMessage> history = [];
+
+history.Add(
+    new ChatMessage(ChatRole.User, firstMessage));
+
+ChatResponse response =
+    await chatClient.GetResponseAsync(history);
+
+foreach (ChatMessage responseMessage in response.Messages)
+{
+    history.Add(responseMessage);
+}
 ```
 
-La equivalencia conceptual es:
-
-| LangChain4j | .NET |
-|---|---|
-| `model.chat(...)` | `IChatClient.GetResponseAsync(...)` |
-| llamadas independientes | llamadas independientes |
-| `MessageWindowChatMemory` | `List<ChatMessage>` |
-| `assistant.chat(...)` | `ChatWithMemoryAsync(...)` |
-| memoria gestionada por LangChain4j | historial gestionado por la aplicación |
-
----
-
-## Estructura
-
-```text
-lab-02-chat-history/
-├── Lab02.ChatHistory.csproj
-├── Program.cs
-└── README.md
-```
-
-El `.env` se mantiene en la raíz del repositorio:
-
-```text
-dac-learning-ai-dotnet/
-├── .env
-├── .env.example
-└── labs/
-    ├── lab-01-hello-llm/
-    └── lab-02-chat-history/
-```
-
-No es necesario crear un `.env` por laboratorio.
-
----
-
-## Configuración
-
-Ejemplo:
-
-```env
-AI_PROVIDER=gemini
-AI_MODEL=
-
-OPENAI_API_KEY=
-GEMINI_API_KEY=tu-api-key
-OPENROUTER_API_KEY=
-```
-
-El laboratorio carga la configuración común mediante:
-
-```csharp
-Env.TraversePath().Load();
-```
+Todo el resto existe para poder ejecutar y visualizar el ejemplo.
 
 ---
 
@@ -280,14 +263,13 @@ ejecutar:
 
 ```powershell
 dotnet restore
-dotnet build
 dotnet run
 ```
 
 Una salida típica será:
 
 ```text
-Proveedor: Gemini
+Proveedor: gemini
 Modelo: gemini-3.5-flash-lite
 
 === SIN MEMORIA ===
@@ -307,47 +289,87 @@ Asistente: Te llamas Daniel.
 
 La redacción exacta depende del modelo.
 
----
-
-## Qué queremos demostrar
-
-### Sin memoria
+El resultado importante es:
 
 ```text
+sin historial → no conoce el nombre
+con historial → conoce el nombre
+```
+
+---
+
+## Un detalle importante: el modelo no recuerda
+
+Aunque la salida del programa diga:
+
+```text
+CON MEMORIA
+```
+
+el modelo no está conservando por sí mismo el estado de nuestra aplicación.
+
+Es nuestra aplicación la que vuelve a enviar:
+
+```text
+mensajes anteriores
++
 mensaje actual
-      ↓
-     modelo
-      ↓
-   respuesta
 ```
 
-Cada llamada es independiente.
+en cada llamada.
 
-### Con memoria
+Por eso, en este punto, es más preciso pensar en:
 
 ```text
-historial + mensaje nuevo
-          ↓
-         modelo
-          ↓
-       respuesta
-          ↓
-  historial actualizado
+historial conversacional
 ```
 
-El modelo conoce el nombre porque la aplicación volvió a enviar el mensaje anterior.
+que en memoria persistente.
+
+La memoria más avanzada aparecerá más adelante.
 
 ---
 
-## Punto importante
+## `ChatMessage`
 
-El modelo no conserva automáticamente el estado de nuestra aplicación entre llamadas.
+`ChatMessage` representa un mensaje dentro de una conversación.
 
-La memoria conversacional existe porque la aplicación vuelve a enviar el contexto anterior.
+En este laboratorio utilizamos:
 
-En este laboratorio ese mecanismo queda deliberadamente visible.
+```csharp
+new ChatMessage(
+    ChatRole.User,
+    firstMessage)
+```
 
-Más adelante veremos abstracciones que permiten encapsular esta responsabilidad.
+donde:
+
+```text
+ChatRole.User
+```
+
+indica que el mensaje pertenece al usuario.
+
+Las respuestas recibidas mediante:
+
+```csharp
+response.Messages
+```
+
+también se guardan para que puedan formar parte del siguiente contexto.
+
+---
+
+## Lecturas opcionales
+
+No necesitás leer estos documentos para comprender el objetivo del Lab 02.
+
+Están disponibles para quien quiera revisar la infraestructura reutilizada:
+
+- [`LabConfiguration`: carga y validación de configuración](docs/01-lab-configuration.md)
+- [`ChatClientFactory`: creación de `IChatClient`](docs/02-chat-client-factory.md)
+
+El concepto nuevo de este laboratorio está directamente en `Program.cs`.
 
 ---
 
@@ -360,30 +382,30 @@ No incorporamos:
 - persistencia;
 - límite de ventana;
 - resumen de conversaciones;
-- Semantic Kernel;
+- memoria por sesión;
 - RAG;
 - tools.
 
-Tampoco implementamos todavía el equivalente exacto de:
+La lista:
 
-```java
-MessageWindowChatMemory.withMaxMessages(20)
+```csharp
+List<ChatMessage>
 ```
 
-Eso aparecerá cuando trabajemos memoria conversacional más avanzada.
+vive únicamente durante la ejecución actual del programa.
 
 ---
 
 ## Resultado esperado
 
-Al finalizar el laboratorio deberías poder explicar:
+Al finalizar deberías poder explicar:
 
 1. por qué dos llamadas independientes no comparten contexto;
 2. qué representa `List<ChatMessage>`;
-3. qué información se agrega al historial;
-4. por qué la segunda llamada con memoria conoce el nombre;
-5. por qué el historial pertenece a la aplicación y no al modelo;
-6. cuál es la equivalencia conceptual con el ejercicio Java.
+3. qué representa `ChatMessage`;
+4. por qué guardamos también las respuestas del asistente;
+5. por qué el modelo conoce el nombre en el segundo caso;
+6. por qué el historial pertenece a la aplicación y no al modelo.
 
 ---
 
@@ -391,4 +413,4 @@ Al finalizar el laboratorio deberías poder explicar:
 
 **Lab 03 - Services y Dependency Injection**
 
-Después de comprender el mecanismo explícito, el siguiente paso será separar la configuración del cliente y la lógica de conversación del `Program.cs`.
+Después de comprender explícitamente cómo se maneja el historial, el siguiente paso será separar responsabilidades y comenzar a utilizar servicios e inyección de dependencias.

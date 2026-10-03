@@ -19,9 +19,7 @@ internal sealed record LabConfiguration(
         string? url =
             Environment.GetEnvironmentVariable("AI_URL");
 
-        Uri? endpoint = string.IsNullOrWhiteSpace(url)
-            ? null
-            : new Uri(url);
+        Uri? endpoint = GetOptionalEndpoint(url);
 
         return new LabConfiguration(
             ProviderName: provider,
@@ -42,5 +40,24 @@ internal sealed record LabConfiguration(
         }
 
         return value.Trim();
+    }
+
+    private static Uri? GetOptionalEndpoint(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return null;
+        }
+
+        if (!Uri.TryCreate(
+                url.Trim(),
+                UriKind.Absolute,
+                out Uri? endpoint))
+        {
+            throw new InvalidOperationException(
+                "La variable AI_URL no contiene una URL válida.");
+        }
+
+        return endpoint;
     }
 }

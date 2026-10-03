@@ -1,28 +1,20 @@
 ---
 references:
   - "File: /labs/lab-02-chat-history/Program.cs"
-generationTime: 2026-10-03T19:56:16.240Z
 ---
 flowchart TD
     A(["Inicio"]) --> B["Cargar configuración"]
-    B --> C{"¿Se produjo InvalidOperationException?"}
-    C -->|Sí| D["Mostrar mensaje de error"]
-    D --> E(["Retornar"])
-    C -->|No| F["Mostrar proveedor y modelo"]
-    F --> G["Crear cliente de chat"]
-    G --> H["Sin memoria: enviar primer mensaje y mostrar respuesta"]
-    H --> I["Sin memoria: enviar segundo mensaje y mostrar respuesta"]
-    I --> J["Inicializar historial vacío"]
-    J --> K["Agregar primer mensaje del usuario al historial"]
-    K --> L["Solicitar respuesta usando el historial"]
-    L --> M["Mostrar respuesta del asistente"]
-    M --> N{"¿Quedan mensajes de respuesta por agregar?"}
-    N -->|Sí| O["Agregar mensaje de respuesta al historial"]
-    O --> N
-    N -->|No| P["Agregar segundo mensaje del usuario al historial"]
-    P --> Q["Solicitar respuesta usando el historial"]
-    Q --> R["Mostrar respuesta del asistente"]
-    R --> S{"¿Quedan mensajes de respuesta por agregar?"}
-    S -->|Sí| T["Agregar mensaje de respuesta al historial"]
-    T --> S
-    S -->|No| U(["Salir"])
+    B --> C{"¿Configuración válida?"}
+    C -->|No| D["Mostrar error"]
+    D --> Z(["Fin"])
+
+    C -->|Sí| E["Crear IChatClient"]
+    E --> F["Dos llamadas independientes"]
+    F --> G["Crear List<ChatMessage>"]
+    G --> H["Agregar mensaje del usuario"]
+    H --> I["Enviar historial"]
+    I --> J["Agregar respuesta al historial"]
+    J --> K["Agregar segundo mensaje"]
+    K --> L["Enviar historial completo"]
+    L --> M["Mostrar respuesta"]
+    M --> Z
