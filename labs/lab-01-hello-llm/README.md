@@ -242,7 +242,6 @@ Están disponibles para quien quiera entender qué esconden las clases auxiliare
 
 - [`LabConfiguration`: carga y validación de configuración](docs/01-lab-configuration.md)
 - [`ChatClientFactory`: creación del `IChatClient`](docs/02-chat-client-factory.md)
-- [`LabConsole`: presentación de la ejecución](docs/03-lab-console.md)
 
 Podés ignorarlos inicialmente y volver cuando alguna de esas piezas te genere curiosidad.
 

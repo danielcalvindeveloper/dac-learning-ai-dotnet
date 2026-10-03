@@ -9,9 +9,13 @@ try
 }
 catch (InvalidOperationException ex)
 {
-    LabConsole.WriteError(ex.Message);
+    Console.WriteLine(ex.Message);
     return;
 }
+
+Console.WriteLine($"Proveedor: {configuration.ProviderName}");
+Console.WriteLine($"Modelo: {configuration.Model}");
+Console.WriteLine();
 
 IChatClient chatClient =
     ChatClientFactory.Create(configuration);
@@ -19,11 +23,8 @@ IChatClient chatClient =
 const string prompt =
     "Explica en una sola oración qué es un modelo de lenguaje.";
 
-LabConsole.WriteRequest(
-    configuration,
-    prompt);
-
+Console.WriteLine($"Prompt: {prompt}");
 ChatResponse response =
     await chatClient.GetResponseAsync(prompt);
+Console.WriteLine($"Respuesta: {response.Text}");
 
-LabConsole.WriteResponse(response.Text);
