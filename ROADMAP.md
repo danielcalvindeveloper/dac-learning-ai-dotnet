@@ -13,6 +13,9 @@ timeline
     title dac-learning-ai-dotnet – Evolución del aprendizaje
 
     section Fundamentos
+        M0 - Rampa de entrada : Lab 00 opcional
+                              : Primera llamada OpenAI / Gemini
+                              : Mapa de artefactos
         M1 - Primer contacto : Hello LLM
                             : IChatClient
                             : Configuración mínima
@@ -62,16 +65,66 @@ timeline
 
 | Hito | Tema | Labs | Estado |
 |---|---|---:|---|
+| M0 | Rampa de entrada y artefactos base | 00 | ✅ Implementado |
 | M1 | Primer contacto con LLM | 01 | ✅ Implementado |
 | M2 | Conversación, DI y prompts | 02–04 | ✅ Implementado |
-| M3 | Structured Output y memoria | 05–06 | ⏳ Pendiente |
-| M4 | Embeddings | 07 | ⏳ Pendiente |
+| M3 | Structured Output y memoria | 05–06 | ✅ Implementado |
+| M4 | Embeddings | 07 | ✅ Implementado |
 | M5 | Documentos y RAG | 08–10 | ⏳ Pendiente |
 | M6 | Tools y Function Calling | 11–12 | ⏳ Pendiente |
 | M7 | Agents | 13 | ⏳ Pendiente |
 | M8 | Multi-Agent y Workflows | 14–15 | ⏳ Pendiente |
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Proyecto integrador | 17 | ⏳ Pendiente |
+
+
+### Simplificación transversal de configuración
+
+La etapa Fundamentos adopta una convención común para evitar que la infraestructura de proveedor oculte el concepto de cada laboratorio:
+
+```env
+AI_PROVIDER=
+AI_MODEL=
+AI_API_KEY=
+AI_URL=
+```
+
+La configuración concreta debe quedar encapsulada fuera del flujo principal del ejercicio siempre que no sea el tema que se está estudiando.
+
+
+---
+
+# M0 — Rampa de entrada
+
+**Objetivo:** permitir una primera ejecución exitosa con la menor cantidad posible de código y ofrecer una guía opcional de los artefactos que aparecerán durante Fundamentos.
+
+**Estado:** ✅ Implementado
+
+### Lab 00 — Introducción
+
+| # | Estado | Alcance |
+|---|---|---|
+| 0.1 | ✅ | Ejecutar una llamada mínima con OpenAI |
+| 0.2 | ✅ | Ejecutar una llamada mínima con Gemini |
+| 0.3 | ✅ | Identificar proveedor, modelo, cliente, `IChatClient`, prompt y respuesta |
+| 0.4 | ✅ | Documentar las abstracciones principales de Fundamentos |
+| 0.5 | ✅ | Explicar que Lab 00 es opcional y no forma parte de la progresión obligatoria |
+
+### Criterio pedagógico
+
+Lab 00 prioriza el **primer éxito ejecutable** antes que la configuración correcta de una aplicación real.
+
+Por eso sus dos ejemplos son deliberadamente mínimos y utilizan un placeholder de API key en el propio código.
+
+A partir del Lab 01 la configuración se externaliza.
+
+```text
+Lab 00
+primera llamada funcionando
+        ↓
+Lab 01+
+organización incremental del código
+```
 
 ---
 
@@ -184,28 +237,28 @@ prompts dinámicos reutilizables
 
 **Objetivo:** dejar de tratar todas las respuestas del modelo como texto libre.
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
 ### Lab 05 — Structured Output
 
 | # | Estado | Alcance |
 |---|---|---|
-| 5.1 | ⏳ | Solicitar una respuesta estructurada |
-| 5.2 | ⏳ | Utilizar JSON como contrato |
-| 5.3 | ⏳ | Mapear el resultado a `class` o `record` C# |
-| 5.4 | ⏳ | Manejar respuestas inválidas |
-| 5.5 | ⏳ | Validar datos mínimos de salida |
+| 5.1 | ✅ | Solicitar respuestas estructuradas mediante tipos C# |
+| 5.2 | ✅ | Utilizar `GetResponseAsync<T>()` y `ChatResponse<T>` |
+| 5.3 | ✅ | Modelar resultados con `Persona`, `Personas` y `Producto` |
+| 5.4 | ✅ | Manejar materialización inválida mediante `TryGetResult` |
+| 5.5 | ✅ | Utilizar un objeto raíz para colecciones estructuradas |
 
 ### Lab 06 — Memoria conversacional avanzada
 
 | # | Estado | Alcance |
 |---|---|---|
-| 6.1 | ⏳ | Diferenciar historial y memoria |
-| 6.2 | ⏳ | Limitar la ventana conversacional |
-| 6.3 | ⏳ | Evaluar estrategias de resumen |
-| 6.4 | ⏳ | Introducir persistencia básica de contexto |
+| 6.1 | ✅ | Aislar conversaciones mediante `sessionId` |
+| 6.2 | ✅ | Introducir `IChatMemoryStore` como contrato de almacenamiento |
+| 6.3 | ✅ | Implementar `InMemoryChatMemoryStore` con ventana máxima |
+| 6.4 | ✅ | Comprobar memoria independiente entre múltiples sesiones |
 
-### Resultado esperado
+### Resultado alcanzado
 
 ```text
 LLM
@@ -223,17 +276,17 @@ Aplicación
 
 **Objetivo:** comprender cómo representar texto de forma semántica y comparar significado.
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
 ### Lab 07 — Embeddings
 
 | # | Estado | Alcance |
 |---|---|---|
-| 7.1 | ⏳ | Generar embeddings |
-| 7.2 | ⏳ | Utilizar `IEmbeddingGenerator` |
-| 7.3 | ⏳ | Comparar vectores |
-| 7.4 | ⏳ | Introducir similitud semántica |
-| 7.5 | ⏳ | Diferenciar búsqueda textual de búsqueda semántica |
+| 7.1 | ✅ | Generar embeddings de una consulta y documentos |
+| 7.2 | ✅ | Utilizar `IEmbeddingGenerator` |
+| 7.3 | ✅ | Comparar vectores de igual dimensión |
+| 7.4 | ✅ | Implementar similitud coseno explícitamente |
+| 7.5 | ✅ | Comprobar ranking por cercanía semántica |
 
 ### Flujo
 
@@ -487,6 +540,7 @@ flowchart TB
 
 ```mermaid
 flowchart LR
+    M0[M0<br/>Lab 00 opcional]
     M1[M1<br/>Hello LLM]
     M2[M2<br/>Conversación]
     M3[M3<br/>Structured Output]
@@ -498,6 +552,7 @@ flowchart LR
     M9[M9<br/>MCP]
     M10[M10<br/>Proyecto Final]
 
+    M0 -.-> M1
     M1 --> M2
     M2 --> M3
     M3 --> M4

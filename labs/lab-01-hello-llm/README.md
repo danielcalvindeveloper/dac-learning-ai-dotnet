@@ -4,81 +4,50 @@
 
 Realizar la primera llamada a un modelo de lenguaje desde una aplicación de consola .NET.
 
-El laboratorio busca responder una pregunta muy simple:
+La pregunta que guía el laboratorio es muy simple:
 
 > ¿Cuál es el mínimo necesario para enviar un prompt a un LLM desde C# y obtener una respuesta?
 
-No se utilizarán todavía memoria, inyección de dependencias, Semantic Kernel, tools, agentes ni RAG.
+El foco está en este flujo:
+
+```text
+prompt
+  ↓
+IChatClient
+  ↓
+modelo
+  ↓
+respuesta
+```
+
+Todavía no trabajamos con memoria, Dependency Injection, Prompt Templates, Structured Output, tools, agentes ni RAG.
 
 ---
 
-## Conceptos que aparecen
+## Antes de empezar
 
-- aplicación de consola .NET;
-- paquete NuGet;
-- API key;
-- proveedor de modelos;
-- modelo de lenguaje;
-- prompt;
-- `IChatClient`;
-- respuesta del modelo.
+Si querés ver primero una llamada todavía más mínima, sin configuración externa ni clases auxiliares, revisá el **Lab 00**.
+
+El Lab 01 da el siguiente paso: conserva un código principal pequeño, pero ya separa la configuración y la creación del cliente.
+
+---
 
 ## Stack
 
 - .NET 10
 - C#
 - Visual Studio Code Insiders
+- `Microsoft.Extensions.AI`
 - `Microsoft.Extensions.AI.OpenAI`
-- OpenAI, Gemini u OpenRouter
+- OpenAI, Gemini u OpenRouter mediante una configuración común
 
-La aplicación utiliza `IChatClient`, la abstracción de `Microsoft.Extensions.AI` para interactuar con servicios de chat generativo.
+La aplicación trabaja con:
 
-El objetivo pedagógico no cambia según el proveedor utilizado.
-
----
-
-## Accesibilidad económica
-
-**No es obligatorio disponer de una cuenta paga de OpenAI para realizar este laboratorio.**
-
-El ejemplo admite tres proveedores:
-
-| `AI_PROVIDER` | Uso previsto | Modelo por defecto |
-|---|---|---|
-| `openai` | opción original | `gpt-4o-mini` |
-| `gemini` | alternativa online con nivel gratuito | `gemini-3.8-flash` |
-| `openrouter` | alternativa online gratuita | `openrouter/free` |
-
-Los niveles gratuitos, modelos disponibles y límites pertenecen a cada proveedor y pueden cambiar con el tiempo.
-
-La intención es evitar que el costo de una API sea una barrera para realizar los laboratorios.
-
-> Los ejemplos de aprendizaje no deben utilizar datos personales, confidenciales ni información sensible.
-
----
-
-## ¿Por qué podemos mantener el mismo código?
-
-Gemini y OpenRouter disponen de endpoints compatibles con la API de OpenAI.
-
-Esto permite conservar la misma estructura:
-
-```text
-Aplicación
-    │
-    ▼
+```csharp
 IChatClient
-    │
-    ├── OpenAI
-    ├── Gemini
-    └── OpenRouter
 ```
 
-y cambiar fundamentalmente:
-
-- API key;
-- endpoint;
-- modelo.
+como abstracción común.
 
 ---
 
@@ -86,54 +55,25 @@ y cambiar fundamentalmente:
 
 ```text
 lab-01-hello-llm/
+├── docs/
+│   ├── 01-lab-configuration.md
+│   ├── 02-chat-client-factory.md
+│   └── 03-lab-console.md
 ├── Lab01.HelloLlm.csproj
+├── LabConfiguration.cs
+├── ChatClientFactory.cs
+├── LabConsole.cs
 ├── Program.cs
 └── README.md
 ```
 
-## 1. Abrir el laboratorio
-
-Desde la raíz del repositorio:
-
-```powershell
-cd labs\lab-01-hello-llm
-code-insiders .
-```
-
-## 2. Verificar .NET
-
-```powershell
-dotnet --version
-```
-
-El proyecto está configurado para:
-
-```text
-net10.0
-```
-
-## 3. Restaurar dependencias
-
-```powershell
-dotnet restore
-```
-
-El laboratorio mantiene una única dependencia explícita:
-
-```xml
-<PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.10.1" />
-```
-
-No es necesario agregar un paquete diferente para Gemini u OpenRouter en este laboratorio.
+Las clases auxiliares existen para sacar del `Program.cs` código necesario para ejecutar el laboratorio, pero que no forma parte del concepto principal.
 
 ---
 
+## Configuración común
 
-## Ubicación del `.env`
-
-El laboratorio **no utiliza un `.env` propio**.
-
-La configuración se comparte con el resto del proyecto mediante un único archivo ubicado en la raíz:
+El laboratorio utiliza el `.env` ubicado en la raíz del repositorio.
 
 ```text
 dac-learning-ai-dotnet/
@@ -141,240 +81,227 @@ dac-learning-ai-dotnet/
 ├── .env.example
 └── labs/
     └── lab-01-hello-llm/
-        ├── Lab01.HelloLlm.csproj
-        └── Program.cs
 ```
 
-Esto permite que todos los laboratorios reutilicen las mismas API keys y la misma selección de proveedor.
+La configuración tiene solamente cuatro variables:
 
-`.env` no debe subirse a Git.
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+```
 
-`.env.example` sí debe formar parte del repositorio porque documenta las variables necesarias.
+### Variables
 
-Cuando el Lab 01 incorpore la carga automática de configuración, buscará este `.env` común desde la carpeta del laboratorio hacia la raíz.
+| Variable | Obligatoria | Objetivo |
+|---|---:|---|
+| `AI_PROVIDER` | Sí | Identifica el proveedor activo |
+| `AI_MODEL` | Sí | Modelo que se utilizará |
+| `AI_API_KEY` | Sí | Credencial de acceso |
+| `AI_URL` | No | Endpoint alternativo cuando el proveedor lo requiere |
+
+No existen modelos por defecto escondidos en el código.
+
+El modelo utilizado queda visible en el `.env`.
 
 ---
 
-## 4. Elegir proveedor
+## Ejemplos de configuración
 
-La variable:
+### Gemini
 
-```text
-AI_PROVIDER
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```
 
-puede tomar:
+### OpenAI
 
-```text
-openai
-gemini
-openrouter
+```env
+AI_PROVIDER=openai
+AI_MODEL=gpt-4o-mini
+AI_API_KEY=tu-api-key
+AI_URL=
 ```
 
-Si no se define, se utiliza `openai`.
+### OpenRouter
 
-### Opción A — OpenAI
-
-```powershell
-$env:AI_PROVIDER="openai"
-$env:OPENAI_API_KEY="tu-api-key"
+```env
+AI_PROVIDER=openrouter
+AI_MODEL=openrouter/free
+AI_API_KEY=tu-api-key
+AI_URL=https://openrouter.ai/api/v1
 ```
 
-Modelo por defecto:
-
-```text
-gpt-4o-mini
-```
-
-### Opción B — Gemini
-
-```powershell
-$env:AI_PROVIDER="gemini"
-$env:GEMINI_API_KEY="tu-api-key"
-```
-
-Modelo por defecto del laboratorio:
-
-```text
-gemini-3.8-flash
-```
-
-Gemini dispone de nivel gratuito para determinados modelos. La API key puede obtenerse desde Google AI Studio.
-
-### Opción C — OpenRouter
-
-```powershell
-$env:AI_PROVIDER="openrouter"
-$env:OPENROUTER_API_KEY="tu-api-key"
-```
-
-Modelo por defecto:
-
-```text
-openrouter/free
-```
-
-`openrouter/free` selecciona automáticamente un modelo gratuito disponible compatible con la solicitud.
+Para cambiar de proveedor alcanza con cambiar la configuración activa.
 
 ---
 
-## Seleccionar otro modelo
+## Ejecutar
 
-Independientemente del proveedor puede sobrescribirse el modelo:
-
-```powershell
-$env:AI_MODEL="nombre-del-modelo"
-```
-
-Ejemplo:
+Desde la raíz del repositorio:
 
 ```powershell
-$env:AI_PROVIDER="gemini"
-$env:GEMINI_API_KEY="tu-api-key"
-$env:AI_MODEL="gemini-3.8-flash"
-```
-
----
-
-## 5. Ejecutar
-
-```powershell
+cd labs\lab-01-hello-llm
+dotnet restore
 dotnet run
 ```
 
-Salida aproximada:
+Una salida aproximada será:
 
 ```text
-Proveedor: Gemini
-Modelo: gemini-3.8-flash
+Proveedor: gemini
+Modelo: gemini-3.5-flash-lite
 Prompt: Explica en una sola oración qué es un modelo de lenguaje.
 
 Respuesta:
 Un modelo de lenguaje es ...
 ```
 
-La respuesta exacta puede variar entre ejecuciones y proveedores.
+La respuesta exacta puede variar.
 
 ---
 
-## Código principal
+## El código que importa
 
-La aplicación sigue trabajando con:
-
-```csharp
-IChatClient chatClient
-```
-
-La selección de proveedor ocurre antes de construir el cliente.
-
-Para mantener el código principal simple, el detalle de cada proveedor queda encapsulado en:
+El flujo principal de `Program.cs` queda reducido a pocas operaciones:
 
 ```csharp
-ResolveProviderConfiguration(provider)
+IChatClient chatClient =
+    ChatClientFactory.Create(configuration);
+
+const string prompt =
+    "Explica en una sola oración qué es un modelo de lenguaje.";
+
+ChatResponse response =
+    await chatClient.GetResponseAsync(prompt);
+
+LabConsole.WriteResponse(response.Text);
 ```
 
-Ese método resuelve únicamente lo necesario para conectarse:
-
-- variable de API key;
-- modelo por defecto;
-- endpoint.
-
-La interacción posterior sigue siendo idéntica:
-
-```csharp
-ChatResponse response = await chatClient.GetResponseAsync(prompt);
-
-Console.WriteLine(response.Text);
-```
-
----
-
-## Flujo
+El concepto central está a la vista:
 
 ```text
-             AI_PROVIDER
-                  │
-        ┌─────────┼─────────┐
-        ▼         ▼         ▼
-     OpenAI    Gemini   OpenRouter
-        │         │         │
-        └─────────┼─────────┘
-                  ▼
-             IChatClient
-                  │
-                  ▼
-               Prompt
-                  │
-                  ▼
-               Modelo
-                  │
-                  ▼
-            ChatResponse
+crear cliente
+     ↓
+definir prompt
+     ↓
+enviar
+     ↓
+recibir respuesta
 ```
+
+---
+
+## Flujo de ejecución
+
+```mermaid
+flowchart LR
+    ENV[".env"] --> CFG[LabConfiguration]
+    CFG --> FACTORY[ChatClientFactory]
+    FACTORY --> CLIENT[IChatClient]
+    PROMPT[Prompt] --> CLIENT
+    CLIENT --> MODEL[Modelo]
+    MODEL --> RESPONSE[ChatResponse]
+    RESPONSE --> CONSOLE[Consola]
+```
+
+El diagrama muestra dos caminos que se unen:
+
+- `.env` prepara el cliente;
+- el `prompt` representa la operación que queremos aprender.
+
+Una vez creado `IChatClient`, el resto del laboratorio ya no necesita conocer detalles del proveedor.
+
+---
+
+## ¿Por qué hay clases auxiliares?
+
+`Program.cs` podría contener toda la configuración, validación y construcción del cliente.
+
+No lo hacemos porque ese código es **necesario para ejecutar**, pero no es el objetivo pedagógico del Lab 01.
+
+La separación busca distinguir:
+
+```text
+código que queremos estudiar
+          de
+código que permite ejecutar el ejemplo
+```
+
+---
+
+## Lecturas opcionales
+
+No necesitás leer estos documentos para completar el laboratorio.
+
+Están disponibles para quien quiera entender qué esconden las clases auxiliares:
+
+- [`LabConfiguration`: carga y validación de configuración](docs/01-lab-configuration.md)
+- [`ChatClientFactory`: creación del `IChatClient`](docs/02-chat-client-factory.md)
+- [`LabConsole`: presentación de la ejecución](docs/03-lab-console.md)
+
+Podés ignorarlos inicialmente y volver cuando alguna de esas piezas te genere curiosidad.
 
 ---
 
 ## ¿Por qué `IChatClient`?
 
-Podríamos utilizar directamente el cliente específico de cada proveedor, pero eso mezclaría desde el primer laboratorio el concepto de LLM con una implementación concreta.
+`IChatClient` evita que el código que consume el modelo dependa directamente de un cliente concreto.
 
-`IChatClient` permite separar ambos conceptos.
+Después de crear el cliente, el código principal utiliza siempre:
 
-En este laboratorio esa ventaja ya puede observarse de forma concreta: el código consumidor no necesita saber si la respuesta proviene de OpenAI, Gemini u OpenRouter.
-
----
-
-## Relación con LangChain4j
-
-La equivalencia conceptual es aproximadamente:
-
-```text
-LangChain4j                    .NET
-────────────────────────────────────────
-ChatLanguageModel       ↔      IChatClient
-OpenAiChatModel         ↔      OpenAI ChatClient
-model.generate(...)     ↔      GetResponseAsync(...)
-respuesta String        ↔      ChatResponse.Text
+```csharp
+await chatClient.GetResponseAsync(prompt);
 ```
 
-No se busca una traducción API por API. Se busca resolver el mismo problema utilizando la forma natural del ecosistema .NET.
+El objetivo pedagógico es que la interacción con el modelo se mantenga igual aunque cambie la configuración.
 
 ---
 
 ## Qué NO hace todavía este laboratorio
 
-El programa no recuerda conversaciones.
+No existe todavía una conversación.
 
-Cada ejecución es:
+Cada solicitud es:
 
 ```text
 prompt → modelo → respuesta
 ```
 
-No existe todavía:
+No hay:
 
-```text
-mensaje 1
-   ↓
-mensaje 2
-   ↓
-contexto de conversación
-```
+- historial;
+- memoria;
+- servicios de aplicación;
+- Dependency Injection;
+- Prompt Templates;
+- Structured Output;
+- embeddings;
+- RAG.
 
-Ese será el objetivo del **Lab 02 - Chat History**.
-
-Tampoco se pretende estudiar todavía diferencias entre proveedores. La posibilidad de elegir uno existe únicamente para facilitar el acceso al laboratorio.
+Esos conceptos aparecerán progresivamente en los siguientes laboratorios.
 
 ---
 
 ## Resultado esperado
 
-Al finalizar el laboratorio deberías poder explicar:
+Al finalizar deberías poder explicar:
 
 1. qué representa `IChatClient`;
-2. cómo se elige un proveedor;
-3. dónde se configura la API key;
-4. cómo se selecciona el modelo;
-5. cómo se envía un prompt;
-6. cómo se obtiene el texto de la respuesta;
-7. por qué el concepto aprendido no depende de OpenAI.
+2. qué representa un prompt;
+3. cómo se envía un prompt al modelo;
+4. qué es `ChatResponse`;
+5. dónde se encuentra el texto devuelto;
+6. por qué la configuración del proveedor no necesita ocupar el código principal.
+
+---
+
+## Siguiente laboratorio
+
+**Lab 02 - Chat History**
+
+El siguiente paso será comprobar qué ocurre cuando necesitamos conservar el contexto entre varios mensajes.
