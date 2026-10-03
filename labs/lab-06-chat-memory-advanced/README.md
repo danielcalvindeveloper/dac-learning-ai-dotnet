@@ -2,44 +2,87 @@
 
 ## Objetivo
 
-Extender el manejo de contexto conversacional para soportar **múltiples sesiones independientes** y separar la memoria de conversación en una capa reutilizable.
+Extender el manejo de contexto conversacional para soportar **múltiples sesiones independientes** y separar el almacenamiento del historial en un componente reutilizable.
 
-En el Lab 02 utilizamos una única lista:
+En el Lab 02 vimos el mecanismo básico:
+
+```text
+List<ChatMessage>
+      ↓
+una conversación
+```
+
+Ahora necesitamos algo más:
+
+```text
+sessionId
+   ↓
+historial propio
+```
+
+El concepto nuevo del Lab 06 es:
+
+> una aplicación puede mantener varios historiales aislados y delegar su almacenamiento a un componente específico.
+
+---
+
+## Continuidad con los laboratorios anteriores
+
+Conservamos la idea de servicio introducida en Lab 03:
+
+```text
+Program.cs
+   ↓
+IAssistant
+   ↓
+Assistant
+```
+
+Pero `Assistant` ahora necesita dos dependencias:
+
+```text
+IChatClient
+IChatMemoryStore
+```
+
+La estructura queda:
+
+```text
+Program.cs
+   ↓
+IAssistant
+   ↓
+Assistant
+   ├── IChatClient
+   └── IChatMemoryStore
+```
+
+El servicio sigue siendo `Assistant`.
+
+La memoria conversacional es una dependencia del servicio.
+
+---
+
+# 1. El problema
+
+Con una sola lista:
 
 ```csharp
 List<ChatMessage>
 ```
 
-Ese enfoque sirve para comprender cómo funciona el historial, pero tiene una limitación evidente:
+podemos representar una conversación.
 
-```text
-una lista
-=
-una conversación
-```
-
-¿Qué ocurre cuando una aplicación atiende a varios usuarios o varias conversaciones al mismo tiempo?
-
----
-
-## El problema
-
-Supongamos dos sesiones:
+Pero si tenemos:
 
 ```text
 sesion-a → Daniel
 sesion-b → Roberto
 ```
 
-Ambas deberían poder preguntar:
+necesitamos que cada conversación conserve únicamente sus propios mensajes.
 
-```text
-¿Cómo me llamo?
-```
-
-y recibir respuestas diferentes.
-
-Si utilizáramos un único historial compartido:
+No queremos:
 
 ```text
 Daniel
@@ -47,70 +90,76 @@ Roberto
 ¿Cómo me llamo?
 ```
 
-el contexto quedaría mezclado.
-
-Necesitamos aislar la memoria mediante un identificador de sesión.
+mezclados en un mismo historial.
 
 ---
 
-## La idea
+# 2. `sessionId`
 
-La arquitectura será:
+El método del servicio ahora recibe:
 
-```text
-sessionId
-   ↓
-IChatMemoryStore
-   ↓
-historial de la sesión
-   ↓
-IChatClient
-   ↓
-LLM
+```csharp
+Task<string> ChatAsync(
+    string sessionId,
+    string message);
 ```
 
-Cada sesión mantiene su propio conjunto de mensajes.
+El `sessionId` identifica a qué conversación pertenece el mensaje.
+
+Por ejemplo:
+
+```text
+sesion-a
+sesion-b
+```
+
+No describe al usuario ni al modelo.
+
+Describe:
+
+```text
+la conversación
+```
 
 ---
 
-# 1. El contrato de memoria
+# 3. `IChatMemoryStore`
 
-Creamos:
+Definimos un contrato:
 
 ```csharp
 public interface IChatMemoryStore
+{
+    IReadOnlyList<ChatMessage> GetMessages(
+        string sessionId);
+
+    void AddMessage(
+        string sessionId,
+        ChatMessage message);
+
+    void AddMessages(
+        string sessionId,
+        IEnumerable<ChatMessage> messages);
+}
 ```
 
-con tres operaciones:
+La interfaz expresa tres necesidades:
 
-```csharp
-IReadOnlyList<ChatMessage> GetMessages(
-    string sessionId);
-
-void AddMessage(
-    string sessionId,
-    ChatMessage message);
-
-void AddMessages(
-    string sessionId,
-    IEnumerable<ChatMessage> messages);
+```text
+leer historial
+agregar un mensaje
+agregar varios mensajes
 ```
 
-La interfaz no dice dónde se almacenan los mensajes.
+No dice dónde se almacenan.
 
-Solo define qué necesita la aplicación.
+Ese detalle pertenece a la implementación.
 
 ---
 
-# 2. Implementación en memoria
+# 4. `InMemoryChatMemoryStore`
 
-Para este laboratorio usamos:
-
-```csharp
-InMemoryChatMemoryStore
-```
-
-internamente basado en:
+La implementación actual utiliza:
 
 ```csharp
 Dictionary<string, List<ChatMessage>>
@@ -119,108 +168,46 @@ Dictionary<string, List<ChatMessage>>
 Conceptualmente:
 
 ```text
-Dictionary
-│
-├── sesion-a
-│   ├── user: Mi nombre es Daniel
-│   ├── assistant: Mucho gusto...
-│   ├── user: ¿Cómo me llamo?
-│   └── assistant: Daniel
-│
-└── sesion-b
-    ├── user: Mi nombre es Roberto
-    ├── assistant: Mucho gusto...
-    ├── user: ¿Cómo me llamo?
-    └── assistant: Roberto
+sesion-a
+   ↓
+mensajes de Daniel
+
+sesion-b
+   ↓
+mensajes de Roberto
 ```
 
-La clave del diccionario es:
-
-```text
-sessionId
-```
+Cada clave apunta a un historial diferente.
 
 ---
 
-# 3. Ventana de mensajes
+# 5. `Assistant` coordina la memoria
 
-La memoria tiene:
+`Assistant` no conoce el `Dictionary`.
 
-```csharp
-private const int MaxMessages = 20;
-```
-
-Después de agregar mensajes se ejecuta:
+Depende de:
 
 ```csharp
-TrimWindow(messages);
+IChatMemoryStore
 ```
 
-Si la cantidad supera el límite, se eliminan los mensajes más antiguos.
-
-Conceptualmente:
+El flujo de una llamada es:
 
 ```text
-mensaje 1
-mensaje 2
-...
-mensaje 20
+mensaje + sessionId
+        ↓
+guardar mensaje
+        ↓
+recuperar historial
+        ↓
+IChatClient
+        ↓
+respuesta
+        ↓
+guardar respuesta
 ```
 
-Cuando llega el mensaje 21:
-
-```text
-mensaje 1   ← eliminado
-
-mensaje 2
-...
-mensaje 21
-```
-
-Esto evita que el historial crezca indefinidamente.
-
----
-
-# 4. Assistant recibe sessionId
-
-Nuestro contrato ahora es:
-
-```csharp
-public interface IAssistant
-{
-    Task<string> ChatAsync(
-        string sessionId,
-        string message);
-}
-```
-
-Ya no alcanza con saber:
-
-```text
-qué dijo el usuario
-```
-
-también necesitamos saber:
-
-```text
-a qué conversación pertenece
-```
-
----
-
-# 5. Flujo de una llamada
-
-Cuando ejecutamos:
-
-```csharp
-await assistant.ChatAsync(
-    "sesion-a",
-    "¿Cómo me llamo?");
-```
-
-`Assistant` realiza cuatro pasos.
-
-### Paso 1 — guardar el mensaje del usuario
+El código central es:
 
 ```csharp
 _memoryStore.AddMessage(
@@ -228,67 +215,65 @@ _memoryStore.AddMessage(
     new ChatMessage(
         ChatRole.User,
         message));
-```
 
-### Paso 2 — recuperar el historial de esa sesión
-
-```csharp
 IReadOnlyList<ChatMessage> history =
     _memoryStore.GetMessages(sessionId);
-```
 
-### Paso 3 — enviar ese historial al modelo
-
-```csharp
 ChatResponse response =
     await _chatClient.GetResponseAsync(history);
-```
 
-### Paso 4 — guardar la respuesta
-
-```csharp
 _memoryStore.AddMessages(
     sessionId,
     response.Messages);
 ```
 
-La memoria queda preparada para el próximo turno.
+---
+
+# 6. Flujo de ejecución
+
+```mermaid
+flowchart LR
+    U[Mensaje + sessionId] --> A[Assistant]
+    A --> M[IChatMemoryStore]
+    M --> H[Historial de la sesión]
+    H --> C[IChatClient]
+    C --> R[ChatResponse]
+    R --> M
+```
+
+La idea central es:
+
+```text
+sessionId
+   ↓
+selecciona historial
+   ↓
+ese historial se envía al modelo
+```
 
 ---
 
-# 6. Prueba con dos sesiones
+# 7. Aislamiento entre sesiones
 
-Primero:
-
-```text
-sesion-a
-```
-
-dice:
+El ejercicio utiliza:
 
 ```text
-Mi nombre es Daniel
+sesion-a → Daniel
+sesion-b → Roberto
 ```
 
-y pregunta:
+y luego pregunta en ambas:
 
 ```text
 ¿Cómo me llamo?
 ```
 
-Después:
+Esperamos:
 
 ```text
-sesion-b
+sesion-a → Daniel
+sesion-b → Roberto
 ```
-
-dice:
-
-```text
-Mi nombre es Roberto
-```
-
-y pregunta lo mismo.
 
 Finalmente volvemos a:
 
@@ -296,27 +281,49 @@ Finalmente volvemos a:
 sesion-a
 ```
 
-y preguntamos nuevamente:
+y comprobamos que continúa recordando:
 
 ```text
-¿Cómo me llamo?
+Daniel
 ```
 
-El resultado esperado es:
-
-```text
-sesion-a → Daniel
-sesion-b → Roberto
-sesion-a → Daniel
-```
-
-Esto demuestra que las conversaciones están aisladas.
+Eso demuestra que los historiales no se mezclan.
 
 ---
 
-# 7. Dependency Injection
+# 8. Ventana de mensajes
 
-Registramos el almacenamiento como:
+La implementación contiene:
+
+```csharp
+private const int MaxMessages = 20;
+```
+
+Cuando el historial supera ese límite:
+
+```text
+se eliminan los mensajes más antiguos
+```
+
+El store evita así crecer indefinidamente.
+
+Conceptualmente:
+
+```text
+21 mensajes
+    ↓
+eliminar el más antiguo
+    ↓
+20 mensajes
+```
+
+La ventana pertenece al mecanismo de almacenamiento, no a `Assistant`.
+
+---
+
+# 9. ¿Por qué `IChatMemoryStore` es Singleton?
+
+Registramos:
 
 ```csharp
 services.AddSingleton<
@@ -324,9 +331,32 @@ services.AddSingleton<
     InMemoryChatMemoryStore>();
 ```
 
-Usamos `Singleton` porque queremos que todas las instancias de `Assistant` compartan el mismo almacenamiento durante la ejecución.
+porque queremos que exista **un mismo almacén compartido** durante toda la ejecución.
 
-Luego:
+Si cada resolución de `Assistant` recibiera un store nuevo:
+
+```text
+Assistant A → store A
+Assistant B → store B
+```
+
+la memoria no sería compartida.
+
+Con `Singleton`:
+
+```text
+Assistant A ─┐
+             ├── mismo store
+Assistant B ─┘
+```
+
+Eso permite que cualquier instancia del servicio consulte las mismas sesiones.
+
+---
+
+# 10. `Assistant` continúa como Transient
+
+Seguimos registrando:
 
 ```csharp
 services.AddTransient<
@@ -334,71 +364,172 @@ services.AddTransient<
     Assistant>();
 ```
 
-`Assistant` recibe automáticamente:
+`Assistant` sigue siendo liviano y no guarda directamente la conversación.
+
+El estado vive en:
+
+```text
+IChatMemoryStore
+```
+
+No convertimos `Assistant` en Singleton sólo porque ahora exista memoria.
+
+La responsabilidad del estado fue separada deliberadamente.
+
+---
+
+# 11. ¿Por qué una interfaz para el store?
+
+Porque `Assistant` necesita:
+
+```text
+guardar y recuperar mensajes
+```
+
+pero no necesita saber si eso ocurre en:
+
+```text
+Dictionary
+base de datos
+Redis
+archivo
+cache distribuida
+```
+
+Hoy:
+
+```text
+IChatMemoryStore
+      ↓
+InMemoryChatMemoryStore
+```
+
+Mañana podríamos reemplazar la implementación sin modificar el servicio.
+
+---
+
+# 12. Historial no es persistencia
+
+En este laboratorio:
+
+```text
+memoria
+```
+
+significa que el historial se conserva mientras vive el proceso.
+
+Si cerramos la aplicación:
+
+```text
+se pierde
+```
+
+No existe todavía:
+
+- base de datos;
+- Redis;
+- archivo;
+- almacenamiento distribuido.
+
+Esto es intencional.
+
+El foco es entender primero:
+
+```text
+sesión
++
+store
++
+aislamiento
++
+ventana
+```
+
+---
+
+# 13. Dependency Injection
+
+La composición queda:
 
 ```csharp
+services.AddSingleton<IChatClient>(
+    _ => AiClientFactory.CreateFromEnvironment());
+
+services.AddSingleton<
+    IChatMemoryStore,
+    InMemoryChatMemoryStore>();
+
+services.AddTransient<
+    IAssistant,
+    Assistant>();
+```
+
+El contenedor puede construir `Assistant` porque conoce ambas dependencias:
+
+```text
 IChatClient
 IChatMemoryStore
 ```
 
-por constructor.
+No necesitamos:
+
+```csharp
+new Assistant(...)
+```
+
+en `Program.cs`.
 
 ---
 
-# 8. Grafo de dependencias
+# 14. Configuración
 
-```mermaid
-flowchart LR
-    P[Program.cs]
-    A[IAssistant]
-    I[Assistant]
-    M[IChatMemoryStore]
-    S[InMemoryChatMemoryStore]
-    C[IChatClient]
-    L[LLM]
+Se utiliza la misma configuración común de los laboratorios anteriores:
 
-    P --> A
-    A --> I
-    I --> M
-    M --> S
-    I --> C
-    C --> L
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+```
+
+Variables:
+
+| Variable | Obligatoria | Objetivo |
+|---|---:|---|
+| `AI_PROVIDER` | Sí | Identifica el proveedor activo |
+| `AI_MODEL` | Sí | Modelo utilizado |
+| `AI_API_KEY` | Sí | Credencial |
+| `AI_URL` | No | Endpoint alternativo |
+
+`Program.cs` no carga `.env`.
+
+La infraestructura sigue siendo:
+
+```text
+LabConfiguration
+        ↓
+AiClientFactory
+        ↓
+IChatClient
 ```
 
 ---
 
-# 9. Flujo por sesión
-
-```mermaid
-flowchart TD
-    U[Mensaje del usuario]
-    ID[sessionId]
-    M[Memory Store]
-    H[Historial de la sesión]
-    C[IChatClient]
-    L[LLM]
-    R[Respuesta]
-
-    U --> M
-    ID --> M
-    M --> H
-    H --> C
-    C --> L
-    L --> R
-    R --> M
-```
-
----
-
-# 10. Estructura
+# 15. Estructura
 
 ```text
 lab-06-chat-memory-advanced/
+├── docs/
+│   ├── 01-sessionid-y-memoria.md
+│   ├── 02-ichatmemorystore.md
+│   ├── 03-singleton-y-ciclo-de-vida.md
+│   └── 04-configuracion-y-aiclientfactory.md
 ├── AiClientFactory.cs
 ├── Assistant.cs
 ├── IAssistant.cs
 ├── IChatMemoryStore.cs
 ├── InMemoryChatMemoryStore.cs
+├── LabConfiguration.cs
 ├── Lab06.ChatMemoryAdvanced.csproj
 ├── Program.cs
 └── README.md
@@ -406,163 +537,113 @@ lab-06-chat-memory-advanced/
 
 ---
 
-# 11. Evolución desde Lab 02
+# 16. Responsabilidad de cada pieza
 
-## Lab 02
+### `IAssistant`
+
+Define:
 
 ```text
-List<ChatMessage>
-        ↓
-una conversación
+chat por sesión
 ```
 
-## Lab 06
+---
+
+### `Assistant`
+
+Coordina:
 
 ```text
+mensaje
 sessionId
-   ↓
-IChatMemoryStore
-   ↓
-historial independiente
+memory store
+IChatClient
+respuesta
 ```
 
-El mecanismo base sigue siendo el mismo:
-
-```text
-guardar mensajes
-+
-reenviar historial
-```
-
-pero ahora está encapsulado y preparado para manejar varias conversaciones.
+No almacena directamente los mensajes.
 
 ---
 
-# 12. Diferencia entre historial y almacenamiento
+### `IChatMemoryStore`
 
-Conviene separar dos ideas.
-
-## Historial
-
-Son los mensajes:
-
-```text
-user
-assistant
-user
-assistant
-```
-
-## Store
-
-Es el componente responsable de decidir:
-
-```text
-dónde vive ese historial
-```
-
-En este laboratorio vive en memoria:
-
-```text
-Dictionary
-```
-
-Pero el contrato permitiría reemplazarlo posteriormente por:
-
-```text
-base de datos
-Redis
-archivo
-cache distribuida
-otro almacenamiento
-```
-
-sin cambiar `Assistant`.
+Define el contrato de memoria conversacional.
 
 ---
 
-# 13. Memoria reutilizable
+### `InMemoryChatMemoryStore`
 
-El beneficio de introducir:
-
-```csharp
-IChatMemoryStore
-```
-
-es que `Assistant` deja de conocer el mecanismo concreto de almacenamiento.
-
-Depende de:
+Implementa ese contrato en RAM mediante:
 
 ```text
-IChatMemoryStore
+Dictionary<string, List<ChatMessage>>
 ```
 
-no de:
-
-```text
-Dictionary
-```
-
-Esto permite sustituir la implementación manteniendo el resto del código.
+y aplica la ventana máxima.
 
 ---
 
-# 14. Configuración
+### `IChatClient`
 
-El laboratorio reutiliza el `.env` común:
+Envía el historial al modelo.
+
+---
+
+### `AiClientFactory`
+
+Construye `IChatClient`.
+
+Infraestructura reutilizada.
+
+---
+
+### `LabConfiguration`
+
+Carga y valida la configuración.
+
+---
+
+# 17. Lecturas opcionales
+
+Para profundizar:
+
+- [`sessionId` y aislamiento de conversaciones](docs/01-sessionid-y-memoria.md)
+- [`IChatMemoryStore` y `InMemoryChatMemoryStore`](docs/02-ichatmemorystore.md)
+- [Por qué el store es Singleton y `Assistant` Transient](docs/03-singleton-y-ciclo-de-vida.md)
+- [`LabConfiguration` y `AiClientFactory`](docs/04-configuracion-y-aiclientfactory.md)
+
+La recomendación sigue siendo:
 
 ```text
-dac-learning-ai-dotnet/
-├── .env
-├── .env.example
-└── labs/
-    ├── lab-01-hello-llm/
-    ├── lab-02-chat-history/
-    ├── lab-03-services-di/
-    ├── lab-04-prompt-templates/
-    ├── lab-05-structured-output/
-    └── lab-06-chat-memory-advanced/
+primero ejecutar
+      ↓
+entender el flujo
+      ↓
+profundizar sólo donde haga falta
 ```
 
 ---
 
-# 15. Ejecutar
-
-Desde:
+# 18. Ejecutar
 
 ```powershell
 cd labs\lab-06-chat-memory-advanced
-```
-
-ejecutar:
-
-```powershell
 dotnet restore
-dotnet build
 dotnet run
 ```
 
----
-
-# 16. Salida esperada
-
-Una ejecución típica será:
+Una salida aproximada:
 
 ```text
-Proveedor: Gemini
-Modelo: gemini-3.5-flash-lite
-
 === SESIÓN A ===
 [sesion-a] Usuario: Mi nombre es Daniel
 [sesion-a] Asistente: Mucho gusto, Daniel.
-
 [sesion-a] Usuario: ¿Cómo me llamo?
 [sesion-a] Asistente: Te llamas Daniel.
 
 === SESIÓN B ===
 [sesion-b] Usuario: Mi nombre es Roberto
 [sesion-b] Asistente: Mucho gusto, Roberto.
-
 [sesion-b] Usuario: ¿Cómo me llamo?
 [sesion-b] Asistente: Te llamas Roberto.
 
@@ -571,65 +652,65 @@ Modelo: gemini-3.5-flash-lite
 [sesion-a] Asistente: Te llamas Daniel.
 ```
 
-La redacción exacta dependerá del modelo.
-
-Lo importante es:
-
-```text
-sesion-a → Daniel
-sesion-b → Roberto
-```
+La redacción exacta depende del modelo.
 
 ---
 
-# 17. Una limitación deliberada
+# 19. Evolución
 
-`InMemoryChatMemoryStore` existe únicamente mientras se ejecuta la aplicación.
-
-Si cerramos el proceso:
+### Lab 02
 
 ```text
-memoria perdida
+List<ChatMessage>
+      ↓
+una conversación
 ```
 
-Esto es intencional.
-
-Todavía no queremos introducir una base de datos ni infraestructura externa.
-
-El objetivo es comprender primero:
+### Lab 06
 
 ```text
 sessionId
-+
-store
-+
-ventana
-+
-historial aislado
+   ↓
+IChatMemoryStore
+   ↓
+múltiples conversaciones
 ```
 
----
+El mecanismo base sigue siendo:
 
-# 18. Qué aprendemos
+```text
+guardar mensajes
++
+reenviar historial
+```
 
-Al finalizar este laboratorio deberías poder explicar:
-
-1. por qué una única lista no alcanza para múltiples conversaciones;
-2. qué función cumple `sessionId`;
-3. qué responsabilidad tiene `IChatMemoryStore`;
-4. por qué el store se registra como `Singleton`;
-5. cómo se mantiene aislada cada conversación;
-6. para qué sirve una ventana máxima de mensajes;
-7. por qué `Assistant` no debería conocer el almacenamiento concreto;
-8. cómo podría reemplazarse posteriormente la memoria en RAM por otro mecanismo.
+pero ahora está encapsulado y preparado para más de una sesión.
 
 ---
 
-# Qué NO hacemos todavía
+# 20. Qué aprendemos
+
+Al finalizar deberías poder explicar:
+
+1. por qué una sola lista no alcanza para varias conversaciones;
+2. qué representa `sessionId`;
+3. para qué existe `IChatMemoryStore`;
+4. qué responsabilidad tiene `InMemoryChatMemoryStore`;
+5. por qué `Assistant` no conoce el `Dictionary`;
+6. por qué el store se registra como Singleton;
+7. por qué `Assistant` puede seguir siendo Transient;
+8. cómo funciona la ventana de 20 mensajes;
+9. por qué esta memoria desaparece al cerrar el proceso;
+10. cómo podría reemplazarse el almacenamiento sin modificar `Assistant`.
+
+---
+
+# 21. Qué NO hacemos todavía
 
 No incorporamos:
 
 - persistencia real;
+- concurrencia avanzada;
 - base de datos;
 - Redis;
 - memoria semántica;
@@ -637,24 +718,20 @@ No incorporamos:
 - resumen automático de conversaciones;
 - Agent Framework.
 
-`Microsoft.Extensions.AI` dispone también de reductores experimentales de historial para limitar o resumir conversaciones, pero en este laboratorio mantenemos la lógica explícita para comprender el mecanismo antes de incorporar esas abstracciones.
+El objetivo es mantener visible el mecanismo antes de agregar más infraestructura.
 
 ---
 
-# Siguiente laboratorio
+## Siguiente laboratorio
 
 **Lab 07 - Embeddings**
 
-Hasta ahora trabajamos con texto y conversaciones.
-
-El siguiente paso será representar significado mediante vectores:
+Hasta ahora trabajamos con:
 
 ```text
 texto
-  ↓
-embedding
-  ↓
-vector
-  ↓
-similitud semántica
++
+contexto conversacional
 ```
+
+El siguiente paso será representar significado mediante vectores.

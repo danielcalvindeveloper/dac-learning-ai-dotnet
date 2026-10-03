@@ -1,23 +1,32 @@
-using DotNetEnv;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
-
-Env.TraversePath().Load();
 
 ServiceCollection services = new();
 
 services.AddSingleton<IChatClient>(
     _ => AiClientFactory.CreateFromEnvironment());
 
-services.AddSingleton<IChatMemoryStore, InMemoryChatMemoryStore>();
+services.AddSingleton<
+    IChatMemoryStore,
+    InMemoryChatMemoryStore>();
 
 services.AddTransient<IAssistant, Assistant>();
 
 using ServiceProvider serviceProvider =
     services.BuildServiceProvider();
 
-IAssistant assistant =
-    serviceProvider.GetRequiredService<IAssistant>();
+IAssistant assistant;
+
+try
+{
+    assistant =
+        serviceProvider.GetRequiredService<IAssistant>();
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine(ex.Message);
+    return;
+}
 
 Console.WriteLine("=== SESIÓN A ===");
 
@@ -59,12 +68,14 @@ static async Task MostrarDialogoAsync(
     string sessionId,
     string message)
 {
-    Console.WriteLine($"[{sessionId}] Usuario: {message}");
+    Console.WriteLine(
+        $"[{sessionId}] Usuario: {message}");
 
     string response =
         await assistant.ChatAsync(
             sessionId,
             message);
 
-    Console.WriteLine($"[{sessionId}] Asistente: {response}");
+    Console.WriteLine(
+        $"[{sessionId}] Asistente: {response}");
 }
