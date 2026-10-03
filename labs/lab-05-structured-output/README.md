@@ -4,25 +4,81 @@
 
 Comprender cómo pasar de respuestas de texto libre a **objetos C# tipados**.
 
-Hasta el Lab 04, nuestros métodos devolvían:
+Hasta el Lab 04, el flujo era:
+
+```text
+parámetros
+   ↓
+PromptTemplates
+   ↓
+prompt
+   ↓
+LLM
+   ↓
+string
+```
+
+En este laboratorio agregamos un contrato de salida:
+
+```text
+parámetros
+   ↓
+PromptTemplates
+   ↓
+prompt
+   ↓
+LLM
+   ↓
+Structured Output
+   ↓
+objeto C#
+```
+
+El concepto nuevo es:
+
+> pedir al modelo una respuesta compatible con un tipo C# y trabajar con ese objeto directamente.
+
+---
+
+## Continuidad con Lab 04
+
+Conservamos el diseño anterior:
+
+```text
+Program.cs
+   ↓
+IAssistant
+   ↓
+Assistant
+   ├── PromptTemplates
+   └── IChatClient
+```
+
+Lo que cambia está en el resultado.
+
+Antes:
 
 ```csharp
 Task<string>
 ```
 
-En este laboratorio damos un paso importante:
+Ahora:
 
-```text
-texto de entrada
-      ↓
-     LLM
-      ↓
-respuesta estructurada
-      ↓
-objeto C#
+```csharp
+Task<Persona>
+Task<Personas>
+Task<Producto>
 ```
 
-## El problema
+`Assistant` sigue siendo el servicio.
+
+`PromptTemplates` sigue construyendo prompts.
+
+`IChatClient` sigue siendo la dependencia que habla con el modelo.
+
+---
+
+# 1. El problema
 
 Supongamos este texto:
 
@@ -30,31 +86,32 @@ Supongamos este texto:
 Mi nombre es Daniel y tengo 63 años.
 ```
 
-Queremos obtener:
+Podríamos pedir una respuesta textual como:
+
+```text
+Daniel tiene 63 años.
+```
+
+Pero si la aplicación necesita utilizar esos datos, todavía tendría que interpretar ese string.
+
+En cambio queremos obtener:
 
 ```csharp
 Persona persona
 ```
 
-y trabajar directamente con:
+y luego trabajar directamente con:
 
 ```csharp
 persona.Nombre
 persona.Edad
 ```
 
-## Structured Output
+---
 
-`Microsoft.Extensions.AI` permite solicitar una respuesta que corresponda a un tipo C#:
+# 2. Los tipos C# son el contrato
 
-```csharp
-ChatResponse<Persona> response =
-    await _chatClient.GetResponseAsync<Persona>(prompt);
-```
-
-El tipo genérico indica qué estructura esperamos recibir.
-
-## Ejemplo 1 - Persona
+Definimos:
 
 ```csharp
 public sealed class Persona
@@ -64,22 +121,132 @@ public sealed class Persona
 }
 ```
 
-Texto:
+Ese tipo expresa qué información esperamos.
+
+No queremos:
+
+```text
+texto más o menos parecido
+```
+
+Queremos:
+
+```text
+Nombre
+Edad
+```
+
+como propiedades conocidas por la aplicación.
+
+---
+
+# 3. `ChatResponse<T>`
+
+Para pedir una respuesta tipada utilizamos:
+
+```csharp
+ChatResponse<Persona> response =
+    await _chatClient.GetResponseAsync<Persona>(prompt);
+```
+
+El tipo:
+
+```csharp
+Persona
+```
+
+indica qué estructura esperamos obtener.
+
+Podemos leerlo así:
+
+```text
+enviar prompt
+    ↓
+obtener respuesta compatible con Persona
+```
+
+---
+
+# 4. El servicio ahora devuelve objetos
+
+La interfaz evoluciona a:
+
+```csharp
+public interface IAssistant
+{
+    Task<Persona> ExtraerPersonaAsync(string texto);
+
+    Task<Personas> ExtraerPersonasAsync(string texto);
+
+    Task<Producto> ExtraerProductoAsync(string texto);
+}
+```
+
+Esto es importante.
+
+El consumidor de `IAssistant` no recibe JSON ni texto para interpretar.
+
+Recibe directamente:
+
+```text
+Persona
+Personas
+Producto
+```
+
+El servicio encapsula también esa responsabilidad.
+
+---
+
+# 5. Ejemplo: una persona
+
+Entrada:
 
 ```text
 Mi nombre es Daniel y tengo 63 años.
 ```
 
-Resultado esperado:
+Prompt:
 
 ```text
-Nombre: Daniel
-Edad: 63
+Extrae los datos de la persona.
+
+Texto:
+Mi nombre es Daniel y tengo 63 años.
 ```
 
-## Ejemplo 2 - Varias personas
+Resultado esperado:
 
-Para Structured Output utilizamos un objeto raíz:
+```csharp
+new Persona
+{
+    Nombre = "Daniel",
+    Edad = 63
+}
+```
+
+`Program.cs` puede usar:
+
+```csharp
+persona.Nombre
+persona.Edad
+```
+
+sin parsear texto.
+
+---
+
+# 6. Ejemplo: varias personas
+
+La entrada contiene:
+
+```text
+Daniel
+Roberto
+Juana
+```
+
+En lugar de devolver una lista como raíz utilizamos:
 
 ```csharp
 public sealed class Personas
@@ -88,9 +255,23 @@ public sealed class Personas
 }
 ```
 
-Esto evita depender de un array como raíz del esquema y mantiene un contrato extensible.
+El contrato queda:
 
-## Ejemplo 3 - Producto
+```text
+Personas
+   ↓
+PersonasEncontradas
+   ↓
+List<Persona>
+```
+
+Esto mantiene una raíz de objeto clara y extensible.
+
+---
+
+# 7. Ejemplo: producto
+
+Definimos:
 
 ```csharp
 public sealed class Producto
@@ -100,63 +281,179 @@ public sealed class Producto
 }
 ```
 
-Texto:
+Entrada:
 
 ```text
 Notebook Lenovo ThinkPad.
 ```
 
-## IAssistant ahora devuelve objetos
+La aplicación espera un:
 
 ```csharp
-public interface IAssistant
-{
-    Task<Persona> ExtraerPersonaAsync(string texto);
-    Task<Personas> ExtraerPersonasAsync(string texto);
-    Task<Producto> ExtraerProductoAsync(string texto);
-}
+Producto
 ```
 
-Antes:
+y no una frase libre.
 
-```text
-Assistant → string
-```
+---
 
-Ahora:
+# 8. `TryGetResult`
 
-```text
-Assistant → Persona / Personas / Producto
-```
-
-## Validación del resultado
-
-Usamos:
+Aunque solicitemos:
 
 ```csharp
-response.TryGetResult(out T? result)
+ChatResponse<T>
 ```
 
-para comprobar que la respuesta pueda convertirse al tipo esperado antes de utilizarla.
+la aplicación debe comprobar que existe un resultado compatible.
 
-## Flujo
+Por eso `Assistant` utiliza:
+
+```csharp
+response.TryGetResult(
+    out T? result)
+```
+
+Si existe:
+
+```csharp
+return result;
+```
+
+Si no:
+
+```csharp
+throw new InvalidOperationException(...)
+```
+
+El servicio no devuelve un objeto incompleto o inexistente silenciosamente.
+
+---
+
+# 9. `GetResultOrThrow<T>`
+
+Las tres operaciones necesitan la misma validación.
+
+En lugar de repetirla, `Assistant` concentra esa lógica en:
+
+```csharp
+private static T GetResultOrThrow<T>(
+    ChatResponse<T> response)
+```
+
+Este helper no es el concepto principal del laboratorio.
+
+Sólo evita duplicación.
+
+Su flujo es:
+
+```text
+ChatResponse<T>
+      ↓
+¿hay T válido?
+  ├─ sí → devolver T
+  └─ no → error
+```
+
+---
+
+# 10. Flujo de ejecución
 
 ```mermaid
 flowchart LR
-    T[Texto] --> P[Prompt Template]
-    P --> C[IChatClient]
-    C --> L[LLM]
-    L --> J[Respuesta estructurada]
-    J --> O[Objeto C#]
+    P[Program.cs] --> S[IAssistant]
+    S --> A[Assistant]
+    A --> T[PromptTemplates]
+    T --> A
+    A --> C[IChatClient]
+    C --> R["ChatResponse<T>"]
+    R --> O[Objeto C#]
 ```
 
-## Estructura
+La evolución principal es:
+
+```text
+Lab 04
+ChatResponse → string
+
+Lab 05
+ChatResponse<T> → T
+```
+
+---
+
+# 11. Dependency Injection continúa igual
+
+La composición heredada del Lab 03 y Lab 04 no cambia:
+
+```csharp
+services.AddSingleton<IChatClient>(
+    _ => AiClientFactory.CreateFromEnvironment());
+
+services.AddTransient<IAssistant, Assistant>();
+```
+
+No agregamos los modelos:
+
+```text
+Persona
+Personas
+Producto
+```
+
+al contenedor.
+
+Son datos, no servicios.
+
+---
+
+# 12. Configuración
+
+Se utiliza la misma configuración común:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+```
+
+Variables:
+
+| Variable | Obligatoria | Objetivo |
+|---|---:|---|
+| `AI_PROVIDER` | Sí | Identifica el proveedor activo |
+| `AI_MODEL` | Sí | Modelo utilizado |
+| `AI_API_KEY` | Sí | Credencial |
+| `AI_URL` | No | Endpoint alternativo |
+
+`Program.cs` no carga `.env`.
+
+La infraestructura permanece:
+
+```text
+LabConfiguration
+        ↓
+AiClientFactory
+        ↓
+IChatClient
+```
+
+---
+
+# 13. Estructura
 
 ```text
 lab-05-structured-output/
+├── docs/
+│   ├── 01-structured-output.md
+│   ├── 02-contratos-csharp.md
+│   ├── 03-chatresponse-generico.md
+│   └── 04-configuracion-y-aiclientfactory.md
 ├── AiClientFactory.cs
 ├── Assistant.cs
 ├── IAssistant.cs
+├── LabConfiguration.cs
 ├── Persona.cs
 ├── Personas.cs
 ├── Producto.cs
@@ -166,40 +463,92 @@ lab-05-structured-output/
 └── README.md
 ```
 
-## Evolución desde Lab 04
+---
 
-### Lab 04
+# 14. Responsabilidad de cada pieza
+
+### `IAssistant`
+
+Define operaciones de extracción tipada.
+
+---
+
+### `Assistant`
+
+Coordina:
 
 ```text
-Prompt Template → LLM → string
+texto
+  ↓
+PromptTemplates
+  ↓
+IChatClient
+  ↓
+ChatResponse<T>
+  ↓
+T
 ```
 
-### Lab 05
+---
 
-```text
-Prompt Template → LLM → Structured Output → objeto C#
-```
+### `PromptTemplates`
 
-## Configuración
+Construye la instrucción textual para cada extracción.
 
-Reutiliza el `.env` de la raíz del repositorio.
+No conoce los detalles de deserialización.
 
-## Ejecutar
+---
+
+### `Persona`, `Personas`, `Producto`
+
+Son contratos de datos.
+
+Describen la forma que esperamos recibir.
+
+---
+
+### `AiClientFactory`
+
+Construye `IChatClient`.
+
+Es infraestructura reutilizada.
+
+---
+
+### `LabConfiguration`
+
+Carga y valida la configuración.
+
+También es infraestructura.
+
+---
+
+# 15. Lecturas opcionales
+
+El laboratorio puede realizarse sin leer estos documentos.
+
+Para profundizar:
+
+- [Structured Output: qué problema resuelve](docs/01-structured-output.md)
+- [Tipos C# como contratos de salida](docs/02-contratos-csharp.md)
+- [`ChatResponse<T>`, `GetResponseAsync<T>` y `TryGetResult`](docs/03-chatresponse-generico.md)
+- [`LabConfiguration` y `AiClientFactory`](docs/04-configuracion-y-aiclientfactory.md)
+
+---
+
+# 16. Ejecutar
 
 ```powershell
 cd labs\lab-05-structured-output
 dotnet restore
-dotnet build
 dotnet run
 ```
 
-## Salida esperada
+Salida aproximada:
 
 ```text
-Proveedor: Gemini
-Modelo: gemini-3.5-flash-lite
-
 === PERSONA ===
+Texto: Mi nombre es Daniel y tengo 63 años.
 Nombre: Daniel
 Edad: 63
 
@@ -209,24 +558,98 @@ Roberto tiene 17 años
 Juana tiene 30 años
 
 === PRODUCTO ===
+Texto: Notebook Lenovo ThinkPad.
 Nombre: Notebook Lenovo ThinkPad
 Categoría: ...
 ```
 
-## Qué aprendemos
+Los valores exactos dependen del modelo.
 
-Al finalizar este laboratorio deberías poder explicar:
+---
+
+# 17. Evolución desde Lab 04
+
+### Lab 04
+
+```text
+Prompt Template
+      ↓
+LLM
+      ↓
+string
+```
+
+### Lab 05
+
+```text
+Prompt Template
+      ↓
+LLM
+      ↓
+Structured Output
+      ↓
+tipo C#
+```
+
+El cambio importante no es solamente el formato de la respuesta.
+
+Es que el resto de la aplicación ahora puede trabajar con:
+
+```text
+propiedades
+tipos
+colecciones
+```
+
+en lugar de interpretar lenguaje natural.
+
+---
+
+# 18. Qué aprendemos
+
+Al finalizar deberías poder explicar:
 
 1. qué significa Structured Output;
-2. qué representa `ChatResponse<T>`;
-3. qué hace `GetResponseAsync<T>()`;
-4. por qué utilizamos tipos C# para describir el resultado esperado;
-5. por qué una colección puede envolverse en un objeto raíz;
-6. para qué sirve `TryGetResult`;
-7. por qué trabajar con objetos facilita la integración con el resto de una aplicación.
+2. por qué un tipo C# puede actuar como contrato de salida;
+3. qué representa `ChatResponse<T>`;
+4. qué hace `GetResponseAsync<T>()`;
+5. para qué sirve `TryGetResult`;
+6. por qué `Assistant` devuelve objetos y no JSON o strings;
+7. por qué `Personas` utiliza un objeto raíz;
+8. por qué estos modelos no son servicios y no se registran en DI;
+9. cómo Structured Output facilita integrar la respuesta con código de aplicación.
+
+---
+
+# 19. Qué NO hacemos todavía
+
+No incorporamos:
+
+- validaciones de dominio complejas;
+- persistencia;
+- retries;
+- reparación de respuestas inválidas;
+- schemas personalizados avanzados;
+- memoria;
+- embeddings;
+- RAG.
+
+El objetivo es únicamente comprender:
+
+```text
+texto
+  ↓
+LLM
+  ↓
+objeto tipado
+```
+
+---
 
 ## Siguiente laboratorio
 
 **Lab 06 - Memoria conversacional avanzada**
 
-En Lab 02 vimos un historial simple mantenido durante la ejecución. El siguiente paso será controlar mejor ese contexto y explorar estrategias de memoria más avanzadas.
+Structured Output resuelve cómo recibir datos tipados.
+
+El siguiente laboratorio vuelve al problema conversacional para introducir sesiones y una memoria reutilizable.

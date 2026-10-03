@@ -1,8 +1,5 @@
-using DotNetEnv;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
-
-Env.TraversePath().Load();
 
 ServiceCollection services = new();
 
@@ -14,8 +11,18 @@ services.AddTransient<IAssistant, Assistant>();
 using ServiceProvider serviceProvider =
     services.BuildServiceProvider();
 
-IAssistant assistant =
-    serviceProvider.GetRequiredService<IAssistant>();
+IAssistant assistant;
+
+try
+{
+    assistant =
+        serviceProvider.GetRequiredService<IAssistant>();
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine(ex.Message);
+    return;
+}
 
 Console.WriteLine("=== PERSONA ===");
 
@@ -47,7 +54,8 @@ Personas personas =
 
 foreach (Persona p in personas.PersonasEncontradas)
 {
-    Console.WriteLine($"{p.Nombre} tiene {p.Edad} años");
+    Console.WriteLine(
+        $"{p.Nombre} tiene {p.Edad} años");
 }
 
 Console.WriteLine();
@@ -64,9 +72,3 @@ Producto producto =
 
 Console.WriteLine($"Nombre: {producto.Nombre}");
 Console.WriteLine($"Categoría: {producto.Categoria}");
-Console.WriteLine();
-
-Console.WriteLine("=== CONCLUSIÓN ===");
-Console.WriteLine(
-    "La aplicación dejó de trabajar solamente con texto libre. " +
-    "Ahora recibe objetos C# tipados construidos a partir de la respuesta del modelo.");
