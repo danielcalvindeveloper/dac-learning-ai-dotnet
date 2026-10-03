@@ -14,9 +14,11 @@ services.AddSingleton<IChatClient>(
 // Registramos nuestra abstracción de aplicación.
 services.AddTransient<IAssistant, Assistant>();
 
+// Construimos el proveedor de servicios.
 using ServiceProvider serviceProvider =
     services.BuildServiceProvider();
 
+//  Obtenemos la instancia de nuestro asistente desde el contenedor de servicios.
 IAssistant assistant =
     serviceProvider.GetRequiredService<IAssistant>();
 

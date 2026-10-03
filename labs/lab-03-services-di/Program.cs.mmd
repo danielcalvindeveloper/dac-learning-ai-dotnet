@@ -1,0 +1,22 @@
+---
+references:
+  - "File: /labs/lab-03-services-di/Program.cs"
+generationTime: 2026-10-03T20:16:25.962Z
+---
+flowchart TD
+    A(["Start"]) --> B["Load environment configuration"]
+    B --> C["Create service collection"]
+    C --> D["Register singleton IChatClient using AiClientFactory"]
+    D --> E["Register transient IAssistant implementation"]
+    E --> F["Build and dispose-scoped service provider"]
+    F --> G["Resolve IAssistant from the service provider"]
+    G --> H["Display chat prompt"]
+    H --> I["Await assistant.ChatAsync"]
+    I --> J["Display chat response"]
+    J --> K["Display translation input"]
+    K --> L["Await assistant.TraducirAsync"]
+    L --> M["Display translation response"]
+    M --> N["Display summary input"]
+    N --> O["Await assistant.ResumirAsync"]
+    O --> P["Display summary response"]
+    P --> Q(["Exit and dispose service provider"])

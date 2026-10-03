@@ -1,0 +1,22 @@
+---
+references:
+  - "File: /labs/lab-03-services-di/Assistant.cs"
+generationTime: 2026-10-03T20:18:21.316Z
+---
+flowchart TD
+    A(["Assistant constructed"]) --> B["Store injected IChatClient in _chatClient"]
+
+    B -.->|Instance setup| C(["ChatAsync invoked"])
+    C --> D["Use message as prompt"]
+    D --> E["Await GetResponseAsync with message"]
+    E --> F["Return response.Text"]
+
+    B -.->|Instance setup| G(["TraducirAsync invoked"])
+    G --> H["Build English translation prompt from texto"]
+    H --> I["Await GetResponseAsync with prompt"]
+    I --> J["Return response.Text"]
+
+    B -.->|Instance setup| K(["ResumirAsync invoked"])
+    K --> L["Build one-sentence summary prompt from texto"]
+    L --> M["Await GetResponseAsync with prompt"]
+    M --> N["Return response.Text"]

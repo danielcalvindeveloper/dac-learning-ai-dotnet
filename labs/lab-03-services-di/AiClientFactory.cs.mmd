@@ -1,0 +1,20 @@
+---
+references:
+  - "File: /labs/lab-03-services-di/AiClientFactory.cs"
+generationTime: 2026-10-03T20:26:12.979Z
+---
+flowchart TD
+    A(["Start CreateFromEnvironment"]) --> B["Load lab configuration"]
+    B -->|Success| C{"Is API key null, empty, or whitespace?"}
+    B -->|InvalidOperationException| D["Write exception message"]
+    D --> E["Rethrow exception"]
+    C -->|Yes| F["Throw InvalidOperationException"]
+    C -->|No| G["Write provider and model"]
+    G --> H{"Is endpoint null?"}
+    H -->|Yes| I["Create ChatClient with model and API key"]
+    I --> J["Convert to IChatClient"]
+    J --> K(["Return chat client"])
+    H -->|No| L["Create client options with endpoint"]
+    L --> M["Create ChatClient with model, credential, and options"]
+    M --> N["Convert to IChatClient"]
+    N --> K

@@ -4,90 +4,49 @@ using System.ClientModel;
 
 public static class AiClientFactory
 {
-    private const string DefaultProvider = "openai";
-    private const string DefaultOpenAiModel = "gpt-4o-mini";
-    private const string DefaultGeminiModel = "gemini-3.5-flash-lite";
-    private const string DefaultOpenRouterModel = "openrouter/free";
 
     public static IChatClient CreateFromEnvironment()
     {
-        string provider =
-            (Environment.GetEnvironmentVariable("AI_PROVIDER") ?? DefaultProvider)
-            .Trim()
-            .ToLowerInvariant();
-
-        ProviderConfiguration config =
-            ResolveProviderConfiguration(provider);
-
-        string? apiKey =
-            Environment.GetEnvironmentVariable(config.ApiKeyVariable);
-
-        string model =
-            Environment.GetEnvironmentVariable("AI_MODEL")
-            ?? config.DefaultModel;
-
-        if (string.IsNullOrWhiteSpace(apiKey))
+        LabConfiguration configuration;
+        // Cargar la configuración del laboratorio
+        try
         {
-            throw new InvalidOperationException(
-                $"No se encontró la variable de entorno {config.ApiKeyVariable}.");
+            configuration = LabConfiguration.Load();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
         }
 
-        Console.WriteLine($"Proveedor: {config.Name}");
-        Console.WriteLine($"Modelo: {model}");
+        if (string.IsNullOrWhiteSpace(configuration.ApiKey))
+        {
+            throw new InvalidOperationException(
+                $"No se encontró la variable de entorno AI_API_KEY.");
+        }
+
+        Console.WriteLine($"Proveedor: {configuration.ProviderName}");
+        Console.WriteLine($"Modelo: {configuration.Model}");
         Console.WriteLine();
 
-        if (config.Endpoint is null)
+        if (configuration.Endpoint is null)
         {
-            return new OpenAI.Chat.ChatClient(model, apiKey)
+            return new OpenAI.Chat.ChatClient(configuration.Model, configuration.ApiKey)
                 .AsIChatClient();
         }
 
         OpenAIClientOptions options = new()
         {
-            Endpoint = config.Endpoint
+            Endpoint = configuration.Endpoint
         };
 
         OpenAI.Chat.ChatClient client = new(
-            model,
-            new ApiKeyCredential(apiKey),
+            configuration.Model,
+            new ApiKeyCredential(configuration.ApiKey),
             options);
 
         return client.AsIChatClient();
     }
-
-    private static ProviderConfiguration ResolveProviderConfiguration(
-        string provider)
-    {
-        return provider switch
-        {
-            "openai" => new ProviderConfiguration(
-                Name: "OpenAI",
-                ApiKeyVariable: "OPENAI_API_KEY",
-                DefaultModel: DefaultOpenAiModel,
-                Endpoint: null),
-
-            "gemini" => new ProviderConfiguration(
-                Name: "Gemini",
-                ApiKeyVariable: "GEMINI_API_KEY",
-                DefaultModel: DefaultGeminiModel,
-                Endpoint: new Uri(
-                    "https://generativelanguage.googleapis.com/v1beta/openai/")),
-
-            "openrouter" => new ProviderConfiguration(
-                Name: "OpenRouter",
-                ApiKeyVariable: "OPENROUTER_API_KEY",
-                DefaultModel: DefaultOpenRouterModel,
-                Endpoint: new Uri("https://openrouter.ai/api/v1")),
-
-            _ => throw new InvalidOperationException(
-                $"Proveedor no reconocido: '{provider}'. " +
-                "Usa openai, gemini u openrouter.")
-        };
-    }
-
-    private sealed record ProviderConfiguration(
-        string Name,
-        string ApiKeyVariable,
-        string DefaultModel,
-        Uri? Endpoint);
 }
+
+
