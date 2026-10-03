@@ -2,8 +2,6 @@ using DotNetEnv;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 
-// Busca el .env común del proyecto recorriendo los directorios padres.
-Env.TraversePath().Load();
 
 ServiceCollection services = new();
 
