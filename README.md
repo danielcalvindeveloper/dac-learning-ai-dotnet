@@ -79,9 +79,12 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ Lab 06 - Chat Memory Advanced: implementado
 - ✅ Lab 07 - Embeddings: implementado
 - ✅ [Lab 08 - Document Loading](labs/lab-08-document-loading/README.md): implementado
-- ⏳ Labs 09-17: pendientes de implementación
+- ✅ [Lab 09 - RAG básico](labs/lab-09-rag-basico/README.md): implementado mediante 09a y 09b
+- ✅ [Lab 09a - RAG explícito](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md): implementado
+- ✅ [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md): implementado
+- ⏳ Labs 10-17: pendientes de implementación
 
-Los Labs 00-08 están implementados. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat.
+Los Labs 00-08 están implementados y Lab 09 está implementado mediante 09a y 09b. Lab 10 continúa pendiente. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; ambos sublabs de Lab 09 los utilizan simultáneamente.
 
 ## Configuración común mediante `.env`
 
@@ -113,11 +116,11 @@ AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 
 `*` Para los proveedores remotos utilizados actualmente por el taller.
 
-**Nuevo desde Lab 07: `AI_EMBEDDING_MODEL`.** Cada laboratorio requiere el modelo que utiliza. En próximos labs que combinen chat y embeddings necesitaremos ambos; comparten proveedor, credencial y endpoint. Los Labs 01-06 mantienen su configuración actual.
+**Nuevo desde Lab 07: `AI_EMBEDDING_MODEL`.** Cada laboratorio que utiliza modelos requiere las capacidades correspondientes. Lab 09a combina chat y embeddings y necesita ambos; comparten proveedor, credencial y endpoint. Los Labs 01-06 mantienen su configuración actual.
 
 `AI_MODEL` transforma texto en una respuesta generada; `AI_EMBEDDING_MODEL` transforma texto en un vector. No todos los modelos soportan embeddings. Aunque el proveedor sea el mismo, los modelos pueden ser distintos y la compatibilidad con chat no implica compatibilidad con embeddings.
 
-Esta distinción aparece cuando la necesitamos, siguiendo KISS. En futuros labs de RAG utilizaremos embeddings para recuperar contenido y el modelo generativo para responder con ese contexto. La [lectura opcional de configuración del Lab 07](labs/lab-07-embeddings/docs/04-configuracion-y-embedding-generator-factory.md) explica esa evolución.
+Esta distinción aparece cuando la necesitamos, siguiendo KISS. En Lab 09a utilizamos embeddings para recuperar contenido y el modelo generativo para responder con ese contexto. La [lectura opcional de configuración del Lab 07](labs/lab-07-embeddings/docs/04-configuracion-y-embedding-generator-factory.md) explica esa evolución.
 
 La intención es evitar defaults y lógica de selección de proveedor dentro de cada `Program.cs`.
 
@@ -222,6 +225,10 @@ Lab 06  memoria por sesión
 Lab 07  embeddings + similitud semántica
    ↓
 Lab 08  archivo → texto → normalización → chunks (offline)
+   ↓
+Lab 09a indexación → recuperación → contexto → generación (explícito)
+   ↓
+Lab 09b encapsulación del mismo pipeline en RagService
 ```
 
 La prioridad es comprender primero el concepto y recién después incorporar abstracciones de mayor nivel.

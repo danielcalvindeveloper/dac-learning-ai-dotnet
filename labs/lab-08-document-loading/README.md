@@ -16,7 +16,7 @@ El concepto nuevo es **preparar documentos**, no construir RAG.
 |---|---|
 | [Lab 07](../lab-07-embeddings/README.md) | texto → embedding → vector → similitud |
 | Lab 08 | archivo → texto → chunks |
-| [Lab 09](../lab-09-rag-basic/README.md), pendiente | chunks → embeddings → recuperación → contexto → LLM |
+| [Lab 09a](../lab-09-rag-basico/lab-09a-rag-explicito/README.md) | chunks → embeddings → recuperación → contexto → LLM |
 
 En este lab dejamos de definir todo el contenido como strings en código. No reutilizamos configuración ni clientes de IA porque no los necesitamos.
 
@@ -197,6 +197,6 @@ Al finalizar deberías poder explicar:
 
 ## Siguiente laboratorio
 
-**Lab 09 - RAG básico**, pendiente.
+**[Lab 09 - RAG básico](../lab-09-rag-basico/README.md)** está implementado mediante Lab 09a - RAG explícito y Lab 09b - RAG con RagService. Primero observamos el pipeline y después encapsulamos su coordinación.
 
-El siguiente paso será chunks → embeddings → recuperación de fragmentos relevantes → contexto para una respuesta. Aquí dejamos preparados los fragmentos; no implementamos ese paso.
+El siguiente paso es chunks → embeddings → recuperación de fragmentos relevantes → contexto para una respuesta. Lab 08 deja preparados los fragmentos; Lab 09a agrega recuperación y generación.

@@ -335,16 +335,32 @@ flowchart LR
 
 ### Lab 09 — RAG básico
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado mediante 09a y 09b
+
+El [Lab 09](labs/lab-09-rag-basico/README.md) se divide en dos evoluciones: observar primero el pipeline y después encapsularlo.
+
+#### Lab 09a — RAG explícito
+
+**Estado:** ✅ Implementado
+
+Un único proyecto Console con indexación y consulta visibles en `Program.cs`, sin un servicio RAG de alto nivel.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 9.1 | ⏳ | Generar embeddings de documentos |
-| 9.2 | ⏳ | Almacenar vectores |
-| 9.3 | ⏳ | Generar embedding de una consulta |
-| 9.4 | ⏳ | Recuperar chunks relevantes |
-| 9.5 | ⏳ | Construir prompt con contexto |
-| 9.6 | ⏳ | Generar respuesta basada en contexto recuperado |
+| 9.1 | ✅ | Generar embeddings de los chunks del documento |
+| 9.2 | ✅ | Almacenar vectores asociados a chunks en memoria |
+| 9.3 | ✅ | Generar embedding de una consulta |
+| 9.4 | ✅ | Recuperar topK chunks por similitud coseno |
+| 9.5 | ✅ | Construir contexto y prompt mediante un template |
+| 9.6 | ✅ | Generar respuesta basada en contexto recuperado |
+
+#### Lab 09b — RAG con RagService
+
+**Estado:** ✅ Implementado
+
+El [Lab 09b](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) encapsula el mismo pipeline en `IRagService` y `RagService`. Devuelve respuesta y chunks recuperados mediante `RagResponse`, con DI como mecanismo de composición. El store Singleton conserva el índice y el servicio Transient coordina sin almacenar estado propio.
+
+M5 continúa en progreso porque Lab 10 - RAG avanzado sigue pendiente.
 
 ### Lab 10 — RAG avanzado
 
