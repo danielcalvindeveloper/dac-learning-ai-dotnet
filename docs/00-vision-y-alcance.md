@@ -2,7 +2,7 @@
 
 ## Visión
 
-Construir un recorrido práctico e incremental para aprender integración de IA generativa en .NET, equivalente conceptualmente al proyecto `dac-learning-langchain4j`.
+Construir un recorrido práctico, autónomo e incremental para aprender integración de IA generativa en .NET.
 
 El repositorio debe permitir estudiar un concepto por vez y comprender qué problema resuelve antes de incorporar abstracciones adicionales.
 
@@ -13,7 +13,7 @@ El repositorio debe permitir estudiar un concepto por vez y comprender qué prob
 3. Mantener ejemplos pequeños.
 4. Priorizar APIs idiomáticas de .NET.
 5. Separar el concepto del proveedor de LLM.
-6. No forzar equivalencias exactas con LangChain4j.
+6. Introducir cada distinción cuando aparezca la necesidad de utilizarla.
 7. Incorporar frameworks de mayor nivel solamente cuando aporten valor.
 
 ## Fuera de alcance inicial

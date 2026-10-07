@@ -74,11 +74,10 @@ Ejemplo:
 
 ```env
 AI_PROVIDER=gemini
-AI_MODEL=
-
-OPENAI_API_KEY=
-GEMINI_API_KEY=tu-api-key-real
-OPENROUTER_API_KEY=
+AI_MODEL=gemini-3.5-flash-lite
+AI_EMBEDDING_MODEL=gemini-embedding-001
+AI_API_KEY=tu-api-key-real
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```
 
 Este archivo **no debe versionarse**.
@@ -93,11 +92,10 @@ Ejemplo:
 
 ```env
 AI_PROVIDER=gemini
-AI_MODEL=
-
-OPENAI_API_KEY=tu-openai-api-key
-GEMINI_API_KEY=tu-gemini-api-key
-OPENROUTER_API_KEY=tu-openrouter-api-key
+AI_MODEL=gemini-3.5-flash-lite
+AI_EMBEDDING_MODEL=gemini-embedding-001
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```
 
 Este archivo **sí debe versionarse**.
@@ -116,13 +114,9 @@ y completar únicamente los valores que necesite.
 
 El proyecto no debe exigir una cuenta paga de un proveedor concreto para poder comenzar.
 
-Para los primeros laboratorios se contemplan:
+Para los primeros laboratorios se contemplan OpenAI, Gemini y OpenRouter.
 
-| Proveedor | Variable de API key | Observación |
-|---|---|---|
-| OpenAI | `OPENAI_API_KEY` | proveedor utilizado originalmente |
-| Gemini | `GEMINI_API_KEY` | dispone de nivel gratuito para determinados modelos |
-| OpenRouter | `OPENROUTER_API_KEY` | dispone de modelos gratuitos y del router `openrouter/free` |
+Todos utilizan `AI_API_KEY` para la credencial activa. `AI_PROVIDER` identifica el proveedor; `AI_URL` permite indicar un endpoint alternativo compatible. Los ejemplos concretos están en [el README raíz](../README.md#ejemplos-de-configuración).
 
 La selección se realiza mediante:
 
@@ -132,11 +126,14 @@ AI_PROVIDER=gemini
 AI_PROVIDER=openrouter
 ```
 
-El modelo puede sobrescribirse mediante:
+Los modelos se configuran explícitamente según la capacidad necesaria:
 
 ```text
-AI_MODEL=<modelo>
+AI_MODEL=<modelo-generativo-chat>
+AI_EMBEDDING_MODEL=<modelo-de-embeddings>
 ```
+
+Hasta Lab 06 basta con el modelo de chat. Desde Lab 07 necesitamos el modelo de embeddings; Lab 07 no utiliza `AI_MODEL`. No todos los modelos soportan ambas capacidades, aunque sean del mismo proveedor. Esta evolución mantiene la configuración simple: agregamos la distinción al necesitarla.
 
 Los planes gratuitos y sus límites pueden modificarse por decisión de cada proveedor.
 

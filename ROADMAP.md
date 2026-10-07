@@ -70,7 +70,7 @@ timeline
 | M2 | Conversación, DI y prompts | 02–04 | ✅ Implementado |
 | M3 | Structured Output y memoria | 05–06 | ✅ Implementado |
 | M4 | Embeddings | 07 | ✅ Implementado |
-| M5 | Documentos y RAG | 08–10 | ⏳ Pendiente |
+| M5 | Documentos y RAG | 08–10 | 🚧 En progreso |
 | M6 | Tools y Function Calling | 11–12 | ⏳ Pendiente |
 | M7 | Agents | 13 | ⏳ Pendiente |
 | M8 | Multi-Agent y Workflows | 14–15 | ⏳ Pendiente |
@@ -80,7 +80,7 @@ timeline
 
 ### Simplificación transversal de configuración
 
-La etapa Fundamentos adopta una convención común para evitar que la infraestructura de proveedor oculte el concepto de cada laboratorio:
+La configuración evoluciona cuando aparece una nueva capacidad, siguiendo KISS. Hasta Lab 06 utilizamos capacidades generativas/chat:
 
 ```env
 AI_PROVIDER=
@@ -88,6 +88,20 @@ AI_MODEL=
 AI_API_KEY=
 AI_URL=
 ```
+
+Desde Lab 07 incorporamos embeddings y agregamos `AI_EMBEDDING_MODEL`:
+
+```env
+AI_PROVIDER=
+AI_MODEL=
+AI_EMBEDDING_MODEL=
+AI_API_KEY=
+AI_URL=
+```
+
+Desde Lab 07, `AI_MODEL` identifica el modelo de chat y `AI_EMBEDDING_MODEL` el modelo de embeddings. Lab 08 trabaja offline con documentos locales y no utiliza configuración de IA. Cada laboratorio que llama a modelos requiere los que utiliza; ambos comparten proveedor, credencial y endpoint.
+
+Chat/generación transforma texto en respuestas; embeddings transforma texto en vectores. No todos los modelos soportan ambas capacidades y pertenecer al mismo proveedor no implica que sean el mismo modelo. Esta separación prepara los futuros labs de RAG: recuperación semántica con embeddings y generación de respuestas con contexto.
 
 La configuración concreta debe quedar encapsulada fuera del flujo principal del ejercicio siempre que no sea el tema que se está estudiando.
 
@@ -280,6 +294,8 @@ Aplicación
 
 ### Lab 07 — Embeddings
 
+**Estado:** ✅ Implementado
+
 | # | Estado | Alcance |
 |---|---|---|
 | 7.1 | ✅ | Generar embeddings de una consulta y documentos |
@@ -303,19 +319,23 @@ flowchart LR
 
 **Objetivo:** incorporar conocimiento externo y construir un pipeline RAG completo.
 
-**Estado:** ⏳ Pendiente
+**Estado:** 🚧 En progreso
 
 ### Lab 08 — Document Loading
 
+**Estado:** ✅ Implementado
+
 | # | Estado | Alcance |
 |---|---|---|
-| 8.1 | ⏳ | Leer documentos |
-| 8.2 | ⏳ | Extraer texto |
-| 8.3 | ⏳ | Normalizar contenido |
-| 8.4 | ⏳ | Aplicar chunking |
-| 8.5 | ⏳ | Asociar metadatos |
+| 8.1 | ✅ | Leer documentos locales .txt y .md |
+| 8.2 | ✅ | Leer contenido como texto plano |
+| 8.3 | ✅ | Normalizar saltos de línea y extremos |
+| 8.4 | ✅ | Aplicar chunking por caracteres con overlap |
+| 8.5 | ✅ | Asociar origen y posición: Source e Index |
 
 ### Lab 09 — RAG básico
+
+**Estado:** ⏳ Pendiente
 
 | # | Estado | Alcance |
 |---|---|---|
@@ -327,6 +347,8 @@ flowchart LR
 | 9.6 | ⏳ | Generar respuesta basada en contexto recuperado |
 
 ### Lab 10 — RAG avanzado
+
+**Estado:** ⏳ Pendiente
 
 | # | Estado | Alcance |
 |---|---|---|

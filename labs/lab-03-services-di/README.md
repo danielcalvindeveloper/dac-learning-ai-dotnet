@@ -360,18 +360,12 @@ Ejemplo:
 
 ```env
 AI_PROVIDER=gemini
-AI_MODEL=
-
-OPENAI_API_KEY=
-GEMINI_API_KEY=tu-api-key
-OPENROUTER_API_KEY=
+AI_MODEL=gemini-3.5-flash-lite
+AI_API_KEY=tu-api-key
+AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```
 
-Para Gemini, el modelo por defecto utilizado es:
-
-```text
-gemini-3.5-flash-lite
-```
+El modelo se configura explícitamente en `AI_MODEL`; no hay un modelo por defecto. Este laboratorio utiliza chat. Desde Lab 07 la configuración común incorpora `AI_EMBEDDING_MODEL` para embeddings, que Lab 03 no necesita.
 
 ---
 

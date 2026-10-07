@@ -78,19 +78,25 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ Lab 05 - Structured Output: implementado
 - ✅ Lab 06 - Chat Memory Advanced: implementado
 - ✅ Lab 07 - Embeddings: implementado
-- ⏳ Labs 08-17: pendientes de implementación
+- ✅ [Lab 08 - Document Loading](labs/lab-08-document-loading/README.md): implementado
+- ⏳ Labs 09-17: pendientes de implementación
+
+Los Labs 00-08 están implementados. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat.
 
 ## Configuración común mediante `.env`
 
-El repositorio utiliza **un único archivo `.env` en la raíz** para centralizar la configuración activa de los laboratorios.
+El repositorio utiliza **un único archivo `.env` en la raíz** para centralizar la configuración activa de los laboratorios que utilizan modelos.
 
-Lab 00 es la única excepción: sus dos ejemplos mínimos llevan un placeholder de API key directamente en el código para reducir al máximo la fricción inicial.
+Lab 08 no necesita configuración de IA ni lee este archivo. Lab 00 también tiene una configuración diferente: sus dos ejemplos mínimos llevan un placeholder de API key directamente en el código para reducir al máximo la fricción inicial.
 
-A partir del Lab 01 la convención es:
+Hasta Lab 06 la configuración utiliza `AI_PROVIDER`, `AI_MODEL`, `AI_API_KEY` y `AI_URL`, porque los ejercicios usan capacidades generativas/chat. Desde Lab 07 se incorpora `AI_EMBEDDING_MODEL` para una capacidad distinta: generar vectores.
+
+La configuración común desde Lab 07 es:
 
 ```env
 AI_PROVIDER=gemini
 AI_MODEL=gemini-3.5-flash-lite
+AI_EMBEDDING_MODEL=gemini-embedding-001
 AI_API_KEY=tu-api-key
 AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```
@@ -100,11 +106,18 @@ AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 | Variable | Requerida | Uso |
 |---|---:|---|
 | `AI_PROVIDER` | Sí | identifica el proveedor activo |
-| `AI_MODEL` | Sí | define explícitamente el modelo |
+| `AI_MODEL` | Para chat | define explícitamente el modelo de chat |
+| `AI_EMBEDDING_MODEL` | Para embeddings | nuevo desde Lab 07: define el modelo de embeddings |
 | `AI_API_KEY` | Sí* | credencial del proveedor remoto |
-| `AI_URL` | Condicional | endpoint alternativo; puede quedar vacío cuando se usa el endpoint por defecto |
+| `AI_URL` | No | endpoint alternativo opcional; vacío utiliza el endpoint por defecto del SDK |
 
 `*` Para los proveedores remotos utilizados actualmente por el taller.
+
+**Nuevo desde Lab 07: `AI_EMBEDDING_MODEL`.** Cada laboratorio requiere el modelo que utiliza. En próximos labs que combinen chat y embeddings necesitaremos ambos; comparten proveedor, credencial y endpoint. Los Labs 01-06 mantienen su configuración actual.
+
+`AI_MODEL` transforma texto en una respuesta generada; `AI_EMBEDDING_MODEL` transforma texto en un vector. No todos los modelos soportan embeddings. Aunque el proveedor sea el mismo, los modelos pueden ser distintos y la compatibilidad con chat no implica compatibilidad con embeddings.
+
+Esta distinción aparece cuando la necesitamos, siguiendo KISS. En futuros labs de RAG utilizaremos embeddings para recuperar contenido y el modelo generativo para responder con ese contexto. La [lectura opcional de configuración del Lab 07](labs/lab-07-embeddings/docs/04-configuracion-y-embedding-generator-factory.md) explica esa evolución.
 
 La intención es evitar defaults y lógica de selección de proveedor dentro de cada `Program.cs`.
 
@@ -117,6 +130,7 @@ El código del laboratorio debería concentrarse en el concepto que se está est
 ```env
 AI_PROVIDER=gemini
 AI_MODEL=gemini-3.5-flash-lite
+AI_EMBEDDING_MODEL=gemini-embedding-001
 AI_API_KEY=tu-api-key
 AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```
@@ -126,6 +140,7 @@ AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 ```env
 AI_PROVIDER=openai
 AI_MODEL=gpt-4o-mini
+AI_EMBEDDING_MODEL=text-embedding-3-small
 AI_API_KEY=tu-api-key
 AI_URL=
 ```
@@ -135,9 +150,12 @@ AI_URL=
 ```env
 AI_PROVIDER=openrouter
 AI_MODEL=openrouter/free
+AI_EMBEDDING_MODEL=
 AI_API_KEY=tu-api-key
 AI_URL=https://openrouter.ai/api/v1
 ```
+
+Antes de usar embeddings con un proveedor alternativo, configurá un modelo compatible en `AI_EMBEDDING_MODEL` y verificá que su endpoint soporte esa API.
 
 `.env` contiene valores reales y **no debe versionarse**.
 
@@ -202,6 +220,8 @@ Lab 05  Structured Output
 Lab 06  memoria por sesión
    ↓
 Lab 07  embeddings + similitud semántica
+   ↓
+Lab 08  archivo → texto → normalización → chunks (offline)
 ```
 
 La prioridad es comprender primero el concepto y recién después incorporar abstracciones de mayor nivel.
