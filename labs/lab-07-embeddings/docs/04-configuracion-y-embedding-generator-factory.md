@@ -44,9 +44,9 @@ El record expone `ProviderName`, `ApiKey`, `EmbeddingModel` y `Endpoint`. Ante v
 
 El ejemplo OpenAI del README utiliza `text-embedding-3-small`; no queda fijado en el código. Lab 07 no lee ni requiere `AI_MODEL` y tampoco lo usa como fallback. Los laboratorios anteriores siguen leyendo `AI_MODEL`.
 
-### Preparación para RAG
+### Continuidad hacia RAG
 
-En futuros laboratorios esta separación permitirá combinar dos tareas:
+En [Lab 09a](../../lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [Lab 09b](../../lab-09-rag-basico/lab-09b-rag-service/README.md) esta separación combina dos tareas:
 
 ```text
 consulta
@@ -64,7 +64,7 @@ AI_MODEL
 respuesta generada
 ```
 
-Lab 07 solo genera y compara vectores. Este flujo explica por qué conservamos ambos modelos configurados; RAG se implementará más adelante.
+Lab 07 solo genera y compara vectores. Este flujo explica por qué conservamos ambos modelos configurados. Lab 09a implementa el pipeline RAG explícito y Lab 09b encapsula el mismo mecanismo en `RagService`.
 
 ## Factory
 

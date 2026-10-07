@@ -133,7 +133,7 @@ AI_MODEL=<modelo-generativo-chat>
 AI_EMBEDDING_MODEL=<modelo-de-embeddings>
 ```
 
-Hasta Lab 06 basta con el modelo de chat. Desde Lab 07 necesitamos el modelo de embeddings; Lab 07 no utiliza `AI_MODEL`. No todos los modelos soportan ambas capacidades, aunque sean del mismo proveedor. Esta evolución mantiene la configuración simple: agregamos la distinción al necesitarla.
+Hasta Lab 06 basta con el modelo de chat. Lab 07 necesita el modelo de embeddings y no utiliza `AI_MODEL`. Lab 08 funciona offline, sin `.env` ni modelos. Lab 09a y Lab 09b requieren ambos modelos para recuperar fragmentos y generar una respuesta con contexto. No todos los modelos soportan ambas capacidades, aunque sean del mismo proveedor. Esta evolución mantiene la configuración simple: agregamos la distinción al necesitarla.
 
 Los planes gratuitos y sus límites pueden modificarse por decisión de cada proveedor.
 
@@ -179,6 +179,6 @@ Para este proyecto la configuración común se centraliza en:
 <raíz-del-repositorio>/.env
 ```
 
-Los laboratorios deben reutilizar ese archivo.
+Los laboratorios que cargan configuración de IA reutilizan ese archivo. Lab 08 no lo necesita; Lab 00 conserva sus ejemplos mínimos con un placeholder de API key en el código.
 
 Más adelante podrá utilizarse `User Secrets` de .NET si algún laboratorio lo justifica, pero no es necesario para los primeros ejercicios.

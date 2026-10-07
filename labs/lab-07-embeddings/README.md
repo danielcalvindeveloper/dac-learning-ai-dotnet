@@ -153,7 +153,7 @@ AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 
 Google documenta `gemini-embedding-001` para embeddings de texto mediante su [API compatible con OpenAI](https://ai.google.dev/gemini-api/docs/openai#embeddings).
 
-Lab 07 requiere `AI_PROVIDER`, `AI_EMBEDDING_MODEL` y `AI_API_KEY`. No lee ni exige `AI_MODEL`, porque el ejercicio no usa chat. Los Labs 01-06 conservan su configuración actual. En próximos laboratorios que combinen generación y recuperación semántica utilizaremos ambos modelos explícitamente.
+Lab 07 requiere `AI_PROVIDER`, `AI_EMBEDDING_MODEL` y `AI_API_KEY`. No lee ni exige `AI_MODEL`, porque el ejercicio no usa chat. Los Labs 01-06 conservan su configuración actual. [Lab 09a](../lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [Lab 09b](../lab-09-rag-basico/lab-09b-rag-service/README.md) ya utilizan ambos modelos para combinar recuperación semántica y generación.
 
 `LabConfiguration` utiliza `Env.TraversePath().Load()` y expone el modelo como `EmbeddingModel`. `AI_URL` se valida con `Uri.TryCreate` y puede quedar vacía. No hay fallback a `AI_MODEL` ni un modelo de embeddings por defecto.
 

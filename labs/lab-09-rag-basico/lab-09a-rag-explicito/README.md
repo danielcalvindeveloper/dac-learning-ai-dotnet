@@ -97,32 +97,32 @@ flowchart LR
 
 ## Estructura
 
+Dentro de `lab-09-rag-basico/` conviven `lab-09a-rag-explicito/` y `lab-09b-rag-service/`. La estructura de este sublaboratorio es:
+
 ```text
-lab-09-rag-basico/
-├── README.md
-└── lab-09a-rag-explicito/
-    ├── documents/
-    │   └── guia-dotnet-ai.md
-    ├── docs/
-    │   ├── 01-que-es-rag.md
-    │   ├── 02-indexacion.md
-    │   ├── 03-recuperacion-semantica.md
-    │   ├── 04-contexto-y-prompt.md
-    │   └── 05-limitaciones-rag-basico.md
-    ├── ChatClientFactory.cs
-    ├── DocumentChunk.cs
-    ├── DocumentLoader.cs
-    ├── EmbeddingGeneratorFactory.cs
-    ├── IndexedChunk.cs
-    ├── InMemoryVectorStore.cs
-    ├── LabConfiguration.cs
-    ├── Lab09a.RagExplicito.csproj
-    ├── Program.cs
-    ├── PromptTemplates.cs
-    ├── SearchResult.cs
-    ├── TextChunker.cs
-    ├── VectorSimilarity.cs
-    └── README.md
+lab-09a-rag-explicito/
+├── documents/
+│   └── guia-dotnet-ai.md
+├── docs/
+│   ├── 01-que-es-rag.md
+│   ├── 02-indexacion.md
+│   ├── 03-recuperacion-semantica.md
+│   ├── 04-contexto-y-prompt.md
+│   └── 05-limitaciones-rag-basico.md
+├── ChatClientFactory.cs
+├── DocumentChunk.cs
+├── DocumentLoader.cs
+├── EmbeddingGeneratorFactory.cs
+├── IndexedChunk.cs
+├── InMemoryVectorStore.cs
+├── LabConfiguration.cs
+├── Lab09a.RagExplicito.csproj
+├── Program.cs
+├── PromptTemplates.cs
+├── SearchResult.cs
+├── TextChunker.cs
+├── VectorSimilarity.cs
+└── README.md
 ```
 
 | Pieza | Responsabilidad |

@@ -14,7 +14,7 @@
 7. [Embeddings](../labs/lab-07-embeddings/README.md) — ✅ Implementado
 8. [Document Loading y Chunking](../labs/lab-08-document-loading/README.md) — ✅ Implementado
 9. [RAG básico](../labs/lab-09-rag-basico/README.md) — ✅ Implementado mediante [Lab 09a - RAG explícito](../labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [Lab 09b - RAG con RagService](../labs/lab-09-rag-basico/lab-09b-rag-service/README.md)
-10. RAG avanzado — ⏳ Pendiente
+10. [RAG avanzado](../labs/lab-10-rag-advanced/README.md) — ⏳ Pendiente
 
 ## Bloque 3 - Capacidades y automatización
 
@@ -45,4 +45,4 @@ Cada laboratorio debería contener, cuando se implemente:
 - resultado esperado;
 - relación con el laboratorio anterior.
 
-Los Labs 00-08 están implementados y Lab 09 está implementado mediante 09a y 09b. Primero comprendemos el pipeline explícito y después encapsulamos su coordinación. Labs 10 en adelante conservan su estructura inicial hasta que se desarrollen.
+Los Labs 00-09 están implementados, con Lab 09 dividido en 09a y 09b. Primero comprendemos el pipeline explícito y después encapsulamos su coordinación. Lab 09 ya incluye selección de `topK`; Lab 10 evaluará su efecto junto con otras mejoras de recuperación. Labs 10 en adelante conservan su estructura inicial hasta que se desarrollen.

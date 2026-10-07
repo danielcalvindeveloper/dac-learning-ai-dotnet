@@ -42,6 +42,14 @@ dac-learning-ai-dotnet/
 │   ├── lab-00-introduccion/
 │   ├── lab-01-hello-llm/
 │   ├── ...
+│   ├── lab-07-embeddings/
+│   ├── lab-08-document-loading/
+│   ├── lab-09-rag-basico/
+│   │   ├── README.md
+│   │   ├── lab-09a-rag-explicito/
+│   │   └── lab-09b-rag-service/
+│   ├── lab-10-rag-advanced/
+│   ├── ...
 │   └── lab-17-final-project/
 ├── .editorconfig
 ├── .env.example
@@ -51,7 +59,7 @@ dac-learning-ai-dotnet/
 └── ROADMAP.md
 ```
 
-Cada laboratorio tendrá su propio `README.md` y será autocontenido.
+Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Lab 09, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
 
 ## Lab 00 - Rampa de entrada opcional
 
@@ -84,7 +92,7 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md): implementado
 - ⏳ Labs 10-17: pendientes de implementación
 
-Los Labs 00-08 están implementados y Lab 09 está implementado mediante 09a y 09b. Lab 10 continúa pendiente. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; ambos sublabs de Lab 09 los utilizan simultáneamente.
+Los Labs 00-09 están implementados, con Lab 09 dividido en 09a y 09b. M5 continúa en progreso porque Lab 10 sigue pendiente. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; ambos sublabs de Lab 09 los utilizan simultáneamente.
 
 ## Configuración común mediante `.env`
 
@@ -116,11 +124,11 @@ AI_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 
 `*` Para los proveedores remotos utilizados actualmente por el taller.
 
-**Nuevo desde Lab 07: `AI_EMBEDDING_MODEL`.** Cada laboratorio que utiliza modelos requiere las capacidades correspondientes. Lab 09a combina chat y embeddings y necesita ambos; comparten proveedor, credencial y endpoint. Los Labs 01-06 mantienen su configuración actual.
+**Nuevo desde Lab 07: `AI_EMBEDDING_MODEL`.** Cada laboratorio que utiliza modelos requiere las capacidades correspondientes. Lab 09a y Lab 09b combinan chat y embeddings y necesitan ambos; comparten proveedor, credencial y endpoint. Los Labs 01-06 mantienen su configuración actual.
 
 `AI_MODEL` transforma texto en una respuesta generada; `AI_EMBEDDING_MODEL` transforma texto en un vector. No todos los modelos soportan embeddings. Aunque el proveedor sea el mismo, los modelos pueden ser distintos y la compatibilidad con chat no implica compatibilidad con embeddings.
 
-Esta distinción aparece cuando la necesitamos, siguiendo KISS. En Lab 09a utilizamos embeddings para recuperar contenido y el modelo generativo para responder con ese contexto. La [lectura opcional de configuración del Lab 07](labs/lab-07-embeddings/docs/04-configuracion-y-embedding-generator-factory.md) explica esa evolución.
+Esta distinción aparece cuando la necesitamos, siguiendo KISS. En Lab 09a observamos el pipeline explícito y en Lab 09b lo encapsulamos en `RagService`; ambos utilizan embeddings para recuperar contenido y el modelo generativo para responder con ese contexto. La [lectura opcional de configuración del Lab 07](labs/lab-07-embeddings/docs/04-configuracion-y-embedding-generator-factory.md) explica esa evolución.
 
 La intención es evitar defaults y lógica de selección de proveedor dentro de cada `Program.cs`.
 

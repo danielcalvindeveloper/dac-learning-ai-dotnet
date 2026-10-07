@@ -34,7 +34,8 @@ timeline
         M5 - Documentos y RAG : Document Loading
                               : Chunking
                               : Vector Store
-                              : RAG básico
+                              : Lab 09a - RAG explícito
+                              : Lab 09b - RagService
                               : RAG avanzado
 
     section Capacidades
@@ -77,6 +78,17 @@ timeline
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Proyecto integrador | 17 | ⏳ Pendiente |
 
+Los Labs 00–09 están implementados; Lab 09 comprende dos sublaboratorios ejecutables e independientes. Dentro de M5:
+
+| Laboratorio | Estado |
+|---|---|
+| [Lab 08 - Document Loading y Chunking](labs/lab-08-document-loading/README.md) | ✅ Implementado |
+| [Lab 09a - RAG explícito](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) | ✅ Implementado |
+| [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) | ✅ Implementado |
+| [Lab 10 - RAG avanzado](labs/lab-10-rag-advanced/README.md) | ⏳ Pendiente |
+
+M5 sigue en progreso por Lab 10. Los Labs 11–17 también continúan pendientes.
+
 
 ### Simplificación transversal de configuración
 
@@ -101,7 +113,7 @@ AI_URL=
 
 Desde Lab 07, `AI_MODEL` identifica el modelo de chat y `AI_EMBEDDING_MODEL` el modelo de embeddings. Lab 08 trabaja offline con documentos locales y no utiliza configuración de IA. Cada laboratorio que llama a modelos requiere los que utiliza; ambos comparten proveedor, credencial y endpoint.
 
-Chat/generación transforma texto en respuestas; embeddings transforma texto en vectores. No todos los modelos soportan ambas capacidades y pertenecer al mismo proveedor no implica que sean el mismo modelo. Esta separación prepara los futuros labs de RAG: recuperación semántica con embeddings y generación de respuestas con contexto.
+Chat/generación transforma texto en respuestas; embeddings transforma texto en vectores. No todos los modelos soportan ambas capacidades y pertenecer al mismo proveedor no implica que sean el mismo modelo. Lab 09a y Lab 09b ya utilizan ambos modelos: embeddings para recuperar fragmentos y chat para generar respuestas con ese contexto.
 
 La configuración concreta debe quedar encapsulada fuera del flujo principal del ejercicio siempre que no sea el tema que se está estudiando.
 
@@ -343,7 +355,7 @@ El [Lab 09](labs/lab-09-rag-basico/README.md) se divide en dos evoluciones: obse
 
 **Estado:** ✅ Implementado
 
-Un único proyecto Console con indexación y consulta visibles en `Program.cs`, sin un servicio RAG de alto nivel.
+El [Lab 09a](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) es un proyecto Console con indexación y consulta visibles en `Program.cs`, sin un servicio RAG de alto nivel.
 
 | # | Estado | Alcance |
 |---|---|---|
@@ -360,6 +372,14 @@ Un único proyecto Console con indexación y consulta visibles en `Program.cs`, 
 
 El [Lab 09b](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) encapsula el mismo pipeline en `IRagService` y `RagService`. Devuelve respuesta y chunks recuperados mediante `RagResponse`, con DI como mecanismo de composición. El store Singleton conserva el índice y el servicio Transient coordina sin almacenar estado propio.
 
+| Pieza | Estado | Alcance |
+|---|---|---|
+| `IRagService` | ✅ | Exponer indexación y consulta mediante `IndexDocumentAsync` y `AskAsync` |
+| `RagService` | ✅ | Coordinar el pipeline conocido sin lógica de consola |
+| `RagResponse` | ✅ | Devolver respuesta y fragmentos recuperados |
+| DI | ✅ | Componer clientes, store Singleton y servicio Transient |
+| `Program.cs` | ✅ | Invocar el servicio y presentar fuentes y respuesta |
+
 M5 continúa en progreso porque Lab 10 - RAG avanzado sigue pendiente.
 
 ### Lab 10 — RAG avanzado
@@ -369,11 +389,13 @@ M5 continúa en progreso porque Lab 10 - RAG avanzado sigue pendiente.
 | # | Estado | Alcance |
 |---|---|---|
 | 10.1 | ⏳ | Comparar estrategias de chunking |
-| 10.2 | ⏳ | Utilizar `top-k` |
+| 10.2 | ⏳ | Evaluar cómo variar `top-k` afecta la recuperación y el contexto |
 | 10.3 | ⏳ | Aplicar score mínimo |
 | 10.4 | ⏳ | Incorporar filtros por metadata |
 | 10.5 | ⏳ | Introducir ranking o re-ranking |
 | 10.6 | ⏳ | Evaluar calidad de recuperación |
+
+La selección básica de `topK` ya está implementada en Lab 09a y Lab 09b. Lab 10 profundizará en su efecto junto con las demás mejoras de recuperación.
 
 ### Arquitectura conceptual
 
