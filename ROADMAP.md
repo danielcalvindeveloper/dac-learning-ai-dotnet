@@ -4,6 +4,8 @@
 
 > Roadmap de aprendizaje incremental para construir aplicaciones con IA generativa utilizando herramientas y patrones propios del ecosistema .NET.
 
+Primero entender, después abstraer y finalmente integrar. Cada paso permite experimentar y observar limitaciones antes de introducir otra capacidad. El [enfoque pedagógico y la evolución del roadmap](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explican esta maduración del recorrido a partir de los laboratorios implementados.
+
 ---
 
 ## Visión de evolución
@@ -36,28 +38,24 @@ timeline
                               : Vector Store
                               : Lab 09a - RAG explícito
                               : Lab 09b - RagService
-                              : RAG avanzado
+                              : Lab 10a - Múltiples documentos
+                              : Lab 10b - Relevancia y fuentes
 
     section Capacidades
-        M6 - Herramientas : Tools
-                          : Function Calling
-                          : Integración con servicios
-        M7 - Agents : Agente individual
+        M6 - Herramientas : Primer Tool y Function Calling
+                          : Múltiples Tools
+        M7 - Agentes : Primer agente
                     : Objetivos
                     : Tools
                     : Ciclo de ejecución
-        M8 - Orquestación : Multi-Agent
-                          : Delegación
-                          : Workflows
+        M8 - Orquestación : Workflow
+                          : Multi-agent
+                          : Delegación y coordinación
 
     section Integración
-        M9 - MCP : MCP Client
-                 : MCP Server
-                 : Tools y Resources
-        M10 - Proyecto integrador : RAG + Tools
-                                  : Agents
-                                  : Workflow
-                                  : Integración final
+        M9 - MCP : Capacidades mediante un protocolo estándar
+        M10 - Integración : Elegir capacidades según el problema
+                          : Proyecto final
 ```
 
 ---
@@ -73,10 +71,10 @@ timeline
 | M4 | Embeddings | 07 | ✅ Implementado |
 | M5 | Documentos y RAG | 08–10 | 🚧 En progreso |
 | M6 | Tools y Function Calling | 11–12 | ⏳ Pendiente |
-| M7 | Agents | 13 | ⏳ Pendiente |
-| M8 | Multi-Agent y Workflows | 14–15 | ⏳ Pendiente |
+| M7 | Primer agente | 13 | ⏳ Pendiente |
+| M8 | Orquestación: Workflow y Multi-agent | 14–15 | ⏳ Pendiente |
 | M9 | MCP | 16 | ⏳ Pendiente |
-| M10 | Proyecto integrador | 17 | ⏳ Pendiente |
+| M10 | Integración consciente | 17 | ⏳ Pendiente |
 
 Los Labs 00–09 están implementados; Lab 09 comprende dos sublaboratorios ejecutables e independientes. Dentro de M5:
 
@@ -85,9 +83,11 @@ Los Labs 00–09 están implementados; Lab 09 comprende dos sublaboratorios ejec
 | [Lab 08 - Document Loading y Chunking](labs/lab-08-document-loading/README.md) | ✅ Implementado |
 | [Lab 09a - RAG explícito](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) | ✅ Implementado |
 | [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) | ✅ Implementado |
-| [Lab 10 - RAG avanzado](labs/lab-10-rag-advanced/README.md) | ⏳ Pendiente |
+| [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md) | 🚧 En progreso |
+| [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) | ✅ Implementado |
+| Lab 10b - Relevancia, threshold y fuentes | ⏳ Pendiente |
 
-M5 sigue en progreso por Lab 10. Los Labs 11–17 también continúan pendientes.
+M5 sigue en progreso porque falta Lab 10b. Los Labs 11–17 también continúan pendientes.
 
 
 ### Simplificación transversal de configuración
@@ -329,11 +329,11 @@ flowchart LR
 
 # M5 — Documentos y RAG
 
-**Objetivo:** incorporar conocimiento externo y construir un pipeline RAG completo.
+**Objetivo:** preparar documentos, comprender y encapsular un pipeline RAG, y trabajar la calidad de recuperación hasta múltiples documentos, relevancia y fuentes.
 
 **Estado:** 🚧 En progreso
 
-### Lab 08 — Document Loading
+### Lab 08 — Document Loading + Chunking
 
 **Estado:** ✅ Implementado
 
@@ -380,22 +380,50 @@ El [Lab 09b](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) encapsula el 
 | DI | ✅ | Componer clientes, store Singleton y servicio Transient |
 | `Program.cs` | ✅ | Invocar el servicio y presentar fuentes y respuesta |
 
-M5 continúa en progreso porque Lab 10 - RAG avanzado sigue pendiente.
+M5 continúa en progreso: Lab 10a está implementado y Lab 10b sigue pendiente.
 
-### Lab 10 — RAG avanzado
+### Lab 10 — Retrieval y calidad
 
-**Estado:** ⏳ Pendiente
+**Estado:** 🚧 En progreso
+
+Cerrar el bloque introductorio/intermedio de RAG con un corpus de documentos, resultados relevantes y fuentes observables. Lab 10a está disponible; Lab 10b conserva su alcance planificado:
+
+```text
+lab-10-retrieval-calidad/
+├── lab-10a-multiples-documentos/
+└── lab-10b-relevancia-threshold-fuentes/ (previsto; pendiente)
+```
+
+La carpeta de 10a existe y contiene su proyecto ejecutable, documentos y lecturas opcionales. La carpeta de 10b todavía no se crea.
+
+#### Lab 10a — Múltiples documentos
+
+**Estado:** ✅ Implementado
+
+El [Lab 10a](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) pasa de un documento a un corpus: cuatro archivos Markdown → chunks con fuente → embeddings → un único índice en memoria. `Program.cs` mantiene visible la indexación por documento y la consulta sobre todo el corpus.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 10.1 | ⏳ | Comparar estrategias de chunking |
-| 10.2 | ⏳ | Evaluar cómo variar `top-k` afecta la recuperación y el contexto |
-| 10.3 | ⏳ | Aplicar score mínimo |
-| 10.4 | ⏳ | Incorporar filtros por metadata |
-| 10.5 | ⏳ | Introducir ranking o re-ranking |
-| 10.6 | ⏳ | Evaluar calidad de recuperación |
+| 10a.1 | ✅ | Indexar múltiples documentos como un corpus |
+| 10a.2 | ✅ | Conservar `Source` y la posición local de cada chunk |
+| 10a.3 | ✅ | Recuperar fragmentos desde diferentes fuentes con un único índice en memoria |
 
-La selección básica de `topK` ya está implementada en Lab 09a y Lab 09b. Lab 10 profundizará en su efecto junto con las demás mejoras de recuperación.
+#### Lab 10b — Relevancia, threshold y fuentes
+
+**Estado:** ⏳ Pendiente
+
+`topK` ya existe en Lab 09: devuelve hasta K resultados, si están disponibles, aunque tengan poca relación con la pregunta. Un límite de cantidad no garantiza relevancia.
+
+| # | Estado | Alcance |
+|---|---|---|
+| 10b.1 | ⏳ | Observar resultados poco relevantes aun siendo los mejores del índice |
+| 10b.2 | ⏳ | Introducir `minimumSimilarity` y calibrarlo con preguntas concretas |
+| 10b.3 | ⏳ | Responder que no hay contexto suficiente si ningún fragmento supera el umbral |
+| 10b.4 | ⏳ | Construir contexto con resultados aceptados y mostrar fuentes recuperadas junto con la respuesta |
+
+El flujo será pregunta → retrieval → comprobar relevancia → informar contexto insuficiente o construir contexto y llamar al LLM. El umbral no es universal: depende del modelo, el corpus y las consultas, y necesita evaluación.
+
+Al completar Lab 10, el bloque habrá recorrido embeddings, document loading, chunking, RAG explícito, `RagService`, múltiples documentos, retrieval, relevancia y fuentes. Es una base práctica; las técnicas de mayor complejidad quedan en las extensiones futuras.
 
 ### Arquitectura conceptual
 
@@ -407,41 +435,53 @@ flowchart LR
 
     Q[Pregunta] --> QE[Embedding]
     QE --> VS
-    VS --> R[Chunks relevantes]
+    VS --> R[Resultados recuperados]
 
-    Q --> P[Prompt + Contexto]
-    R --> P
+    R --> V{Relevancia suficiente}
+    V -- No --> N[Contexto insuficiente]
+    V -- Sí --> P[Prompt + Contexto]
+    Q --> P
 
     P --> LLM[LLM]
     LLM --> A[Respuesta]
 ```
 
+El control de relevancia corresponde al Lab 10b planificado; Lab 09 ya implementa recuperación por `topK` y generación con contexto.
+
 ---
 
 # M6 — Tools y Function Calling
 
-**Objetivo:** permitir que el modelo utilice capacidades externas controladas por la aplicación.
+**Objetivo:** comprender una solicitud de tool y después la selección entre varias herramientas, con ejecución controlada por la aplicación.
 
 **Estado:** ⏳ Pendiente
 
-### Lab 11 — Tools
+### Lab 11 — Primer Tool
+
+**Estado:** ⏳ Pendiente
+
+Una tool representa una operación de código .NET. El modelo solicita su ejecución mediante function calling; la aplicación interpreta los argumentos, ejecuta la función y devuelve el resultado. El modelo no ejecuta el código por sí mismo.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 11.1 | ⏳ | Definir una función como herramienta |
-| 11.2 | ⏳ | Describir su finalidad |
-| 11.3 | ⏳ | Definir parámetros |
-| 11.4 | ⏳ | Exponer servicios locales como tools |
+| 11.1 | ⏳ | Exponer una función pequeña como tool y describir su finalidad |
+| 11.2 | ⏳ | Observar la solicitud de function calling y sus argumentos |
+| 11.3 | ⏳ | Ejecutar código .NET y devolver su resultado al modelo |
+| 11.4 | ⏳ | Obtener una respuesta final y distinguir la solicitud del modelo de la ejecución real |
 
-### Lab 12 — Function Calling
+### Lab 12 — Múltiples Tools
+
+**Estado:** ⏳ Pendiente
+
+Pasar de una tool a varias operaciones disponibles. Tener herramientas no convierte por sí solo la aplicación en un agente.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 12.1 | ⏳ | Permitir que el modelo seleccione una función |
-| 12.2 | ⏳ | Interpretar argumentos |
-| 12.3 | ⏳ | Ejecutar la función |
-| 12.4 | ⏳ | Devolver el resultado al modelo |
-| 12.5 | ⏳ | Generar la respuesta final |
+| 12.1 | ⏳ | Ofrecer varias tools con finalidades y argumentos claros |
+| 12.2 | ⏳ | Observar cuál se solicita y cuándo no hace falta ninguna |
+| 12.3 | ⏳ | Resolver preguntas que puedan requerir más de una operación |
+| 12.4 | ⏳ | Manejar errores básicos al ejecutar una tool |
+| 12.5 | ⏳ | Diferenciar tool calling de un agente orientado a un objetivo |
 
 ```mermaid
 sequenceDiagram
@@ -460,19 +500,23 @@ sequenceDiagram
 
 ---
 
-# M7 — Agents
+# M7 — Agentes
 
-**Objetivo:** introducir comportamiento agéntico de forma controlada.
+**Objetivo:** introducir un agente pequeño con objetivo, herramientas, estado/contexto y decisiones iterativas controladas.
 
 **Estado:** ⏳ Pendiente
 
-### Lab 13 — Agents
+### Lab 13 — Primer agente
+
+**Estado:** ⏳ Pendiente
+
+Tool calling es una capacidad; un agente coordina decisiones y acciones hacia un objetivo. Este paso incorpora contexto del proceso y límites, sin multi-agent todavía.
 
 | # | Estado | Alcance |
 |---|---|---|
 | 13.1 | ⏳ | Definir objetivo e instrucciones |
 | 13.2 | ⏳ | Asignar tools al agente |
-| 13.3 | ⏳ | Ejecutar un ciclo de decisión y acción |
+| 13.3 | ⏳ | Mantener estado/contexto y ejecutar un ciclo de decisión y acción |
 | 13.4 | ⏳ | Establecer condición de finalización |
 | 13.5 | ⏳ | Incorporar límites de ejecución |
 | 13.6 | ⏳ | Observar las acciones realizadas |
@@ -490,60 +534,71 @@ flowchart TD
 
 ---
 
-# M8 — Multi-Agent y Workflows
+# M8 — Orquestación
 
-**Objetivo:** separar responsabilidades y coordinar múltiples participantes.
+**Objetivo:** estudiar primero un proceso explícito y después la coordinación entre pocos agentes, eligiendo la alternativa que aporte valor.
 
 **Estado:** ⏳ Pendiente
 
-### Lab 14 — Multi-Agent
+### Lab 14 — Workflow
+
+**Estado:** ⏳ Pendiente
+
+Un proceso conocido puede resolverse con pasos y bifurcaciones controlados por la aplicación. Su estructura puede ser determinista aunque incluya llamadas a modelos. Workflow y agente son conceptos distintos.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 14.1 | ⏳ | Crear agentes especializados |
-| 14.2 | ⏳ | Delegar tareas |
-| 14.3 | ⏳ | Compartir o transferir contexto |
-| 14.4 | ⏳ | Consolidar resultados |
+| 14.1 | ⏳ | Definir una secuencia explícita de pasos |
+| 14.2 | ⏳ | Pasar resultados de un paso al siguiente |
+| 14.3 | ⏳ | Incorporar una decisión y bifurcaciones visibles |
+| 14.4 | ⏳ | Justificar cuándo un workflow es suficiente sin incorporar un agente |
 
-### Lab 15 — Workflows
+### Lab 15 — Multi-agent
+
+**Estado:** ⏳ Pendiente
+
+Introducir especialización, delegación y coordinación después de conocer tools, agentes y workflows. Usar pocos agentes y observar qué aporta la separación: más agentes no implica una mejor solución.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 15.1 | ⏳ | Definir pasos explícitos |
-| 15.2 | ⏳ | Incorporar estado |
-| 15.3 | ⏳ | Incorporar bifurcaciones |
-| 15.4 | ⏳ | Ejecutar pasos secuenciales |
-| 15.5 | ⏳ | Evaluar ejecución paralela |
-| 15.6 | ⏳ | Integrar agents y funciones dentro del flujo |
+| 15.1 | ⏳ | Definir responsabilidades para pocos agentes especializados |
+| 15.2 | ⏳ | Delegar tareas desde un coordinador |
+| 15.3 | ⏳ | Intercambiar y consolidar resultados |
+| 15.4 | ⏳ | Evaluar si la coordinación agrega valor frente a una solución más simple |
 
 ### Diferencia conceptual
 
 ```text
-Agent
-  decide parte del camino
+Tool
+  expone una operación ejecutada por la aplicación
+
+Agente
+  decide acciones iterativamente hacia un objetivo
 
 Workflow
-  define explícitamente el camino
+  sigue pasos y bifurcaciones definidos por la aplicación
 ```
 
 ---
 
 # M9 — Model Context Protocol
 
-**Objetivo:** comprender cómo conectar herramientas y recursos mediante un protocolo estándar.
+**Objetivo:** comprender cómo exponer y consumir capacidades mediante un protocolo estándar, después de conocer tools y agentes.
 
 **Estado:** ⏳ Pendiente
 
 ### Lab 16 — MCP
 
+**Estado:** ⏳ Pendiente
+
+Hasta aquí las herramientas se integran en nuestra aplicación. MCP aparece para estudiar cómo compartir y consumir capacidades mediante un protocolo estándar. Consumir un servidor y crear un servidor mínimo son posibilidades; la estructura de sublabs se definirá al diseñar el laboratorio.
+
 | # | Estado | Alcance |
 |---|---|---|
 | 16.1 | ⏳ | Comprender la arquitectura MCP |
-| 16.2 | ⏳ | Implementar o utilizar un MCP Client |
-| 16.3 | ⏳ | Conectarse a un MCP Server |
-| 16.4 | ⏳ | Descubrir tools |
-| 16.5 | ⏳ | Consumir resources |
-| 16.6 | ⏳ | Ejecutar una tool remota |
+| 16.2 | ⏳ | Reconocer los roles de cliente y servidor |
+| 16.3 | ⏳ | Diseñar un ejercicio mínimo para exponer y consumir capacidades |
+| 16.4 | ⏳ | Observar descubrimiento e invocación de una tool mediante el protocolo |
 
 ```mermaid
 flowchart LR
@@ -555,43 +610,37 @@ flowchart LR
 
 ---
 
-# M10 — Proyecto integrador
+# M10 — Integración
 
-**Objetivo:** integrar los conceptos estudiados en una solución pequeña y comprensible.
+**Objetivo:** elegir e integrar conscientemente las capacidades necesarias para resolver un problema pequeño.
 
 **Estado:** ⏳ Pendiente
 
 ### Lab 17 — Proyecto final
 
+**Estado:** ⏳ Pendiente
+
+El desafío debe permitir justificar qué usar y qué dejar afuera. Según el problema, puede hacer falta RAG, una tool, un workflow, un agente o MCP. Ninguna de esas capacidades es obligatoria por haber sido estudiada.
+
 | # | Estado | Alcance |
 |---|---|---|
-| 17.1 | ⏳ | Utilizar `IChatClient` |
-| 17.2 | ⏳ | Configurar servicios mediante DI |
-| 17.3 | ⏳ | Utilizar prompts reutilizables |
-| 17.4 | ⏳ | Incorporar structured output |
-| 17.5 | ⏳ | Incorporar documentos y embeddings |
-| 17.6 | ⏳ | Implementar un flujo RAG |
-| 17.7 | ⏳ | Incorporar al menos una tool |
-| 17.8 | ⏳ | Utilizar function calling |
-| 17.9 | ⏳ | Incorporar al menos un agent |
-| 17.10 | ⏳ | Orquestar mediante un workflow |
-| 17.11 | ⏳ | Evaluar integración MCP |
+| 17.1 | ⏳ | Definir el problema y criterios de aceptación observables |
+| 17.2 | ⏳ | Justificar qué capacidades aportan valor y cuáles no hacen falta |
+| 17.3 | ⏳ | Elegir herramientas, workflow o agente según la necesidad |
+| 17.4 | ⏳ | Evaluar RAG si se necesita conocimiento documental y MCP si aporta interoperabilidad |
+| 17.5 | ⏳ | Implementar una solución mínima y verificarla con casos concretos |
+| 17.6 | ⏳ | Documentar decisiones, resultados y limitaciones |
 
-### Arquitectura orientativa
+### Decisión antes de integrar
 
-```mermaid
-flowchart TB
-    U[Usuario] --> APP[Aplicación .NET]
-
-    APP --> ORQ[Agent / Workflow]
-
-    ORQ --> LLM[LLM]
-    ORQ --> RAG[RAG Service]
-    ORQ --> TOOL[Tools]
-    ORQ --> MCP[MCP Client]
-
-    DOC[Documentos] --> VS[Vector Store]
-    RAG --> VS
+```text
+problema concreto
+    ↓
+capacidades justificadas
+    ↓
+solución mínima
+    ↓
+validación y límites
 ```
 
 ---
@@ -607,8 +656,8 @@ flowchart LR
     M4[M4<br/>Embeddings]
     M5[M5<br/>RAG]
     M6[M6<br/>Tools]
-    M7[M7<br/>Agents]
-    M8[M8<br/>Multi-Agent / Workflows]
+    M7[M7<br/>Primer agente]
+    M8[M8<br/>Workflow / Multi-agent]
     M9[M9<br/>MCP]
     M10[M10<br/>Proyecto Final]
 
@@ -643,20 +692,33 @@ Un laboratorio se considera completo cuando dispone de:
 
 ## Posibles extensiones futuras
 
-Estas líneas quedan deliberadamente fuera del roadmap principal:
+Son áreas de profundización fuera de los Labs 00–17, sin numeración ni estructura definitiva. La base del recorrido permitirá estudiarlas con más contexto; esta lista permanece abierta.
+
+### Extensión - RAG avanzado
+
+Posibles temas:
+
+- bases vectoriales reales y filtros por metadata;
+- hybrid search y BM25;
+- re-ranking, query rewriting y multi-query;
+- chunking semántico;
+- evaluación de retrieval y de respuestas;
+- observabilidad y citaciones avanzadas.
+
+### Otras líneas posibles
+
+- Agents avanzado;
+- MCP avanzado;
+- evaluación y observabilidad;
 
 - modelos locales con Ollama;
 - Azure OpenAI;
-- observabilidad;
-- evaluación automática de respuestas;
-- evaluación de RAG;
 - guardrails;
 - persistencia avanzada;
-- bases vectoriales externas;
 - multimodalidad;
 - audio;
 - visión;
 - GraphRAG;
 - integración con IDEs.
 
-Se incorporarán como laboratorios adicionales solamente si aportan valor al recorrido principal.
+Estas posibilidades podrán tomar forma como series específicas si aportan valor. El [documento de enfoque pedagógico](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explica por qué se separan del recorrido principal.

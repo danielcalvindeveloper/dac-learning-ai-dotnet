@@ -249,7 +249,7 @@ Al finalizar deberías poder explicar:
 
 ## Qué NO hacemos todavía
 
-- RAG avanzado ni nuevas capacidades de recuperación;
+- múltiples documentos ni nuevas capacidades de recuperación;
 - vector database externa ni persistencia;
 - threshold, filtros ni re-ranking;
 - chunking avanzado ni tokenización;
@@ -259,6 +259,6 @@ Al finalizar deberías poder explicar:
 
 ## Siguiente laboratorio
 
-**Lab 10 - RAG avanzado**, pendiente.
+**[Lab 10 - Retrieval y calidad](../../lab-10-retrieval-calidad/README.md)**, en progreso: 10a implementado y 10b pendiente.
 
-Después de comprender y encapsular el pipeline básico podremos estudiar mejoras de recuperación. No las incorporamos en esta refactorización pedagógica.
+Después de comprender y encapsular el pipeline básico, [Lab 10a](../../lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) amplía el conocimiento a múltiples documentos y hace visible el origen de los chunks. Lab 10b, todavía pendiente, distinguirá `topK` de resultados suficientemente relevantes e introducirá un threshold calibrado. RAG avanzado queda como posible extensión fuera del recorrido principal, según el [enfoque pedagógico](../../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).

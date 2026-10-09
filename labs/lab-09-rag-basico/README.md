@@ -25,4 +25,4 @@ Lab 09 está **implementado mediante 09a y 09b**. Primero comprendemos el mecani
 
 Lab 07 introduce embeddings y similitud. Lab 08 prepara documentos como chunks. Lab 09a reúne esas capacidades y agrega generación con contexto recuperado.
 
-Cada sublab se ejecuta independientemente y tiene sus propias instrucciones de configuración, ejecución y lecturas opcionales: [Lab 09a](lab-09a-rag-explicito/README.md) y [Lab 09b](lab-09b-rag-service/README.md). Lab 10 - RAG avanzado continúa pendiente.
+Cada sublab se ejecuta independientemente y tiene sus propias instrucciones de configuración, ejecución y lecturas opcionales: [Lab 09a](lab-09a-rag-explicito/README.md) y [Lab 09b](lab-09b-rag-service/README.md). [Lab 10 - Retrieval y calidad](../lab-10-retrieval-calidad/README.md) está en progreso: 10a ya trabaja múltiples documentos; 10b abordará relevancia, threshold y fuentes y continúa pendiente.

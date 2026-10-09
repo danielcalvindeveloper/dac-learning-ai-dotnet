@@ -14,6 +14,6 @@ Una recuperación incorrecta o incompleta puede producir una respuesta insuficie
 
 No incorporamos hybrid search, query rewriting, agentes ni gestión avanzada del contexto. Las consultas requieren servicios externos y pueden fallar por credenciales, modelos incompatibles o límites del proveedor.
 
-[Lab 09b](../../lab-09b-rag-service/README.md) encapsula este mismo mecanismo en un servicio. Las mejoras de recuperación corresponden a Lab 10, que continúa pendiente.
+[Lab 09b](../../lab-09b-rag-service/README.md) encapsula este mismo mecanismo en un servicio. [Lab 10a](../../../lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) ya amplía la búsqueda a múltiples documentos y muestra las fuentes recuperadas. Lab 10b continúa pendiente y abordará un threshold calibrado. Filtros por metadata, re-ranking y otras técnicas de RAG avanzado quedan como posibles extensiones fuera del recorrido principal, según el [enfoque pedagógico](../../../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).
 
 [Volver al laboratorio](../README.md).

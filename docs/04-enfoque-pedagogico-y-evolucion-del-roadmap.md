@@ -1,0 +1,88 @@
+# Enfoque pedagógico y evolución del roadmap
+
+## Contexto
+
+El roadmap inicial buscaba recorrer LLM, RAG, Tools, Agents y MCP. La experiencia de construir los primeros laboratorios mostró el valor de separar algunas de esas capacidades en pasos más pequeños. El recorrido madura a partir de esa experiencia y conserva los Labs 00–17 como camino principal.
+
+## Qué aprendimos construyendo los primeros labs
+
+- En Lab 02 observamos el historial explícito; en Lab 06 organizamos memoria por sesión y una ventana de mensajes.
+- En Lab 09a vemos cada etapa del pipeline RAG en `Program.cs`; en Lab 09b encapsulamos el mismo mecanismo en `RagService`.
+- Hasta Lab 06 `AI_MODEL` era suficiente. `AI_EMBEDDING_MODEL` aparece en Lab 07, cuando necesitamos una capacidad distinta.
+
+Estos ejemplos comparten una decisión: introducir una abstracción cuando el alumno ya conoce el problema que resuelve.
+
+## Decisión
+
+```text
+comprender
+    ↓
+experimentar
+    ↓
+observar limitaciones
+    ↓
+abstraer cuando exista una razón
+    ↓
+integrar
+```
+
+Primero entender, después abstraer y finalmente integrar. Por ejemplo, observar que `topK` devuelve los mejores fragmentos disponibles permite plantear una pregunta concreta: ¿qué hacemos si ninguno es suficientemente relevante?
+
+## Consecuencia en RAG
+
+El bloque principal llega hasta **Lab 10 - Retrieval y calidad**. La secuencia reúne embeddings, carga de documentos, chunking, RAG explícito, encapsulación en `RagService`, múltiples documentos, retrieval, relevancia y fuentes.
+
+Lab 10a pasa de un documento a un corpus y ya está implementado. Lab 10b, todavía pendiente, trabajará un umbral de similitud, la falta de contexto suficiente y las fuentes recuperadas. `topK` limita la cantidad de resultados; no garantiza relevancia. Un umbral necesita calibración y evaluación con preguntas concretas, y no existe un valor universal.
+
+Al completar ese bloque tendremos una base práctica de RAG. Las técnicas de mayor complejidad quedarán como áreas de profundización posteriores al recorrido principal.
+
+## Consecuencia en Tools y Agents
+
+```text
+Lab 11: Primer Tool
+    ↓
+Lab 12: Múltiples Tools
+    ↓
+Lab 13: Primer agente
+    ↓
+Lab 14: Workflow
+    ↓
+Lab 15: Multi-agent
+    ↓
+Lab 16: MCP
+    ↓
+Lab 17: Proyecto final
+```
+
+Una tool expone una operación que ejecuta código .NET. Function calling permite que el modelo solicite esa operación con argumentos; la aplicación ejecuta el código y devuelve el resultado. Tener varias tools disponibles no convierte por sí solo una aplicación en un agente.
+
+El primer agente incorpora un objetivo, herramientas, estado/contexto y decisiones iterativas con límites. Después estudiamos workflows: procesos cuyos pasos y bifurcaciones controla la aplicación. Un workflow puede tener una estructura determinista aunque una llamada a un modelo produzca respuestas variables.
+
+Multi-agent llega cuando ya podemos evaluar si conviene repartir responsabilidades entre pocos agentes. Más agentes no implica una mejor solución. MCP aparece después, cuando conocemos la necesidad de exponer y consumir capacidades mediante un protocolo estándar.
+
+El proyecto final ejercita la elección: RAG, una tool, un workflow, un agente o MCP se incorporan según el problema. También debe poder justificarse que una capacidad no hace falta.
+
+## Por qué el recorrido es más gradual
+
+Cada laboratorio plantea una pregunta pequeña y concreta. Hay más pasos para experimentar y reconocer limitaciones antes de combinar capacidades. El alumno puede identificar qué problema apareció, qué solución introducimos y por qué existe.
+
+El contraste entre 09a y 09b es la referencia: comprender el pipeline facilita valorar qué aporta su encapsulación. Los frameworks se incorporarán cuando ayuden a resolver una necesidad que ya podamos explicar.
+
+## Extensiones futuras
+
+Las posibles extensiones no tienen numeración ni estructura comprometida. Una **Extensión - RAG avanzado** podría profundizar en:
+
+- bases vectoriales reales y filtros por metadata;
+- hybrid search y BM25;
+- re-ranking, query rewriting y multi-query;
+- chunking semántico;
+- evaluación de retrieval y de respuestas;
+- observabilidad y citaciones avanzadas.
+
+También podrán estudiarse Agents avanzado, MCP avanzado, evaluación y observabilidad u otras áreas que surjan. Una vez adquirida la base, estas técnicas pueden explorarse con más contexto y preguntas mejor definidas. La lista permanece abierta.
+
+## Principio rector
+
+Cada nueva herramienta debe aparecer cuando el alumno ya comprende el problema que resuelve.
+
+[Roadmap y estados de implementación](../ROADMAP.md) · [Recorrido por laboratorios](03-roadmap-labs.md).

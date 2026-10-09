@@ -15,9 +15,11 @@ Aprender de forma incremental los conceptos principales necesarios para integrar
 - embeddings;
 - carga y fragmentación de documentos;
 - RAG;
+- retrieval, relevancia y fuentes;
 - tools y function calling;
 - agentes;
 - workflows;
+- multi-agent;
 - MCP.
 
 El foco está en los conceptos. Las APIs concretas pueden evolucionar.
@@ -48,7 +50,9 @@ dac-learning-ai-dotnet/
 │   │   ├── README.md
 │   │   ├── lab-09a-rag-explicito/
 │   │   └── lab-09b-rag-service/
-│   ├── lab-10-rag-advanced/
+│   ├── lab-10-retrieval-calidad/
+│   │   ├── README.md
+│   │   └── lab-10a-multiples-documentos/
 │   ├── ...
 │   └── lab-17-final-project/
 ├── .editorconfig
@@ -90,9 +94,14 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 09 - RAG básico](labs/lab-09-rag-basico/README.md): implementado mediante 09a y 09b
 - ✅ [Lab 09a - RAG explícito](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md): implementado
 - ✅ [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md): implementado
-- ⏳ Labs 10-17: pendientes de implementación
+- 🚧 [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md): en progreso
+- ✅ [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md): implementado
+- ⏳ Lab 10b - Relevancia, threshold y fuentes: pendiente
+- ⏳ Labs 11-17: pendientes de implementación
 
-Los Labs 00-09 están implementados, con Lab 09 dividido en 09a y 09b. M5 continúa en progreso porque Lab 10 sigue pendiente. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; ambos sublabs de Lab 09 los utilizan simultáneamente.
+Los Labs 00-09 y Lab 10a están implementados, con Lab 09 dividido en 09a y 09b. Lab 10 y M5 continúan en progreso porque falta Lab 10b. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Lab 09 y Lab 10a utilizan ambos.
+
+**Lab 10 - Retrieval y calidad** avanza con múltiples documentos en 10a; relevancia, threshold y fuentes se trabajarán en 10b, todavía pendiente. Después el recorrido continúa con Primer Tool → Múltiples Tools → Primer agente → Workflow → Multi-agent → MCP → Proyecto final. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
 
 ## Configuración común mediante `.env`
 
@@ -210,6 +219,7 @@ Los modelos, planes y límites de cada proveedor pueden cambiar. Para los labora
 - `docs/00-vision-y-alcance.md`
 - `docs/01-entorno-vscode-insiders.md`
 - `docs/03-roadmap-labs.md` — recorrido pedagógico detallado de los laboratorios.
+- [Enfoque pedagógico y evolución del roadmap](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) — fundamento de la progresión y futuras áreas de profundización.
 
 ## Criterio pedagógico
 
@@ -237,8 +247,28 @@ Lab 08  archivo → texto → normalización → chunks (offline)
 Lab 09a indexación → recuperación → contexto → generación (explícito)
    ↓
 Lab 09b encapsulación del mismo pipeline en RagService
+   ↓
+Lab 10a múltiples documentos → un índice → retrieval multifuente
+   ↓
+Lab 10b relevancia, threshold y fuentes (pendiente)
+   ↓
+Lab 11  Primer Tool y function calling (pendiente)
+   ↓
+Lab 12  Múltiples Tools (pendiente)
+   ↓
+Lab 13  Primer agente (pendiente)
+   ↓
+Lab 14  Workflow (pendiente)
+   ↓
+Lab 15  Multi-agent (pendiente)
+   ↓
+Lab 16  MCP (pendiente)
+   ↓
+Lab 17  Proyecto final: elegir e integrar según el problema (pendiente)
 ```
 
-La prioridad es comprender primero el concepto y recién después incorporar abstracciones de mayor nivel.
+Primero entender, después abstraer y finalmente integrar. Cada paso permite experimentar y observar limitaciones antes de introducir una nueva abstracción. El contraste entre Lab 09a y Lab 09b es la referencia para extender este enfoque al resto del recorrido.
+
+Tool calling, agente y workflow son conceptos distintos: una tool expone una operación, un agente toma decisiones iterativas hacia un objetivo y un workflow organiza pasos explícitos. El proyecto final permitirá justificar cuáles necesita la solución.
 
 Los frameworks y APIs concretas son herramientas del recorrido, no el objetivo final del aprendizaje.

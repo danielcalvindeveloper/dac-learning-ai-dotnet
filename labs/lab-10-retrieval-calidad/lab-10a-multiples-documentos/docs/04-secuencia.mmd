@@ -1,0 +1,44 @@
+sequenceDiagram
+    autonumber
+    participant P as Program.cs
+    participant D as documents/
+    participant L as DocumentLoader
+    participant C as TextChunker
+    participant E as IEmbeddingGenerator
+    participant V as InMemoryVectorStore
+    participant M as IChatClient
+
+    P->>D: Descubrir archivos *.md
+    D-->>P: Rutas de los cuatro documentos
+    P->>P: Ordenar rutas
+    P->>V: Crear un único índice en memoria
+
+    loop Por cada documento
+        P->>L: LoadAsync(documentPath)
+        L-->>P: Texto
+        P->>C: Split(text, Source, 500, 100)
+        C-->>P: Chunks con Source e Index
+        P->>E: GenerateAsync(contenidos de los chunks)
+        E-->>P: Un embedding por chunk
+        P->>P: Validar cantidad de embeddings
+
+        loop Por cada chunk y su embedding
+            P->>V: Add(IndexedChunk)
+        end
+    end
+
+    Note over P,V: Todos los documentos comparten el mismo índice
+
+    P->>E: GenerateAsync([question])
+    E-->>P: Un embedding de consulta
+    P->>V: Search(questionEmbedding.Vector, topK: 3)
+    V-->>P: Chunks ordenados por similitud
+
+    Note over P,V: Los resultados pueden provenir de distintas fuentes
+
+    P->>P: Mostrar Source, Index y Similarity
+    P->>P: Construir contexto con fuentes y contenido
+    P->>P: Construir prompt RAG con contexto y pregunta
+    P->>M: GetResponseAsync(prompt)
+    M-->>P: Respuesta generada
+    P->>P: Mostrar respuesta

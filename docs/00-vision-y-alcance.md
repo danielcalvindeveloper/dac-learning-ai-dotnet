@@ -6,6 +6,8 @@ Construir un recorrido práctico, autónomo e incremental para aprender integrac
 
 El repositorio debe permitir estudiar un concepto por vez y comprender qué problema resuelve antes de incorporar abstracciones adicionales.
 
+Primero entender, después abstraer y finalmente integrar. Experimentar y observar limitaciones da sentido al paso siguiente, como muestra la evolución del pipeline explícito de Lab 09a a `RagService` en Lab 09b.
+
 ## Principios
 
 1. Un concepto principal por laboratorio.
@@ -26,3 +28,7 @@ El repositorio debe permitir estudiar un concepto por vez y comprender qué prob
 - arquitecturas distribuidas.
 
 Estos temas podrán incorporarse posteriormente si resultan útiles para el aprendizaje.
+
+El recorrido principal conserva los Labs 00–17. El bloque RAG llegará hasta retrieval, múltiples documentos, relevancia y fuentes; RAG avanzado será una posible extensión. Después avanzaremos desde una tool hacia múltiples tools, un agente, workflow, multi-agent, MCP e integración según el problema.
+
+El [documento de enfoque pedagógico y evolución del roadmap](04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explica el fundamento. [ROADMAP.md](../ROADMAP.md) distingue planificación de implementación.
