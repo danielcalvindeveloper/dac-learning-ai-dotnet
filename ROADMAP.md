@@ -69,25 +69,25 @@ timeline
 | M2 | Conversación, DI y prompts | 02–04 | ✅ Implementado |
 | M3 | Structured Output y memoria | 05–06 | ✅ Implementado |
 | M4 | Embeddings | 07 | ✅ Implementado |
-| M5 | Documentos y RAG | 08–10 | 🚧 En progreso |
+| M5 | Documentos y RAG | 08–10 | ✅ Implementado |
 | M6 | Tools y Function Calling | 11–12 | ⏳ Pendiente |
 | M7 | Primer agente | 13 | ⏳ Pendiente |
 | M8 | Orquestación: Workflow y Multi-agent | 14–15 | ⏳ Pendiente |
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Integración consciente | 17 | ⏳ Pendiente |
 
-Los Labs 00–09 están implementados; Lab 09 comprende dos sublaboratorios ejecutables e independientes. Dentro de M5:
+Los Labs 00–10 están implementados; Labs 09 y 10 comprenden dos sublaboratorios ejecutables e independientes cada uno. Dentro de M5:
 
 | Laboratorio | Estado |
 |---|---|
 | [Lab 08 - Document Loading y Chunking](labs/lab-08-document-loading/README.md) | ✅ Implementado |
 | [Lab 09a - RAG explícito](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) | ✅ Implementado |
 | [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) | ✅ Implementado |
-| [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md) | 🚧 En progreso |
+| [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md) | ✅ Implementado |
 | [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) | ✅ Implementado |
-| Lab 10b - Relevancia, threshold y fuentes | ⏳ Pendiente |
+| [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) | ✅ Implementado |
 
-M5 sigue en progreso porque falta Lab 10b. Los Labs 11–17 también continúan pendientes.
+M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Los Labs 11–17 continúan pendientes.
 
 
 ### Simplificación transversal de configuración
@@ -331,7 +331,7 @@ flowchart LR
 
 **Objetivo:** preparar documentos, comprender y encapsular un pipeline RAG, y trabajar la calidad de recuperación hasta múltiples documentos, relevancia y fuentes.
 
-**Estado:** 🚧 En progreso
+**Estado:** ✅ Implementado
 
 ### Lab 08 — Document Loading + Chunking
 
@@ -380,21 +380,21 @@ El [Lab 09b](labs/lab-09-rag-basico/lab-09b-rag-service/README.md) encapsula el 
 | DI | ✅ | Componer clientes, store Singleton y servicio Transient |
 | `Program.cs` | ✅ | Invocar el servicio y presentar fuentes y respuesta |
 
-M5 continúa en progreso: Lab 10a está implementado y Lab 10b sigue pendiente.
+M5 queda implementado con ambos sublabs de Lab 10, cerrando el bloque introductorio de RAG.
 
 ### Lab 10 — Retrieval y calidad
 
-**Estado:** 🚧 En progreso
+**Estado:** ✅ Implementado
 
-Cerrar el bloque introductorio/intermedio de RAG con un corpus de documentos, resultados relevantes y fuentes observables. Lab 10a está disponible; Lab 10b conserva su alcance planificado:
+Cerrar el bloque introductorio/intermedio de RAG con un corpus de documentos, una regla experimental de relevancia y fuentes observables. Ambos sublabs están disponibles:
 
 ```text
 lab-10-retrieval-calidad/
 ├── lab-10a-multiples-documentos/
-└── lab-10b-relevancia-threshold-fuentes/ (previsto; pendiente)
+└── lab-10b-relevancia-threshold-fuentes/
 ```
 
-La carpeta de 10a existe y contiene su proyecto ejecutable, documentos y lecturas opcionales. La carpeta de 10b todavía no se crea.
+Cada carpeta contiene su proyecto ejecutable, documentos y lecturas opcionales. El corpus y la infraestructura conocida se conservan en ambos ejemplos.
 
 #### Lab 10a — Múltiples documentos
 
@@ -410,20 +410,22 @@ El [Lab 10a](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.m
 
 #### Lab 10b — Relevancia, threshold y fuentes
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
+
+El [Lab 10b](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) ejecuta una consulta relacionada y otra ajena al corpus. Muestra candidatos, filtra explícitamente por similitud y evita la llamada generativa si no queda contexto aceptado. Las fuentes se obtienen de los resultados enviados al prompt.
 
 `topK` ya existe en Lab 09: devuelve hasta K resultados, si están disponibles, aunque tengan poca relación con la pregunta. Un límite de cantidad no garantiza relevancia.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 10b.1 | ⏳ | Observar resultados poco relevantes aun siendo los mejores del índice |
-| 10b.2 | ⏳ | Introducir `minimumSimilarity` y calibrarlo con preguntas concretas |
-| 10b.3 | ⏳ | Responder que no hay contexto suficiente si ningún fragmento supera el umbral |
-| 10b.4 | ⏳ | Construir contexto con resultados aceptados y mostrar fuentes recuperadas junto con la respuesta |
+| 10b.1 | ✅ | Observar resultados poco relevantes aun siendo los mejores del índice |
+| 10b.2 | ✅ | Introducir `minimumSimilarity` y comprobarlo empíricamente con las dos preguntas |
+| 10b.3 | ✅ | Informar que no hay contexto suficiente y omitir generación si ningún fragmento alcanza el umbral |
+| 10b.4 | ✅ | Construir contexto con resultados aceptados y mostrar sus fuentes junto con la respuesta |
 
-El flujo será pregunta → retrieval → comprobar relevancia → informar contexto insuficiente o construir contexto y llamar al LLM. El umbral no es universal: depende del modelo, el corpus y las consultas, y necesita evaluación.
+El flujo es pregunta → retrieval → comprobar relevancia → informar contexto insuficiente o construir contexto y llamar al LLM. `minimumSimilarity = 0.70` es experimental y permitió separar ambos casos con `gemini-embedding-001`. No es universal ni un porcentaje: depende del modelo, corpus, preguntas, chunking, distribución de scores y dominio.
 
-Al completar Lab 10, el bloque habrá recorrido embeddings, document loading, chunking, RAG explícito, `RagService`, múltiples documentos, retrieval, relevancia y fuentes. Es una base práctica; las técnicas de mayor complejidad quedan en las extensiones futuras.
+El bloque recorre embeddings, document loading, chunking, RAG explícito, `RagService`, múltiples documentos, retrieval, relevancia y fuentes. Es una base práctica; las técnicas de mayor complejidad quedan en las extensiones futuras.
 
 ### Arquitectura conceptual
 
@@ -446,7 +448,7 @@ flowchart LR
     LLM --> A[Respuesta]
 ```
 
-El control de relevancia corresponde al Lab 10b planificado; Lab 09 ya implementa recuperación por `topK` y generación con contexto.
+El control de relevancia está implementado en Lab 10b; Lab 09 conserva recuperación por `topK` y generación con contexto sin ese filtro.
 
 ---
 

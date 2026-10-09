@@ -1,0 +1,60 @@
+sequenceDiagram
+    autonumber
+    participant P as Program.cs
+    participant D as documents/
+    participant L as DocumentLoader
+    participant C as TextChunker
+    participant E as IEmbeddingGenerator
+    participant V as InMemoryVectorStore
+    participant M as IChatClient
+
+    P->>D: Descubrir archivos *.md
+    D-->>P: Rutas de los cuatro documentos
+    P->>P: Ordenar rutas
+    P->>V: Crear un único índice en memoria
+
+    loop Por cada documento
+        P->>L: LoadAsync(documentPath)
+        L-->>P: Texto
+        P->>C: Split(text, Source, 500, 100)
+        C-->>P: Chunks con Source e Index
+        P->>E: GenerateAsync(contenidos de los chunks)
+        E-->>P: Un embedding por chunk
+        P->>P: Validar cantidad de embeddings
+
+        loop Por cada chunk y su embedding
+            P->>V: Add(IndexedChunk)
+        end
+    end
+
+    Note over P,V: El corpus se indexa una sola vez para ambas consultas
+
+    loop Consulta relacionada y consulta no relacionada
+        P->>P: Mostrar pregunta
+        P->>E: GenerateAsync([question])
+        E-->>P: Un embedding de consulta
+        P->>P: Validar que haya un único embedding
+        P->>V: Search(questionEmbedding.Vector, topK: 3)
+        V-->>P: Candidatos ordenados por similitud
+        P->>P: Mostrar Source, Index y Similarity de los candidatos
+
+        Note over P,V: Top K limita la cantidad. No garantiza relevancia
+
+        P->>P: Filtrar candidatos con Similarity >= minimumSimilarity
+        Note over P: Threshold experimental: 0.70 para este ejemplo. No es un porcentaje
+        P->>P: Mostrar cantidad de resultados que alcanzan el threshold
+
+        alt Ningún resultado alcanza el threshold
+            P->>P: Informar que no hay contexto suficientemente relevante
+            P->>P: Continuar con la siguiente consulta sin llamar al modelo generativo
+        else Hay resultados que alcanzan el threshold
+            P->>P: Construir contexto sólo con resultados aceptados y sus fuentes
+            P->>P: Construir prompt RAG con contexto y pregunta
+            P->>M: GetResponseAsync(prompt)
+            M-->>P: Respuesta generada
+            P->>P: Mostrar respuesta
+            P->>P: Mostrar Source, Index y Similarity de los resultados aceptados
+
+            Note over P,M: Las fuentes corresponden al contexto enviado al modelo
+        end
+    end

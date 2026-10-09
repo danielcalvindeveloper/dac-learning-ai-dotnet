@@ -2,7 +2,7 @@
 
 El recorrido principal conserva los Labs 00–17. Primero entendemos y experimentamos, después abstraemos cuando aparece una necesidad y finalmente integramos. El [enfoque pedagógico y la evolución del roadmap](04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explican esa progresión.
 
-Lab 00 es la rampa de entrada opcional. Los Labs 00–09 y Lab 10a están implementados; Lab 10 está en progreso porque falta 10b. Los Labs 11–17 continúan pendientes.
+Lab 00 es la rampa de entrada opcional. Los Labs 00–10 y M5 están implementados, incluyendo los sublabs 09a, 09b, 10a y 10b. Los Labs 11–17 continúan pendientes.
 
 ## Bloque 1 - Fundamentos
 
@@ -18,11 +18,11 @@ Lab 00 es la rampa de entrada opcional. Los Labs 00–09 y Lab 10a están implem
 7. [Embeddings](../labs/lab-07-embeddings/README.md) — ✅ Implementado
 8. [Document Loading y Chunking](../labs/lab-08-document-loading/README.md) — ✅ Implementado
 9. [RAG básico](../labs/lab-09-rag-basico/README.md) — ✅ Implementado mediante [Lab 09a - RAG explícito](../labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [Lab 09b - RAG con RagService](../labs/lab-09-rag-basico/lab-09b-rag-service/README.md)
-10. [Retrieval y calidad](../labs/lab-10-retrieval-calidad/README.md) — 🚧 En progreso
+10. [Retrieval y calidad](../labs/lab-10-retrieval-calidad/README.md) — ✅ Implementado
 
-Lab 10 tiene dos etapas: [10a - Múltiples documentos](../labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md), **implementado**, pasa a un corpus conservando el origen de cada chunk; **10b - Relevancia, threshold y fuentes**, pendiente, distinguirá cantidad de resultados de contexto suficiente. Un umbral se calibra con el modelo, el corpus y las preguntas; no es universal.
+Lab 10 tiene dos etapas implementadas: [10a - Múltiples documentos](../labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) pasa a un corpus conservando el origen de cada chunk; [10b - Relevancia, threshold y fuentes](../labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) distingue cantidad de resultados de contexto suficiente, muestra evidencia aceptada y evita generación cuando no queda contexto. El umbral es experimental y necesita calibración; no es universal ni un porcentaje de relevancia.
 
-Este bloque dará una base práctica de RAG: embeddings → documentos → chunks → pipeline explícito → `RagService` → múltiples documentos → relevancia y fuentes. Las técnicas avanzadas quedan como posibles extensiones.
+Este bloque ofrece una base práctica de RAG: embeddings → documentos → chunks → pipeline explícito → `RagService` → múltiples documentos → relevancia y fuentes. Las técnicas avanzadas quedan como posibles extensiones.
 
 ## Bloque 3 - Capacidades y automatización
 
@@ -43,7 +43,7 @@ Tool calling no equivale a un agente. Un workflow controla explícitamente el pr
 
 Hasta Lab 06 `AI_MODEL` cubre las capacidades generativas/chat. Desde Lab 07 agregamos `AI_EMBEDDING_MODEL` para generar vectores, porque la compatibilidad con chat no implica soporte de embeddings. Esta distinción aparece cuando se necesita, siguiendo KISS.
 
-Ambos modelos pueden coexistir y compartir `AI_PROVIDER`, `AI_API_KEY` y `AI_URL`. Lab 09a utiliza embeddings para recuperar contenido y chat para generar respuestas; Lab 09b encapsula ese mismo pipeline en un servicio. Lab 10a amplía la búsqueda a un corpus manteniendo visibles las fuentes. Lab 08 carga y divide documentos locales sin configuración de IA. Lab 10b y Labs 11 en adelante continúan pendientes; M5 sigue en progreso. El estado detallado se encuentra en [ROADMAP.md](../ROADMAP.md).
+Ambos modelos pueden coexistir y compartir `AI_PROVIDER`, `AI_API_KEY` y `AI_URL`. Lab 09a utiliza embeddings para recuperar contenido y chat para generar respuestas; Lab 09b encapsula ese mismo pipeline en un servicio. Lab 10a amplía la búsqueda a un corpus y 10b decide qué candidatos acepta antes de generar. Lab 08 carga y divide documentos locales sin configuración de IA. M5 está implementado; Labs 11 en adelante continúan pendientes. El estado detallado se encuentra en [ROADMAP.md](../ROADMAP.md).
 
 Cada laboratorio debería contener, cuando se implemente:
 
@@ -55,9 +55,9 @@ Cada laboratorio debería contener, cuando se implemente:
 - resultado esperado;
 - relación con el laboratorio anterior.
 
-Lab 09 comprende [09a - RAG explícito](../labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [09b - RAG con RagService](../labs/lab-09-rag-basico/lab-09b-rag-service/README.md). Primero comprendemos el pipeline y después encapsulamos su coordinación. `topK` ya está implementado; Lab 10a busca en múltiples documentos y Lab 10b trabajará qué hacer cuando los mejores resultados no sean suficientemente relevantes.
+Lab 09 comprende [09a - RAG explícito](../labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [09b - RAG con RagService](../labs/lab-09-rag-basico/lab-09b-rag-service/README.md). Primero comprendemos el pipeline y después encapsulamos su coordinación. `topK` ya está implementado; Lab 10a busca en múltiples documentos y Lab 10b muestra qué hacer cuando los mejores resultados no alcanzan el mínimo de similitud elegido.
 
-Lab 10 ya utiliza su ruta definitiva `lab-10-retrieval-calidad/` con el sublab 10a. La carpeta de 10b todavía no existe. Los Labs 11–17 conservan el esqueleto documental actual; sus rutas se adecuarán al alcance al implementarlos.
+Lab 10 utiliza su ruta definitiva `lab-10-retrieval-calidad/` con ambos sublabs. Los Labs 11–17 conservan el esqueleto documental actual; sus rutas se adecuarán al alcance al implementarlos.
 
 ## Posibles extensiones futuras
 

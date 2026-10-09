@@ -52,7 +52,8 @@ dac-learning-ai-dotnet/
 │   │   └── lab-09b-rag-service/
 │   ├── lab-10-retrieval-calidad/
 │   │   ├── README.md
-│   │   └── lab-10a-multiples-documentos/
+│   │   ├── lab-10a-multiples-documentos/
+│   │   └── lab-10b-relevancia-threshold-fuentes/
 │   ├── ...
 │   └── lab-17-final-project/
 ├── .editorconfig
@@ -94,14 +95,14 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 09 - RAG básico](labs/lab-09-rag-basico/README.md): implementado mediante 09a y 09b
 - ✅ [Lab 09a - RAG explícito](labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md): implementado
 - ✅ [Lab 09b - RAG con RagService](labs/lab-09-rag-basico/lab-09b-rag-service/README.md): implementado
-- 🚧 [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md): en progreso
+- ✅ [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md): implementado
 - ✅ [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md): implementado
-- ⏳ Lab 10b - Relevancia, threshold y fuentes: pendiente
+- ✅ [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md): implementado
 - ⏳ Labs 11-17: pendientes de implementación
 
-Los Labs 00-09 y Lab 10a están implementados, con Lab 09 dividido en 09a y 09b. Lab 10 y M5 continúan en progreso porque falta Lab 10b. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Lab 09 y Lab 10a utilizan ambos.
+Los Labs 00-10 están implementados, con Lab 09 dividido en 09a y 09b y Lab 10 en 10a y 10b. M5 está implementado y Labs 11-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos.
 
-**Lab 10 - Retrieval y calidad** avanza con múltiples documentos en 10a; relevancia, threshold y fuentes se trabajarán en 10b, todavía pendiente. Después el recorrido continúa con Primer Tool → Múltiples Tools → Primer agente → Workflow → Multi-agent → MCP → Proyecto final. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
+**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. Después el recorrido continúa con Primer Tool → Múltiples Tools → Primer agente → Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
 
 ## Configuración común mediante `.env`
 
@@ -250,7 +251,7 @@ Lab 09b encapsulación del mismo pipeline en RagService
    ↓
 Lab 10a múltiples documentos → un índice → retrieval multifuente
    ↓
-Lab 10b relevancia, threshold y fuentes (pendiente)
+Lab 10b candidatos → threshold → contexto aceptado o sin generación
    ↓
 Lab 11  Primer Tool y function calling (pendiente)
    ↓

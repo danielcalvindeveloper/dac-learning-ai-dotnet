@@ -242,6 +242,6 @@ No incorporamos threshold, score mínimo, filtros por metadata, re-ranking, BM25
 
 `topK` devuelve los mejores resultados disponibles. **¿Qué pasa si ninguno es realmente relevante?**
 
-Ese será el problema de **Lab 10b - Relevancia, threshold y fuentes**, previsto en `lab-10b-relevancia-threshold-fuentes/` y todavía pendiente. Este sublab no lo resuelve.
+Ese es el problema de **[Lab 10b - Relevancia, threshold y fuentes](../lab-10b-relevancia-threshold-fuentes/README.md)**, ya implementado en `lab-10b-relevancia-threshold-fuentes/`. Lab 10a conserva su alcance sin threshold.
 
 [Volver a Lab 10](../README.md).

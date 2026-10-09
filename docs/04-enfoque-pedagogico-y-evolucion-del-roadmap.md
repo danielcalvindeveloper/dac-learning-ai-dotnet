@@ -32,7 +32,7 @@ Primero entender, después abstraer y finalmente integrar. Por ejemplo, observar
 
 El bloque principal llega hasta **Lab 10 - Retrieval y calidad**. La secuencia reúne embeddings, carga de documentos, chunking, RAG explícito, encapsulación en `RagService`, múltiples documentos, retrieval, relevancia y fuentes.
 
-Lab 10a pasa de un documento a un corpus y ya está implementado. Lab 10b, todavía pendiente, trabajará un umbral de similitud, la falta de contexto suficiente y las fuentes recuperadas. `topK` limita la cantidad de resultados; no garantiza relevancia. Un umbral necesita calibración y evaluación con preguntas concretas, y no existe un valor universal.
+Lab 10a pasa de un documento a un corpus. Lab 10b trabaja un umbral experimental de similitud, la falta de contexto suficiente y las fuentes recuperadas. Ambos están implementados. `topK` limita la cantidad de resultados; no garantiza relevancia. Un umbral necesita calibración y evaluación con preguntas concretas, y no existe un valor universal.
 
 Al completar ese bloque tendremos una base práctica de RAG. Las técnicas de mayor complejidad quedarán como áreas de profundización posteriores al recorrido principal.
 
