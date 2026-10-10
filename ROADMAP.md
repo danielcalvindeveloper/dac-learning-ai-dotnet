@@ -74,12 +74,12 @@ timeline
 | M4 | Embeddings | 07 | ✅ Implementado |
 | M5 | Documentos y RAG | 08–10 | ✅ Implementado |
 | M6 | Tools y Function Calling | 11–12 | ✅ Implementado |
-| M7 | Primer agente | 13 | ⏳ Pendiente |
+| M7 | Primer agente | 13 | ✅ Implementado |
 | M8 | Orquestación: Workflow y Multi-agent | 14–15 | ⏳ Pendiente |
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Integración consciente | 17 | ⏳ Pendiente |
 
-Los Labs 00–12 están implementados; Labs 09, 10 y 11 comprenden dos sublaboratorios ejecutables e independientes cada uno, y Lab 12 comprende tres. Dentro de M5:
+Los Labs 00–13 están implementados; Labs 09, 10 y 11 comprenden dos sublaboratorios ejecutables e independientes cada uno, y Lab 12 comprende tres. Dentro de M5:
 
 | Laboratorio | Estado |
 |---|---|
@@ -90,7 +90,7 @@ Los Labs 00–12 están implementados; Labs 09, 10 y 11 comprenden dos sublabora
 | [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) | ✅ Implementado |
 | [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) | ✅ Implementado |
 
-M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está implementado: Lab 12a ofrece varias Tools, 12b observa decisión y errores y 12c integra una API HTTP. Los Labs 13–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
+M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está implementado: Lab 12a ofrece varias Tools, 12b observa decisión y errores y 12c integra una API HTTP. M7 está implementado: [Lab 13](labs/lab-13-primer-agente/README.md) diagnostica incidentes con tres Tools locales, estado explícito y un máximo de cinco iteraciones. Los Labs 14–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
 
 
 ### Simplificación transversal de configuración
@@ -514,10 +514,10 @@ Los tres compilan con .NET 10 y completaron la ejecución real con Gemini. En 12
 flowchart LR
     A[12a: varias Tools] --> B[12b: decisión y errores]
     B --> C[12c: capacidad HTTP externa]
-    C --> D[13: primer agente pendiente]
+    C --> D[13: primer agente implementado]
 ```
 
-Tener Tools, incluso externas, no implementa un agente ni MCP. Lab 13 estudiará decisiones sucesivas hacia un objetivo con estado y límites; continúa pendiente.
+Tener Tools, incluso externas, no implementa un agente ni MCP. Lab 13 ya implementa decisiones sucesivas hacia un objetivo con estado y límites, sin MCP.
 
 ---
 
@@ -525,32 +525,32 @@ Tener Tools, incluso externas, no implementa un agente ni MCP. Lab 13 estudiará
 
 **Objetivo:** introducir un agente pequeño con objetivo, herramientas, estado/contexto y decisiones iterativas controladas.
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
 ### Lab 13 — Primer agente
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
-Tool calling es una capacidad; un agente coordina decisiones y acciones hacia un objetivo. Este paso incorpora contexto del proceso y límites, sin multi-agent todavía.
+Tool calling es una capacidad; un agente coordina decisiones y acciones hacia un objetivo. [Lab 13](labs/lab-13-primer-agente/README.md) usa el dominio de incidentes: consulta estado, busca una recomendación o registra un caso local según lo observado. El loop de Program conserva AgentState y limita a cinco decisiones, incluida la respuesta final. Function Calling sigue abstraído con UseFunctionInvocation y FunctionInvocationContext.Terminate devuelve el control después de una acción. Los tres escenarios completaron 2, 3 y 4 iteraciones con Gemini; esas decisiones no son garantías universales.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 13.1 | ⏳ | Definir objetivo e instrucciones |
-| 13.2 | ⏳ | Asignar tools al agente |
-| 13.3 | ⏳ | Mantener estado/contexto y ejecutar un ciclo de decisión y acción |
-| 13.4 | ⏳ | Establecer condición de finalización |
-| 13.5 | ⏳ | Incorporar límites de ejecución |
-| 13.6 | ⏳ | Observar las acciones realizadas |
+| 13.1 | ✅ | Definir objetivo e instrucciones |
+| 13.2 | ✅ | Asignar tools al agente |
+| 13.3 | ✅ | Mantener estado/contexto y ejecutar un ciclo de decisión y acción |
+| 13.4 | ✅ | Establecer condición de finalización |
+| 13.5 | ✅ | Incorporar límites de ejecución |
+| 13.6 | ✅ | Observar las acciones realizadas |
 
 ```mermaid
 flowchart TD
-    O[Objetivo] --> A[Agent]
-    A --> D{¿Necesita Tool?}
-    D -- Sí --> T[Tool]
-    T --> A
-    D -- No --> F{¿Finalizó?}
-    F -- No --> A
-    F -- Sí --> R[Resultado]
+    O[Objetivo y estado] --> A[Decidir]
+    A --> D{¿Solicita Tool?}
+    D -- Sí --> T[Actuar y observar]
+    T --> L{¿Quedan iteraciones?}
+    L -- Sí --> A
+    L -- No --> X[Detener sin completar]
+    D -- No --> R[Respuesta final]
 ```
 
 ---

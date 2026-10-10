@@ -203,6 +203,6 @@ APIs con autenticación adicional, reintentos, resiliencia avanzada, múltiples 
 
 ## Siguiente laboratorio
 
-[Lab 13 - Primer agente](../../lab-13-agents/README.md) permanece pendiente. Ya podemos ofrecer capacidades locales y externas; el siguiente paso será coordinar decisiones hacia un objetivo con estado y límites.
+[Lab 13 - Primer agente](../../lab-13-primer-agente/README.md) ya está implementado. Ya podemos ofrecer capacidades locales y externas; en Lab 13 coordinamos decisiones hacia un objetivo de diagnóstico con estado, observaciones y límites.
 
 [Guía de Lab 12](../README.md) · [Roadmap](../../../ROADMAP.md).

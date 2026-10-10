@@ -10,7 +10,7 @@ Partimos de [Lab 11b](../lab-11-tools/lab-11b-tool-invocation/README.md). El cic
 
 ## Estado
 
-✅ Implementado mediante tres sublabs independientes. Los tres completaron restore, build y ejecución real con `gemini-3.5-flash-lite` y .NET 10. M6 queda ✅ Implementado. Lab 13 continúa ⏳ Pendiente.
+✅ Implementado mediante tres sublabs independientes. Los tres completaron restore, build y ejecución real con `gemini-3.5-flash-lite` y .NET 10. M6 queda ✅ Implementado. Lab 13 ya está implementado y completa M7.
 
 | Sublaboratorio | Pregunta principal | Estado |
 |---|---|---|
@@ -103,8 +103,8 @@ Una Tool puede encapsular una API REST. Un Agent puede utilizar Tools. MCP puede
 
 ## Siguiente laboratorio
 
-[Lab 13 - Primer agente](../lab-13-agents/README.md) sigue pendiente. Hasta aquí el usuario hace una pregunta, el modelo puede solicitar Tools y produce una respuesta.
+[Lab 13 - Primer agente](../lab-13-primer-agente/README.md) ya está implementado. Hasta aquí el usuario hace una pregunta, el modelo puede solicitar Tools y produce una respuesta.
 
-El siguiente paso estudiará un sistema que reciba un objetivo, evalúe estado, decida pasos sucesivos y continúe hasta cumplirlo o alcanzar un límite. Ese comportamiento todavía no se implementa en Lab 12.
+Lab 13 recibe un objetivo de diagnóstico, conserva estado y observaciones y decide acciones sucesivas hasta finalizar o alcanzar cinco iteraciones. Ese comportamiento todavía no se implementa en Lab 12.
 
 [Lab 11 - Tools](../lab-11-tools/README.md) · [Roadmap](../../ROADMAP.md) · [Enfoque pedagógico](../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).

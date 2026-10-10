@@ -29,6 +29,6 @@ Primero entender, después abstraer y finalmente integrar. Experimentar y observ
 
 Estos temas podrán incorporarse posteriormente si resultan útiles para el aprendizaje.
 
-El recorrido principal conserva los Labs 00–17. El bloque RAG llegará hasta retrieval, múltiples documentos, relevancia y fuentes; RAG avanzado será una posible extensión. Después avanzaremos desde una Tool explícita en 11a hacia su invocación automática en 11b. Lab 12, Function Calling, ya implementa múltiples Tools en 12a, decisión y errores en 12b y una capacidad HTTP externa en 12c; luego seguiremos con un agente, workflow, multi-agent, MCP e integración según el problema.
+El recorrido principal conserva los Labs 00–17. El bloque RAG llegará hasta retrieval, múltiples documentos, relevancia y fuentes; RAG avanzado será una posible extensión. Después avanzaremos desde una Tool explícita en 11a hacia su invocación automática en 11b. Lab 12, Function Calling, ya implementa múltiples Tools en 12a, decisión y errores en 12b y una capacidad HTTP externa en 12c; Lab 13 ya implementa un primer agente de soporte, con objetivo, estado, observaciones y decisiones iterativas limitadas. Luego seguiremos con workflow, multi-agent, MCP e integración según el problema.
 
 El [documento de enfoque pedagógico y evolución del roadmap](04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explica el fundamento. [ROADMAP.md](../ROADMAP.md) distingue planificación de implementación.

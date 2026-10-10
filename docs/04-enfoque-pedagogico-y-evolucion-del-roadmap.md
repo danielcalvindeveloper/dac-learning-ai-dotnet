@@ -10,6 +10,7 @@ El roadmap inicial buscaba recorrer LLM, RAG, Tools, Agents y MCP. La experienci
 - En Lab 09a vemos cada etapa del pipeline RAG en `Program.cs`; en Lab 09b encapsulamos el mismo mecanismo en `RagService`.
 - En Lab 11a observamos el ciclo explícito de una Tool; en Lab 11b mantenemos el ejercicio y delegamos su coordinación a `FunctionInvokingChatClient`.
 - En Lab 12a ofrecemos varias capacidades; 12b observa decisión y errores; 12c conecta una Tool con HTTP. Los tres están implementados y no son agentes.
+- En Lab 13 observamos un agente de soporte: objetivo, estado, decisiones, acciones y observaciones dentro de un loop explícito con límite.
 - Hasta Lab 06 `AI_MODEL` era suficiente. `AI_EMBEDDING_MODEL` aparece en Lab 07, cuando necesitamos una capacidad distinta.
 
 Estos ejemplos comparten una decisión: introducir una abstracción cuando el alumno ya conoce el problema que resuelve.
@@ -68,9 +69,11 @@ Lab 11 se divide en dos experiencias para comprender, experimentar, observar com
 
 La prueba inicial de 11b mostró que automatizar el ciclo no corregía por sí solo la pérdida de metadata en el adaptador. La conservación del mensaje nativo quedó en el cliente base, fuera del ejercicio. Gemini y `thought_signature` fueron el caso real que permitió descubrir el problema. El principio aprendido es trabajar contra el modelo común y conservar información nativa cuando el protocolo la necesita. La implementación concreta pertenece al adaptador del SDK OpenAI; otro SDK puede requerir otro tratamiento. Este contraste ayuda a distinguir la responsabilidad del cliente de invocación de la compatibilidad del adaptador. Ambos sublabs están implementados. Lab 12 continúa con tres experiencias también implementadas: selección entre capacidades, decisión de responder sin Tool y errores, e integración de una API HTTP.
 
-12b comprueba que una función debe defender sus invariantes y que `IncludeDetailedErrors` permite devolver al modelo el mensaje de una excepción. 12c distingue una API de la Tool que la encapsula; consultar datos publicados no garantiza que describan el presente. M6 queda implementado. Lab 13 sigue pendiente: todavía no coordinamos pasos sucesivos hacia un objetivo con estado y límites.
+12b comprueba que una función debe defender sus invariantes y que `IncludeDetailedErrors` permite devolver al modelo el mensaje de una excepción. 12c distingue una API de la Tool que la encapsula; consultar datos publicados no garantiza que describan el presente. M6 queda implementado. Lab 13 también está implementado y completa M7: coordina pasos sucesivos hacia un objetivo con estado y un máximo de cinco iteraciones.
 
-El primer agente incorpora un objetivo, herramientas, estado/contexto y decisiones iterativas con límites. Después estudiamos workflows: procesos cuyos pasos y bifurcaciones controla la aplicación. Un workflow puede tener una estructura determinista aunque una llamada a un modelo produzca respuestas variables.
+El primer agente incorpora un objetivo, herramientas, estado/contexto y decisiones iterativas con límites. `UseFunctionInvocation()` conserva el intercambio de funciones; `FunctionInvoker` y `FunctionInvocationContext.Terminate` permiten devolver el control al `while` después de la acción. Function Calling puede estar abstraído; el Agent Loop debe quedar visible. Los escenarios de incidente conocido, error conocido y error desconocido permiten observar caminos distintos, sin routing fijo por reporte. Las decisiones siguen dependiendo del modelo y finalizar no prueba que el diagnóstico sea correcto.
+
+Lab 14 continúa pendiente y prepara la pregunta: ¿todas las decisiones del proceso deberían quedar en manos del agente? Después estudiamos workflows: procesos cuyos pasos y bifurcaciones controla la aplicación. Un workflow puede tener una estructura determinista aunque una llamada a un modelo produzca respuestas variables.
 
 Multi-agent llega cuando ya podemos evaluar si conviene repartir responsabilidades entre pocos agentes. Más agentes no implica una mejor solución. MCP aparece después, cuando conocemos la necesidad de exponer y consumir capacidades mediante un protocolo estándar.
 

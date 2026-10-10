@@ -63,6 +63,7 @@ dac-learning-ai-dotnet/
 │   │   ├── lab-12a-multiples-tools/
 │   │   ├── lab-12b-decision-y-errores/
 │   │   └── lab-12c-tool-externa/
+│   ├── lab-13-primer-agente/
 │   ├── ...
 │   └── lab-17-final-project/
 ├── .editorconfig
@@ -114,11 +115,12 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 12a - Múltiples Tools](labs/lab-12-function-calling/lab-12a-multiples-tools/README.md): implementado
 - ✅ [Lab 12b - Decisión y errores](labs/lab-12-function-calling/lab-12b-decision-y-errores/README.md): implementado
 - ✅ [Lab 12c - Tool externa](labs/lab-12-function-calling/lab-12c-tool-externa/README.md): implementado
-- ⏳ Labs 13-17: pendientes de implementación
+- ✅ [Lab 13 - Primer agente](labs/lab-13-primer-agente/README.md): implementado
+- ⏳ Labs 14-17: pendientes de implementación
 
-Los Labs 00-12 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b, Lab 11 en 11a y 11b y Lab 12 en 12a, 12b y 12c. M5 y M6 están implementados; Labs 13-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los sublabs de Labs 11 y 12 utilizan únicamente el modelo de chat; 12c también consulta una API HTTP pública.
+Los Labs 00-13 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b, Lab 11 en 11a y 11b y Lab 12 en 12a, 12b y 12c. M5, M6 y M7 están implementados; Labs 14-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los sublabs de Labs 11 y 12 y Lab 13 utilizan únicamente el modelo de chat; 12c también consulta una API HTTP pública. Las Tools de Lab 13 son locales.
 
-**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). **Lab 12 - Function Calling** trabaja selección entre varias Tools en 12a, decisión y errores en 12b y una Tool HTTP en 12c; los tres completaron la ejecución real con Gemini. Después el recorrido continúa con Primer agente → Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
+**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). **Lab 12 - Function Calling** trabaja selección entre varias Tools en 12a, decisión y errores en 12b y una Tool HTTP en 12c; los tres completaron la ejecución real con Gemini. **Lab 13 - Primer agente** incorpora diagnóstico de incidentes con objetivo, estado, observaciones y un loop explícito limitado a cinco decisiones. Los tres escenarios completaron caminos diferentes con Gemini. Después el recorrido continúa con Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
 
 ## Configuración común mediante `.env`
 
@@ -237,7 +239,7 @@ Los modelos, planes y límites de cada proveedor pueden cambiar. Para los labora
 - `docs/01-entorno-vscode-insiders.md`
 - `docs/03-roadmap-labs.md` — recorrido pedagógico detallado de los laboratorios.
 - [Enfoque pedagógico y evolución del roadmap](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) — fundamento de la progresión y futuras áreas de profundización.
-- [Qué aprendemos en los laboratorios implementados](docs/05-que-aprendemos.md) — aprendizajes de los Labs 00–12 y sus sublaboratorios.
+- [Qué aprendemos en los laboratorios implementados](docs/05-que-aprendemos.md) — aprendizajes de los Labs 00–13 y sus sublaboratorios.
 
 ## Criterio pedagógico
 
@@ -280,7 +282,7 @@ Lab 12b decisión de no usar Tool y errores
    ↓
 Lab 12c Tool que consulta una API HTTP
    ↓
-Lab 13  Primer agente (pendiente)
+Lab 13  Primer agente: objetivo → decidir → actuar → observar → repetir
    ↓
 Lab 14  Workflow (pendiente)
    ↓

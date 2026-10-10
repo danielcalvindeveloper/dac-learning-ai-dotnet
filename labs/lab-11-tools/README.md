@@ -15,7 +15,7 @@ Lab 11 está compuesto por dos experiencias sobre el mismo caso: `CalcularTotalC
 | [11a - Primer Tool explícito](lab-11a-tool-explicita/README.md) | Comprender el mecanismo de Tool Calling | ✅ Implementado |
 | [11b - Invocación automática de Tools](lab-11b-tool-invocation/README.md) | Utilizar `FunctionInvokingChatClient` para coordinar el mismo ciclo | ✅ Implementado |
 
-M6 está ✅ Implementado: Lab 12 continúa este recorrido con tres sublabs ejecutables. Lab 13 permanece pendiente.
+M6 está ✅ Implementado: Lab 12 continúa este recorrido con tres sublabs ejecutables. Lab 13 ya implementa un agente con objetivo, estado y decisiones iterativas limitadas.
 
 ## Por qué hay dos sublabs
 

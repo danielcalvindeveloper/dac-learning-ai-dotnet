@@ -1,6 +1,6 @@
 # Qué aprendemos en los laboratorios implementados
 
-Recopilación de los aprendizajes de los Labs 00–12, incluidos sus sublaboratorios. Cada título enlaza al README correspondiente.
+Recopilación de los aprendizajes de los Labs 00–13, incluidos sus sublaboratorios. Cada título enlaza al README correspondiente.
 
 Se conserva el contenido de «Qué aprendemos»; en Labs 01 y 02 se utiliza «Resultado esperado». Para Lab 00 y Lab 10b se sintetizan los aprendizajes a partir de sus README, que no tienen una sección equivalente.
 
@@ -242,3 +242,18 @@ Al completar los tres sublabs deberías poder explicar:
 5. Por qué consultar un servicio no garantiza que sus datos sean de hoy.
 6. Por qué una Tool puede llamar directamente a HTTP sin MCP.
 7. Por qué todo este código sigue ejecutándose en la aplicación, no dentro del LLM.
+
+## [Lab 13 - Primer agente](../labs/lab-13-primer-agente/README.md)
+
+Al finalizar deberías poder explicar:
+
+1. qué diferencia hay entre Tool y Agent;
+2. qué diferencia hay entre Function Calling y Agent;
+3. qué es un objetivo;
+4. qué contiene el estado de ejecución;
+5. qué representa una observación;
+6. qué cuenta como una iteración;
+7. cómo funciona el Agent Loop;
+8. por qué el agente puede tomar caminos distintos;
+9. por qué necesita un límite de iteraciones;
+10. por qué un agente no es simplemente un conjunto de Tools.
