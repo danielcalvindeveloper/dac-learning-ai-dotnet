@@ -478,6 +478,8 @@ No incorporamos Semantic Kernel, Agent Framework, MCP, GraphRAG, reranking, hybr
 
 ## Posibles siguientes pasos
 
-Evaluación de retrieval y sincronización explícita de documentos son mejoras que responderían a límites observados de esta referencia. En el carril agéntico, la siguiente referencia planificada es `reference/agent-framework/`: aplicará Microsoft Agent Framework al tipo de problema comprendido en Lab 13, sin ampliar aquí el alcance del RAG.
+La continuación implementada es [RAG Hybrid Search + BM25](../rag-hybrid-search/README.md): conserva el corpus técnico y Qdrant, incorpora Lucene.NET como índice lexical persistente con BM25, fusión RRF propia y filtros nativos en ambos motores. Su [documentación técnica](../rag-hybrid-search/README.md#documentación-técnica) explica la ingesta dual y el recorrido completo, incluyendo el estado prerelease de los paquetes Lucene.
+
+La siguiente candidata del carril RAG es `reference/rag-semantic-chunking/`, todavía sin implementar. Evaluación de retrieval y sincronización más robusta siguen siendo áreas de mejora. En el carril agéntico, `reference/agent-framework/` continúa planificada para aplicar Microsoft Agent Framework al tipo de problema comprendido en Lab 13.
 
 [Índice de implementaciones de referencia](../README.md) · [README principal](../../README.md) · [Roadmap](../../ROADMAP.md#implementaciones-de-referencia).

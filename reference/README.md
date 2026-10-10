@@ -6,7 +6,7 @@ Las implementaciones de referencia muestran cómo aplicar los conceptos de los l
 
 Buscan reducir la distancia entre “entiendo cómo funciona” y “veo cómo podría implementarlo en un proyecto real”. Forman parte del mismo proyecto y complementan el recorrido incremental de `labs/`.
 
-**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md) está implementada y validada con Qdrant. El agente con Microsoft Agent Framework continúa planificado.
+**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md) y [RAG Hybrid Search + BM25](rag-hybrid-search/README.md) están implementadas y validadas con Qdrant. RAG Semantic Chunking y el agente con Microsoft Agent Framework continúan planificados.
 
 ## Cómo recorrer ambos niveles
 
@@ -39,6 +39,10 @@ problema → concepto → abstracción → herramienta adecuada
 
 Cada referencia debe justificar qué aporta la tecnología elegida, qué complejidad agrega y qué conserva de los labs. No creamos un proyecto sólo porque una librería figure en el stack.
 
+Las Implementaciones de Referencia deben privilegiar componentes y librerías maduras cuando existan: muestran cómo integrar correctamente infraestructura en una aplicación realista. El tamaño pequeño del dataset facilita ejecutar, leer y comparar; **no es un argumento para sustituir motores reales por implementaciones artesanales**.
+
+La lógica propia corresponde cuando pertenece a la solución y mejora claridad. RRF propio compone rankings y es apropiado; BM25 artesanal en lugar de Lucene.NET no corresponde a esta referencia. Esta elección admite documentar compromisos reales: Lucene.NET 4.8 utiliza paquetes prerelease, verificados y fijados, sin presentarlos como estables.
+
 Los nombres de carpeta deben ser breves, descriptivos, en minúsculas y con guiones. Este carril no usa números de Lab ni modifica milestones. No se crean carpetas vacías para candidatas futuras.
 
 ## Estrategia de librerías y frameworks
@@ -65,11 +69,13 @@ Semantic Kernel forma parte de la evolución previa del ecosistema Microsoft AI.
 
 ## Primeras implementaciones y candidatas
 
-El orden de referencias es RAG con Vector Store real, agente con Microsoft Agent Framework y futuras implementaciones según necesidades concretas. La primera ya es ejecutable; la ruta del agente sigue siendo una propuesta, sin carpeta creada:
+El carril RAG evoluciona de Vector Store real a Hybrid Search y después a Semantic Chunking. Las dos primeras referencias son ejecutables; Semantic Chunking y el agente con Microsoft Agent Framework siguen siendo propuestas, sin carpetas creadas:
 
 | Ruta | Pregunta que resuelve o resolverá | Estado |
 |---|---|---|
 | [`reference/rag-vector-store/`](rag-vector-store/README.md) | ¿Cómo reemplazar `InMemoryVectorStore` y la búsqueda lineal por infraestructura vectorial real? | ✅ Implementada |
+| [`reference/rag-hybrid-search/`](rag-hybrid-search/README.md) | ¿Cuándo combinar similitud semántica con BM25, RRF y filtros por metadata? | ✅ Implementada |
+| `reference/rag-semantic-chunking/` | ¿Qué ocurre si el problema está en cómo construimos los chunks? | ⏳ Planificada |
 | `reference/agent-framework/` | ¿Qué infraestructura de un agente de soporte puede delegarse a Microsoft Agent Framework después de comprender el loop explícito? | ⏳ Planificada |
 
 ### RAG con Vector Store real
@@ -84,6 +90,14 @@ Parte de [Lab 07 — Embeddings](../labs/lab-07-embeddings/README.md), [Lab 08 �
 | Origen de los fragmentos y RAG | Metadata y RAG con infraestructura especializada |
 
 La [implementación con Qdrant](rag-vector-store/README.md) conserva embeddings explícitos mediante Microsoft.Extensions.AI y delega persistencia y vector search a Microsoft.Extensions.VectorData. Se validaron ingesta, consultas, fuentes, persistencia, IDs estables y tests unitarios.
+
+### RAG Hybrid Search + BM25
+
+Continúa [rag-vector-store](rag-vector-store/README.md) y el bloque conceptual de Labs 07–10. La [implementación híbrida](rag-hybrid-search/README.md) conserva Qdrant y embeddings explícitos, delega BM25 e índice invertido persistente a Lucene.NET y fusiona posiciones mediante RRF propio. Ambos motores aplican filtros nativos antes del topK. Lucene.Net y Analysis.Common están fijados en 4.8.0-beta00018, **prerelease**, con .NET 10 verificado.
+
+Incluye comparación reproducible de consultas semánticas, códigos exactos y evidencia complementaria, RAG completo con fuentes, unit tests offline y un proyecto separado de integración. Su [documentación técnica](rag-hybrid-search/README.md#documentación-técnica) explica cada componente. Hybrid no garantiza mejorar todas las preguntas.
+
+La siguiente candidata del carril RAG es `reference/rag-semantic-chunking/`, todavía sin implementar: estudiar cómo la construcción de chunks afecta la recuperación.
 
 ### Agente con Microsoft Agent Framework
 
@@ -107,6 +121,10 @@ Cada implementación tiene una sección **Conocimientos previos** con enlaces a 
 Los README de Labs 07–10 enlazan la referencia ejecutable. Mientras una candidata siga planificada, no agregamos enlaces a proyectos inexistentes ni placeholders en todos los labs.
 
 ## Documentación obligatoria de cada implementación
+
+**Norma permanente, sin excepción, para todas las referencias actuales y futuras:** cada `reference/*` debe incluir `README.md`, `docs/`, código y tests. Código maduro no significa sobrearquitectura.
+
+`docs/` debe explicar arquitectura, artefactos relevantes, dependencias y su motivo, decisiones de diseño, entorno, ejecución y testing; incluir diagramas Mermaid y referencias oficiales donde corresponda. El README debe enlazar todos esos documentos. No alcanza con README y código. Los comentarios pedagógicos del código deben explicar decisiones y conceptos no obvios para que un desarrollador menos experimentado pueda seguir la solución.
 
 Cada implementación debe tener su propio `README.md` con, al menos:
 

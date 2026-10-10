@@ -1,0 +1,29 @@
+[
+  {
+    "id": "A-semantica",
+    "query": "How can I take time away from work to rest during the year?",
+    "expectedDocuments": ["licencia-anual.md"],
+    "observation": "Vector recupera la paráfrasis; BM25 no encuentra términos en inglés."
+  },
+  {
+    "id": "B-codigo",
+    "query": "ART-93823",
+    "expectedDocuments": ["catalogo-codigos.md"],
+    "observation": "BM25 devuelve sólo el código exacto; vector puede incluir formularios con códigos parecidos."
+  },
+  {
+    "id": "C-hibrida",
+    "query": "ART-93821 annual time off: which form and how many days?",
+    "expectedDocuments": ["catalogo-codigos.md", "licencia-anual.md"],
+    "observation": "Comparar cobertura y orden: Lucene también puede recuperar ambas evidencias; RRF prioriza la política mediante la señal semántica."
+  },
+  {
+    "id": "D-metadata",
+    "query": "ART-93821 annual time off: which form and how many days?",
+    "department": "RRHH",
+    "type": "policy",
+    "year": 2026,
+    "expectedDocuments": ["licencia-anual.md"],
+    "observation": "Comparar con C: excluir TI y la política histórica antes del topK."
+  }
+]

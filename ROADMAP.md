@@ -676,16 +676,20 @@ validación y límites
 
 En paralelo al recorrido incremental de Labs, el proyecto incorpora un carril de implementaciones aplicadas. Pueden desarrollarse cuando el bloque conceptual correspondiente tenga suficiente madurez, sin esperar a finalizar todos los laboratorios.
 
-No forman parte de la secuencia numerada ni agregan milestones. [RAG con Vector Store real](reference/rag-vector-store/README.md) está implementada y validada con Qdrant; el agente con Microsoft Agent Framework continúa planificado, sin carpeta creada.
+No forman parte de la secuencia numerada ni agregan milestones. [RAG con Vector Store real](reference/rag-vector-store/README.md) y [RAG Hybrid Search + BM25](reference/rag-hybrid-search/README.md) están implementadas y validadas con Qdrant. RAG Semantic Chunking y el agente con Microsoft Agent Framework continúan planificados, sin carpetas creadas.
 
 | Implementación / candidata | Ruta | Problema que resuelve o abordará | Estado |
 |---|---|---|---|
 | RAG con Vector Store real | [`reference/rag-vector-store/`](reference/rag-vector-store/README.md) | Reemplazar `InMemoryVectorStore` y búsqueda lineal por Qdrant persistente con Microsoft.Extensions.AI y Microsoft.Extensions.VectorData | ✅ Implementada |
+| RAG Hybrid Search + BM25 | [`reference/rag-hybrid-search/`](reference/rag-hybrid-search/README.md) | Combinar Qdrant dense y Lucene.NET BM25 mediante RRF propio, filtros nativos y contexto para RAG | ✅ Implementada |
+| RAG Semantic Chunking | `reference/rag-semantic-chunking/` | Estudiar cómo la construcción de chunks afecta la recuperación | ⏳ Planificada |
 | Agente con Microsoft Agent Framework | `reference/agent-framework/` | Retomar incidentes de Lab 13 y delegar infraestructura agéntica después de comprender el Agent Loop | ⏳ Planificada |
 
-Microsoft.Extensions.AI mantiene las abstracciones base. Microsoft.Extensions.VectorData aporta la infraestructura de acceso vectorial. Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos, después del Agent Loop explícito de Lab 13; lo complementa sin migrar ese laboratorio. El orden previsto es RAG con Vector Store real → agente con Microsoft Agent Framework → futuras referencias según el problema.
+Microsoft.Extensions.AI mantiene las abstracciones base. Microsoft.Extensions.VectorData aporta la infraestructura de acceso vectorial. Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos, después del Agent Loop explícito de Lab 13; lo complementa sin migrar ese laboratorio. El carril RAG evoluciona de Vector Store real → Hybrid Search → Semantic Chunking; la referencia agéntica conserva su planificación independiente.
 
 La primera referencia utiliza Qdrant, con ingesta/consulta separadas, embeddings explícitos, metadata, fuentes y tests unitarios. Se verificaron dos ingestas sin duplicados y consulta después de recrear el contenedor conservando el volumen. Las [reglas del carril](reference/README.md#documentación-obligatoria-de-cada-implementación) exigen explicar el problema, conocimientos previos, arquitectura, dependencias, preparación del entorno, configuración, ejecución y limitaciones.
+
+Hybrid Search delega BM25 e índice invertido persistente a Lucene.NET, mantiene Qdrant dense y RRF propio, tres modos comparables y filtros nativos antes del topK. Lucene.NET 4.8.0-beta00018 es prerelease; se verificó con .NET 10. Incluye ingesta dual, respuestas RAG, unit tests sin servicios externos, integración local Lucene e integración Qdrant/Hybrid. Todas las referencias deben incluir `docs/`, Mermaid, fuentes oficiales, comentarios pedagógicos y tests, sin sobrearquitectura ni sustituciones artesanales de infraestructura por el tamaño del corpus.
 
 ## Dependencias entre hitos
 

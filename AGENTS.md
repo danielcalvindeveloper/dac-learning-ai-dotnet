@@ -59,10 +59,14 @@ Código maduro no significa arquitectura enterprise. Aplicar KISS, buen diseño 
 
 Antes de elegir dependencias, verificar APIs, versiones, estado estable/preview y compatibilidad en documentación oficial. Primero el problema, después la herramienta. Incorporar frameworks sólo cuando resuelvan una responsabilidad visible.
 
+Las referencias deben privilegiar componentes y librerías maduras para infraestructura conocida. El tamaño reducido del dataset de demostración no justifica sustituir motores reales por implementaciones artesanales. La lógica propia es apropiada cuando pertenece a la solución y mejora claridad: RRF para componer rankings sí; reemplazar BM25 de Lucene.NET por un motor artesanal en `rag-hybrid-search` no. Documentar explícitamente prereleases y compromisos de soporte cuando correspondan.
+
 Incluir tests útiles y deterministas de lógica propia: transformaciones, IDs, chunking, configuración, contexto, selección de fuentes y caminos sin evidencia. Preferir funciones pequeñas y abstracciones existentes antes que interfaces creadas sólo para mockear. Los unit tests deben poder ejecutarse sin LLM, red, Docker ni infraestructura externa cuando sea razonable.
 
 No intentar probar internamente SDKs o bases vectoriales ni afirmar textos exactos de un LLM o scores sin garantía contractual. Si se agregan tests de integración, separarlos e indicar cómo ejecutarlos y qué infraestructura requieren; los unit tests no deben depender de ellos.
 
 Cada referencia debe cumplir las [reglas de documentación](reference/README.md#documentación-obligatoria-de-cada-implementación): explicar problema, labs previos, arquitectura, dependencias y su motivo, preparación del entorno, configuración, infraestructura, ejecución, recorrido del código, tests, diferencias y limitaciones. Enlazar fuentes oficiales y distinguir planificación de implementación.
+
+Norma permanente, sin excepción, para referencias actuales y futuras: cada `reference/*` debe contener `README.md`, `docs/`, código y tests. Documentar en `docs/` arquitectura, artefactos relevantes, decisiones, librerías, entorno y testing; incluir diagramas Mermaid y referencias oficiales. El README debe enlazar esos documentos y el código debe incluir comentarios pedagógicos útiles. Código maduro no significa sobrearquitectura.
 
 Verificar realmente `dotnet restore`, `dotnet build` y `dotnet test`; corregir errores y revisar warnings nuevos sin silenciarlos injustificadamente. Ejecutar y comprobar la infraestructura y los flujos reales cuando el entorno lo permita. Informar exactamente lo que se ejecutó y lo que quedó sin verificar.

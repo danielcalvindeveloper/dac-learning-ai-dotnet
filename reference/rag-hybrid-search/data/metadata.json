@@ -1,0 +1,10 @@
+{
+  "dependency-injection.md": { "Department": "TI", "DocumentType": "guide", "Year": 2026 },
+  "embeddings.md": { "Department": "TI", "DocumentType": "guide", "Year": 2026 },
+  "microsoft-extensions-ai.md": { "Department": "TI", "DocumentType": "guide", "Year": 2026 },
+  "rag.md": { "Department": "TI", "DocumentType": "guide", "Year": 2026 },
+  "licencia-anual.md": { "Department": "RRHH", "DocumentType": "policy", "Year": 2026 },
+  "catalogo-codigos.md": { "Department": "TI", "DocumentType": "catalog", "Year": 2026 },
+  "licencia-software.md": { "Department": "TI", "DocumentType": "policy", "Year": 2026 },
+  "descanso-2025.md": { "Department": "RRHH", "DocumentType": "policy", "Year": 2025 }
+}

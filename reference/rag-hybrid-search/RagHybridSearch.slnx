@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/RagHybridSearch/RagHybridSearch.csproj" />
+  <Project Path="tests/RagHybridSearch.Tests/RagHybridSearch.Tests.csproj" />
+</Solution>

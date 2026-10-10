@@ -18,7 +18,7 @@ comprender fundamentos + experimentar implementaciones aplicadas
 
 Ambos niveles se relacionan: primero comprender el mecanismo, después estudiar una implementación aplicada y volver sobre las decisiones de cada una. Las referencias reducen esa distancia sin reemplazar los labs ni tratarlos como implementaciones incorrectas.
 
-La primera referencia, [RAG con Vector Store real](../reference/rag-vector-store/README.md), ya aplica Labs 07–10 con Qdrant persistente. La siguiente candidata, un agente con Microsoft Agent Framework, sigue planificada.
+Las referencias [RAG con Vector Store real](../reference/rag-vector-store/README.md) y [RAG Hybrid Search + BM25](../reference/rag-hybrid-search/README.md) ya aplican Labs 07–10 con Qdrant persistente. Hybrid integra Lucene.NET para BM25, RRF propio y filtros nativos en ambos motores. Semantic Chunking y el agente con Microsoft Agent Framework siguen planificados.
 
 ## Principios
 
