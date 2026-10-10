@@ -2,6 +2,7 @@ using Microsoft.Extensions.AI;
 
 namespace RagVectorStore;
 
+// UsedModel indica una llamada al chat; la búsqueda previa sí puede haber consumido embeddings.
 public sealed record RagAnswer(string Text, IReadOnlyList<string> Sources, bool UsedModel);
 
 public sealed class RagService(IChatClient chatClient)
@@ -12,12 +13,14 @@ public sealed class RagService(IChatClient chatClient)
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(question);
+        // Recuperar los mejores disponibles y aceptar evidencia son decisiones separadas.
         SearchHit[] accepted = candidates
             .Where(hit => double.IsFinite(hit.Score) && hit.Score >= RagSettings.MinimumScore)
             .ToArray();
 
         if (accepted.Length == 0)
         {
+            // Salida determinista: sin evidencia aceptada no solicitamos una respuesta generativa.
             return new RagAnswer("No se encontró contexto suficientemente relevante para responder.", [], false);
         }
 

@@ -51,6 +51,7 @@ public sealed class RagServiceTests
         Assert.Contains("evidencia suficiente", chat.LastPrompt);
     }
 
+    // Registra solicitudes sin red: comprobamos qué enviamos y si llamamos, no el razonamiento de un LLM.
     private sealed class RecordingChatClient : IChatClient
     {
         public int Calls { get; private set; }

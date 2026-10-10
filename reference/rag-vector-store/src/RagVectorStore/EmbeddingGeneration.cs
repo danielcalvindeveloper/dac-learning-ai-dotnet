@@ -14,6 +14,7 @@ public static class EmbeddingGeneration
         GeneratedEmbeddings<Embedding<float>> embeddings;
         try
         {
+            // Cada resultado se emparejará por posición con el texto enviado en este lote.
             embeddings = await generator.GenerateAsync(texts, cancellationToken: cancellationToken);
         }
         catch (ClientResultException ex)
@@ -26,6 +27,7 @@ public static class EmbeddingGeneration
             throw new InvalidOperationException("No se pudo contactar al proveedor de embeddings. Revisá AI_URL y la conexión.", ex);
         }
 
+        // Validamos la forma de la respuesta antes de construir records o consultar Qdrant.
         if (embeddings.Count != texts.Count || embeddings.Any(embedding => embedding.Vector.IsEmpty))
         {
             throw new InvalidOperationException("El proveedor devolvió una cantidad o dimensión de embeddings inválida.");

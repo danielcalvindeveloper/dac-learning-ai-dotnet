@@ -30,6 +30,7 @@ public sealed class DocumentChunkRecord
 
         return new DocumentChunkRecord
         {
+            // Usamos 16 bytes del hash y un orden explícito para obtener siempre el mismo Guid.
             Id = new Guid(hash.AsSpan(0, 16), bigEndian: true),
             DocumentId = documentId,
             Source = chunk.Source,
@@ -48,6 +49,7 @@ public sealed class DocumentChunkRecord
         {
             Properties =
             [
+                // Key identifica el punto; Data conserva texto y procedencia; Vector permite buscarlo.
                 new VectorStoreKeyProperty(nameof(Id), typeof(Guid)),
                 new VectorStoreDataProperty(nameof(DocumentId), typeof(string)),
                 new VectorStoreDataProperty(nameof(Source), typeof(string)),

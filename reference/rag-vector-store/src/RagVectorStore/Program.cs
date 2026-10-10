@@ -17,6 +17,7 @@ if (args.Length == 0 || (args[0] != "ingest" && args[0] != "query")
     return;
 }
 
+// Ctrl+C solicita cancelación; las operaciones reciben el token y pueden liberar sus recursos.
 using CancellationTokenSource cancellation = new();
 ConsoleCancelEventHandler cancelHandler = (_, e) => { e.Cancel = true; cancellation.Cancel(); };
 Console.CancelKeyPress += cancelHandler;
@@ -29,9 +30,11 @@ try
         options.Endpoint = configuration.Endpoint;
     }
 
+    // Adaptamos el SDK concreto: los servicios trabajan con las abstracciones de Microsoft.Extensions.AI.
     using IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator = new OpenAI.Embeddings.EmbeddingClient(
         configuration.EmbeddingModel, new ApiKeyCredential(configuration.ApiKey), options).AsIEmbeddingGenerator();
     using QdrantClient qdrant = new(configuration.QdrantEndpoint, grpcTimeout: TimeSpan.FromSeconds(10));
+    // Program conserva la propiedad del cliente gRPC y lo libera con using, después del store.
     using VectorStore vectorStore = new QdrantVectorStore(qdrant, ownsClient: false);
 
     Console.WriteLine($"Proveedor: {configuration.ProviderName} | Embeddings: {configuration.EmbeddingModel}");
@@ -42,6 +45,7 @@ try
         // Verificamos conectividad antes de consumir embeddings pagos.
         await vectorStore.CollectionExistsAsync(RagSettings.CollectionName, cancellation.Token);
         IngestionService ingestion = new(embeddingGenerator, vectorStore);
+        // El .csproj copia el corpus junto al ejecutable; no dependemos del directorio actual para leerlo.
         await ingestion.IngestAsync(Path.Combine(AppContext.BaseDirectory, "data"), cancellation.Token);
     }
     else
@@ -56,6 +60,7 @@ try
             Console.WriteLine($"score: {hit.Score:F4} | source: {hit.Record.Source} | document: {hit.Record.DocumentId} | chunk: {hit.Record.ChunkIndex}");
         }
 
+        // Crear el cliente no envía una petición; RagService sólo llama al chat si acepta evidencia.
         using IChatClient chatClient = new OpenAI.Chat.ChatClient(
             configuration.Model, new ApiKeyCredential(configuration.ApiKey), options).AsIChatClient();
         RagService rag = new(chatClient);

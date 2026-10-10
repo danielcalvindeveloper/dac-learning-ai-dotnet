@@ -12,12 +12,14 @@ public sealed record AppConfiguration(
 {
     public static AppConfiguration Load()
     {
+        // La búsqueda del .env parte del directorio de trabajo y asciende hacia la raíz.
         Env.TraversePath().Load();
         return Parse(Environment.GetEnvironmentVariable);
     }
 
     public static AppConfiguration Parse(Func<string, string?> read)
     {
+        // Recibir la lectura como función permite probar la validación con un diccionario, sin credenciales.
         ArgumentNullException.ThrowIfNull(read);
 
         return new AppConfiguration(

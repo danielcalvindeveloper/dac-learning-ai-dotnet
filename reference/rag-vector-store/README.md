@@ -8,6 +8,20 @@ La pregunta es: **¿cómo reemplazamos el almacenamiento en memoria y la búsque
 
 Esta es una implementación de referencia, sin numeración de Lab. No modifica el recorrido conceptual.
 
+## Guía para entender el código
+
+La carpeta `docs/` explica los artefactos de la solución, las decisiones de implementación y los flujos con diagramas Mermaid. Leela en este orden o elegí el tema que necesites:
+
+1. [Mapa de la solución](docs/01-mapa-de-la-solucion.md): responsabilidades, archivos de soporte, corpus y dependencias.
+2. [Configuración e infraestructura](docs/02-configuracion-e-infraestructura.md): `.env`, composición en `Program.cs`, recursos, cancelación y Docker.
+3. [Documentos y chunking](docs/03-documentos-y-chunking.md): lectura, `DocumentChunk`, normalización, tamaño y overlap.
+4. [Embeddings y registro vectorial](docs/04-embeddings-y-registro-vectorial.md): APIs, vectores, IDs estables, payload y esquema.
+5. [Ingesta y persistencia](docs/05-ingesta-y-persistencia.md): secuencia desde el archivo hasta el upsert, idempotencia y límites.
+6. [Consulta, contexto y respuesta](docs/06-consulta-contexto-y-respuesta.md): secuencia de retrieval, aceptación de evidencia, prompt y fuentes.
+7. [Tests y diagnóstico](docs/07-tests-y-diagnostico.md): cobertura real, cliente de prueba, errores y códigos de salida.
+
+Cada guía enlaza el código que explica y fuentes oficiales donde corresponde. `docs/` es documentación para el desarrollador; `data/` contiene los documentos de ejemplo que indexa la aplicación.
+
 ## Problema que resuelve
 
 En Lab 10, `InMemoryVectorStore` conserva chunks y vectores en una lista, compara cada vector mediante `CosineSimilarity`, ordena y devuelve hasta `topK` candidatos. Al cerrar el proceso, el índice desaparece.
@@ -389,6 +403,14 @@ rag-vector-store/
 ├── global.json
 ├── RagVectorStore.slnx
 ├── README.md
+├── docs/
+│   ├── 01-mapa-de-la-solucion.md
+│   ├── 02-configuracion-e-infraestructura.md
+│   ├── 03-documentos-y-chunking.md
+│   ├── 04-embeddings-y-registro-vectorial.md
+│   ├── 05-ingesta-y-persistencia.md
+│   ├── 06-consulta-contexto-y-respuesta.md
+│   └── 07-tests-y-diagnostico.md
 ├── data/
 │   ├── dependency-injection.md
 │   ├── embeddings.md

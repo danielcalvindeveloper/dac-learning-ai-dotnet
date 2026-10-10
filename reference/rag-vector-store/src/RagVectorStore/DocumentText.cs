@@ -1,5 +1,6 @@
 namespace RagVectorStore;
 
+// Fragmento previo a la indexación: conserva procedencia y posición, pero todavía no un vector.
 public sealed record DocumentChunk(string Content, string Source, int Index);
 
 public static class DocumentText
@@ -32,14 +33,18 @@ public static class DocumentText
             throw new ArgumentOutOfRangeException(nameof(overlap), "Debe ser menor que chunkSize.");
         }
 
+        // Recortamos sólo el documento completo para no alterar el overlap entre fragmentos.
         string normalized = text.ReplaceLineEndings("\n").Trim();
         List<DocumentChunk> chunks = [];
+        // El inicio avanza menos que el tamaño: así se repite la cola del chunk anterior.
+        // Length y Substring cuentan unidades UTF-16, no tokens ni límites de palabras.
         for (int start = 0; start < normalized.Length; start += chunkSize - overlap)
         {
             int length = Math.Min(chunkSize, normalized.Length - start);
             chunks.Add(new DocumentChunk(normalized.Substring(start, length), source, chunks.Count));
             if (start + length == normalized.Length)
             {
+                // No agregamos otro fragmento formado sólo por texto que ya alcanzó el final.
                 break;
             }
         }
