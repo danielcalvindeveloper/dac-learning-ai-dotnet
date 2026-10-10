@@ -8,6 +8,7 @@ El roadmap inicial buscaba recorrer LLM, RAG, Tools, Agents y MCP. La experienci
 
 - En Lab 02 observamos el historial explícito; en Lab 06 organizamos memoria por sesión y una ventana de mensajes.
 - En Lab 09a vemos cada etapa del pipeline RAG en `Program.cs`; en Lab 09b encapsulamos el mismo mecanismo en `RagService`.
+- En Lab 11a observamos el ciclo explícito de una Tool; en Lab 11b mantenemos el ejercicio y delegamos su coordinación a `FunctionInvokingChatClient`.
 - Hasta Lab 06 `AI_MODEL` era suficiente. `AI_EMBEDDING_MODEL` aparece en Lab 07, cuando necesitamos una capacidad distinta.
 
 Estos ejemplos comparten una decisión: introducir una abstracción cuando el alumno ya conoce el problema que resuelve.
@@ -39,9 +40,11 @@ Al completar ese bloque tendremos una base práctica de RAG. Las técnicas de ma
 ## Consecuencia en Tools y Agents
 
 ```text
-Lab 11: Primer Tool
+Lab 11a: Primer Tool explícito
     ↓
-Lab 12: Múltiples Tools
+Lab 11b: Invocación automática de Tools
+    ↓
+Lab 12: Function Calling con múltiples Tools
     ↓
 Lab 13: Primer agente
     ↓
@@ -56,6 +59,10 @@ Lab 17: Proyecto final
 
 Una tool expone una operación que ejecuta código .NET. Function calling permite que el modelo solicite esa operación con argumentos; la aplicación ejecuta el código y devuelve el resultado. Tener varias tools disponibles no convierte por sí solo una aplicación en un agente.
 
+Lab 11 se divide en dos experiencias para comprender, experimentar, observar complejidad e introducir una abstracción. 11a muestra deliberadamente el protocolo y preserva explícitamente la representación nativa cuando reconoce el tipo del SDK utilizado, sin preguntar qué proveedor está configurado. 11b utiliza `UseFunctionInvocation()` para encapsular la coordinación ya comprendida. La función sigue ejecutándose dentro de la aplicación.
+
+La prueba inicial de 11b mostró que automatizar el ciclo no corregía por sí solo la pérdida de metadata en el adaptador. La conservación del mensaje nativo quedó en el cliente base, fuera del ejercicio. Gemini y `thought_signature` fueron el caso real que permitió descubrir el problema. El principio aprendido es trabajar contra el modelo común y conservar información nativa cuando el protocolo la necesita. La implementación concreta pertenece al adaptador del SDK OpenAI; otro SDK puede requerir otro tratamiento. Este contraste ayuda a distinguir la responsabilidad del cliente de invocación de la compatibilidad del adaptador. Ambos sublabs están implementados; Lab 12 continúa pendiente y abordará múltiples capacidades, selección, argumentos, errores y una Tool externa.
+
 El primer agente incorpora un objetivo, herramientas, estado/contexto y decisiones iterativas con límites. Después estudiamos workflows: procesos cuyos pasos y bifurcaciones controla la aplicación. Un workflow puede tener una estructura determinista aunque una llamada a un modelo produzca respuestas variables.
 
 Multi-agent llega cuando ya podemos evaluar si conviene repartir responsabilidades entre pocos agentes. Más agentes no implica una mejor solución. MCP aparece después, cuando conocemos la necesidad de exponer y consumir capacidades mediante un protocolo estándar.
@@ -66,7 +73,7 @@ El proyecto final ejercita la elección: RAG, una tool, un workflow, un agente o
 
 Cada laboratorio plantea una pregunta pequeña y concreta. Hay más pasos para experimentar y reconocer limitaciones antes de combinar capacidades. El alumno puede identificar qué problema apareció, qué solución introducimos y por qué existe.
 
-El contraste entre 09a y 09b es la referencia: comprender el pipeline facilita valorar qué aporta su encapsulación. Los frameworks se incorporarán cuando ayuden a resolver una necesidad que ya podamos explicar.
+Los contrastes entre 09a y 09b y entre 11a y 11b permiten valorar qué aporta encapsular una responsabilidad después de comprenderla. 11a muestra el mecanismo; 11b utiliza la abstracción adecuada del framework para coordinarlo. Los frameworks se incorporan cuando ayudan a resolver una necesidad que ya podamos explicar.
 
 ## Extensiones futuras
 

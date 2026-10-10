@@ -42,8 +42,9 @@ timeline
                               : Lab 10b - Relevancia y fuentes
 
     section Capacidades
-        M6 - Herramientas : Primer Tool y Function Calling
-                          : Múltiples Tools
+        M6 - Herramientas : Lab 11a - Tool explícita
+                          : Lab 11b - Invocación automática
+                          : Lab 12 - Function Calling con múltiples Tools
         M7 - Agentes : Primer agente
                     : Objetivos
                     : Tools
@@ -70,13 +71,13 @@ timeline
 | M3 | Structured Output y memoria | 05–06 | ✅ Implementado |
 | M4 | Embeddings | 07 | ✅ Implementado |
 | M5 | Documentos y RAG | 08–10 | ✅ Implementado |
-| M6 | Tools y Function Calling | 11–12 | ⏳ Pendiente |
+| M6 | Tools y Function Calling | 11–12 | 🚧 En progreso |
 | M7 | Primer agente | 13 | ⏳ Pendiente |
 | M8 | Orquestación: Workflow y Multi-agent | 14–15 | ⏳ Pendiente |
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Integración consciente | 17 | ⏳ Pendiente |
 
-Los Labs 00–10 están implementados; Labs 09 y 10 comprenden dos sublaboratorios ejecutables e independientes cada uno. Dentro de M5:
+Los Labs 00–11 están implementados; Labs 09, 10 y 11 comprenden dos sublaboratorios ejecutables e independientes cada uno. Dentro de M5:
 
 | Laboratorio | Estado |
 |---|---|
@@ -87,7 +88,7 @@ Los Labs 00–10 están implementados; Labs 09 y 10 comprenden dos sublaboratori
 | [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) | ✅ Implementado |
 | [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) | ✅ Implementado |
 
-M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Los Labs 11–17 continúan pendientes.
+M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está en progreso porque Lab 12 sigue pendiente; los Labs 12–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
 
 
 ### Simplificación transversal de configuración
@@ -456,26 +457,37 @@ El control de relevancia está implementado en Lab 10b; Lab 09 conserva recupera
 
 **Objetivo:** comprender una solicitud de tool y después la selección entre varias herramientas, con ejecución controlada por la aplicación.
 
-**Estado:** ⏳ Pendiente
+**Estado:** 🚧 En progreso
 
-### Lab 11 — Primer Tool
+### Lab 11 — Tools
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
 Una tool representa una operación de código .NET. El modelo solicita su ejecución mediante function calling; la aplicación interpreta los argumentos, ejecuta la función y devuelve el resultado. El modelo no ejecuta el código por sí mismo.
 
+[Lab 11](labs/lab-11-tools/README.md) comprende dos experiencias con `CalcularTotalConIva` y la misma pregunta. Primero entendemos el mecanismo y después utilizamos una abstracción existente para coordinarlo.
+
+| Sublaboratorio | Alcance | Estado |
+|---|---|---|
+| [11a - Primer Tool explícito](labs/lab-11-tools/lab-11a-tool-explicita/README.md) | Solicitud, argumentos, ejecución, Function Result y continuación visibles | ✅ Implementado |
+| [11b - Invocación automática de Tools](labs/lab-11-tools/lab-11b-tool-invocation/README.md) | El mismo ejercicio con `ChatClientBuilder.UseFunctionInvocation()` | ✅ Implementado |
+
+Ambos compilan con .NET 10 y completaron el ciclo con Gemini: .NET obtuvo `1210` y el modelo devolvió la respuesta final. Gemini hizo visible la necesidad de preservar metadata nativa al continuar. Ambos sublabs conservan la representación recibida del SDK OpenAI sin condiciones por proveedor: explícitamente en 11a y en el cliente base en 11b. Otro SDK puede requerir otro tratamiento. La invocación automática continúa a cargo de `FunctionInvokingChatClient`.
+
 | # | Estado | Alcance |
 |---|---|---|
-| 11.1 | ⏳ | Exponer una función pequeña como tool y describir su finalidad |
-| 11.2 | ⏳ | Observar la solicitud de function calling y sus argumentos |
-| 11.3 | ⏳ | Ejecutar código .NET y devolver su resultado al modelo |
-| 11.4 | ⏳ | Obtener una respuesta final y distinguir la solicitud del modelo de la ejecución real |
+| 11.1 | ✅ | Exponer una función pequeña como tool y describir su finalidad |
+| 11.2 | ✅ | Observar la solicitud de function calling y sus argumentos |
+| 11.3 | ✅ | Ejecutar código .NET y devolver su resultado al modelo |
+| 11.4 | ✅ | Obtener una respuesta final y distinguir la solicitud del modelo de la ejecución real |
+| 11.5 | ✅ | Automatizar la invocación con `FunctionInvokingChatClient` en 11b |
+| 11.6 | ✅ | Comparar responsabilidades entre el ciclo explícito y su abstracción |
 
-### Lab 12 — Múltiples Tools
+### Lab 12 — Function Calling
 
 **Estado:** ⏳ Pendiente
 
-Pasar de una tool a varias operaciones disponibles. Tener herramientas no convierte por sí solo la aplicación en un agente.
+Pasar de una Tool a varias operaciones disponibles, con selección, argumentos, errores y casos donde no hace falta ninguna. La invocación automática ya se estudia en 11b. Habrá una Tool local y al menos una que encapsule una capacidad externa, por ejemplo una API HTTP. Tener herramientas no convierte por sí solo la aplicación en un agente.
 
 | # | Estado | Alcance |
 |---|---|---|
@@ -484,6 +496,7 @@ Pasar de una tool a varias operaciones disponibles. Tener herramientas no convie
 | 12.3 | ⏳ | Resolver preguntas que puedan requerir más de una operación |
 | 12.4 | ⏳ | Manejar errores básicos al ejecutar una tool |
 | 12.5 | ⏳ | Diferenciar tool calling de un agente orientado a un objetivo |
+| 12.6 | ⏳ | Contrastar una Tool local con otra que encapsule una capacidad externa |
 
 ```mermaid
 sequenceDiagram

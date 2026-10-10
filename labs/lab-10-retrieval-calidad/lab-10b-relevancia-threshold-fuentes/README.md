@@ -236,6 +236,6 @@ No incorporamos vector databases, BM25, hybrid search, re-ranking, query rewriti
 
 Podemos observar qué recuperó el sistema, decidir qué contexto aceptamos y evitar la generación cuando no hay evidencia suficiente según el mínimo elegido. Esta base permite estudiar otras técnicas posteriormente con un problema conocido.
 
-El siguiente laboratorio del recorrido es [Lab 11 - Primer Tool](../../lab-11-tools/README.md), todavía pendiente.
+El siguiente laboratorio del recorrido es [Lab 11 - Tools](../../lab-11-tools/README.md), implementado mediante 11a, con el ciclo explícito, y 11b, con invocación automática. Ambos preservan la representación nativa del SDK utilizado sin condiciones por proveedor; el caso observado con Gemini se explica en sus README.
 
 [Volver a Lab 10](../README.md).

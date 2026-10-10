@@ -1,8 +1,8 @@
-# Lab 12 - Múltiples Tools
+# Lab 12 - Function Calling
 
 ## Objetivo
 
-Pasar de una tool a varias operaciones disponibles y observar cómo el modelo solicita la que corresponde a la pregunta, o responde sin usar ninguna.
+Trabajar Function Calling con múltiples Tools: selección, argumentos, ejecución, errores y casos donde el modelo responde sin usar ninguna. El ciclo explícito y su automatización con una única Tool ya se estudian en Lab 11.
 
 ## Estado
 
@@ -17,7 +17,7 @@ LLM
  └── Tool C
 ```
 
-Function calling ya habrá sido introducido en Lab 11. Aquí observaremos selección, argumentos y resultados cuando hay más de una herramienta disponible.
+[Lab 11a](../lab-11-tools/lab-11a-tool-explicita/README.md) muestra el protocolo explícito y [Lab 11b](../lab-11-tools/lab-11b-tool-invocation/README.md) introduce `UseFunctionInvocation()` con el mismo ejercicio. Aquí utilizaremos esa base para observar selección, argumentos y resultados cuando hay más de una herramienta disponible. Introducir la invocación automática ya no es el objetivo principal de Lab 12.
 
 Entre los casos didácticos habrá al menos una tool cuya implementación invoque una capacidad externa, por ejemplo una API HTTP. La tool encapsulará esa llamada para observar argumentos, ejecución, resultados y errores en un ejemplo acotado.
 
@@ -34,9 +34,12 @@ Una tool puede encapsular una API. Un agente puede utilizar tools. MCP puede exp
 ## Alcance previsto
 
 - Describir herramientas con responsabilidades distintas.
+- Utilizar el ciclo de invocación automática ya comprendido en 11b.
+- Observar los argumentos recibidos y relacionarlos con cada operación.
 - Observar cuándo usar una y cuándo no usar ninguna.
 - Explorar una pregunta que pueda requerir más de una operación.
 - Incluir una tool que encapsule una llamada a una API externa, por ejemplo HTTP.
+- Contrastar una Tool local con otra que encapsule una capacidad externa.
 - Manejar errores básicos de ejecución y presentar resultados.
 
 ## Fuera de alcance

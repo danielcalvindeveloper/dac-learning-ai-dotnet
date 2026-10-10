@@ -54,6 +54,10 @@ dac-learning-ai-dotnet/
 │   │   ├── README.md
 │   │   ├── lab-10a-multiples-documentos/
 │   │   └── lab-10b-relevancia-threshold-fuentes/
+│   ├── lab-11-tools/
+│   │   ├── README.md
+│   │   ├── lab-11a-tool-explicita/
+│   │   └── lab-11b-tool-invocation/
 │   ├── ...
 │   └── lab-17-final-project/
 ├── .editorconfig
@@ -64,7 +68,7 @@ dac-learning-ai-dotnet/
 └── ROADMAP.md
 ```
 
-Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Lab 09, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
+Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Labs 09, 10 y 11, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
 
 ## Lab 00 - Rampa de entrada opcional
 
@@ -98,11 +102,14 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 10 - Retrieval y calidad](labs/lab-10-retrieval-calidad/README.md): implementado
 - ✅ [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md): implementado
 - ✅ [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md): implementado
-- ⏳ Labs 11-17: pendientes de implementación
+- ✅ [Lab 11 - Tools](labs/lab-11-tools/README.md): implementado mediante 11a y 11b
+- ✅ [Lab 11a - Primer Tool explícito](labs/lab-11-tools/lab-11a-tool-explicita/README.md): implementado
+- ✅ [Lab 11b - Invocación automática de Tools](labs/lab-11-tools/lab-11b-tool-invocation/README.md): implementado
+- ⏳ Labs 12-17: pendientes de implementación
 
-Los Labs 00-10 están implementados, con Lab 09 dividido en 09a y 09b y Lab 10 en 10a y 10b. M5 está implementado y Labs 11-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos.
+Los Labs 00-11 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b y Lab 11 en 11a y 11b. M5 está implementado, M6 está en progreso y Labs 12-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los dos sublabs de Lab 11 utilizan únicamente chat.
 
-**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. Después el recorrido continúa con Primer Tool → Múltiples Tools → Primer agente → Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
+**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). Después el recorrido continúa con Function Calling con múltiples Tools → Primer agente → Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
 
 ## Configuración común mediante `.env`
 
@@ -253,9 +260,11 @@ Lab 10a múltiples documentos → un índice → retrieval multifuente
    ↓
 Lab 10b candidatos → threshold → contexto aceptado o sin generación
    ↓
-Lab 11  Primer Tool y function calling (pendiente)
+Lab 11a una Tool + ciclo de function calling explícito
    ↓
-Lab 12  Múltiples Tools (pendiente)
+Lab 11b la misma Tool + invocación automática
+   ↓
+Lab 12  Function Calling: múltiples Tools (pendiente)
    ↓
 Lab 13  Primer agente (pendiente)
    ↓
@@ -268,7 +277,7 @@ Lab 16  MCP (pendiente)
 Lab 17  Proyecto final: elegir e integrar según el problema (pendiente)
 ```
 
-Primero entender, después abstraer y finalmente integrar. Cada paso permite experimentar y observar limitaciones antes de introducir una nueva abstracción. El contraste entre Lab 09a y Lab 09b es la referencia para extender este enfoque al resto del recorrido.
+Primero entender, después abstraer y finalmente integrar. Cada paso permite experimentar y observar limitaciones antes de introducir una nueva abstracción. Lab 09a y Lab 09b contrastan el pipeline explícito con `RagService`; Lab 11a y Lab 11b aplican la misma progresión a Tool Calling.
 
 Tool calling, agente y workflow son conceptos distintos: una tool expone una operación, un agente toma decisiones iterativas hacia un objetivo y un workflow organiza pasos explícitos. El proyecto final permitirá justificar cuáles necesita la solución.
 

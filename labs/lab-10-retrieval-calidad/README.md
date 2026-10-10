@@ -71,6 +71,6 @@ Las bases vectoriales reales, filtros por metadata, hybrid search, BM25, re-rank
 
 ## Siguiente laboratorio
 
-[Lab 11 - Primer Tool](../lab-11-tools/README.md), pendiente: una solicitud del modelo, argumentos, ejecución de código .NET y devolución del resultado.
+[Lab 11 - Tools](../lab-11-tools/README.md), implementado: 11a muestra el ciclo explícito y 11b automatiza su coordinación. Ambos conservan la representación nativa recibida del SDK OpenAI sin condiciones por proveedor. Gemini y `thought_signature` son el caso real que hizo visible esa necesidad.
 
 [Roadmap](../../ROADMAP.md) · [Fundamento pedagógico](../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).
