@@ -200,3 +200,7 @@ Al finalizar deberías poder explicar:
 **[Lab 09 - RAG básico](../lab-09-rag-basico/README.md)** está implementado mediante Lab 09a - RAG explícito y Lab 09b - RAG con RagService. Primero observamos el pipeline y después encapsulamos su coordinación.
 
 El siguiente paso es chunks → embeddings → recuperación de fragmentos relevantes → contexto para una respuesta. Lab 08 deja preparados los fragmentos; Lab 09a agrega recuperación y generación.
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

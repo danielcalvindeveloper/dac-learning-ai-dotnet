@@ -245,3 +245,7 @@ No incorporamos threshold, score mínimo, filtros por metadata, re-ranking, BM25
 Ese es el problema de **[Lab 10b - Relevancia, threshold y fuentes](../lab-10b-relevancia-threshold-fuentes/README.md)**, ya implementado en `lab-10b-relevancia-threshold-fuentes/`. Lab 10a conserva su alcance sin threshold.
 
 [Volver a Lab 10](../README.md).
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

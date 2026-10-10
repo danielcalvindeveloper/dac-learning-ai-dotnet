@@ -31,13 +31,33 @@ integrar
 
 Primero entender, después abstraer y finalmente integrar. Por ejemplo, observar que `topK` devuelve los mejores fragmentos disponibles permite plantear una pregunta concreta: ¿qué hacemos si ninguno es suficientemente relevante?
 
+## Dos niveles complementarios
+
+**Nivel 1 — comprender:** `labs/` mantiene implementaciones explícitas, pequeñas y observables para experimentar mecanismos y reconocer sus límites.
+
+**Nivel 2 — aplicar:** [`reference/` — Implementaciones de referencia](../reference/README.md) reutiliza esos conceptos con herramientas e infraestructura más cercanas a escenarios reales.
+
+Una implementación pedagógica explícita no es una mala implementación. Tiene un objetivo diferente. Una implementación de referencia no reemplaza la comprensión conceptual: la presupone.
+
+```text
+comprender el mecanismo
+        ↓
+ver una implementación aplicada
+        ↓
+relacionar ambos niveles
+```
+
+Una abstracción o framework adquiere mayor valor pedagógico cuando el alumno ya experimentó el problema que resuelve. Esta relación evita tanto incorporar infraestructura sin comprenderla como detener el recorrido únicamente en mecanismos pedagógicos.
+
+Las referencias podrán aparecer en paralelo cuando un bloque tenga suficiente madurez. Serán ejecutables y acotadas; realista no significa industrial. La regla sigue siendo **primero el problema, después la herramienta**.
+
 ## Consecuencia en RAG
 
 El bloque principal llega hasta **Lab 10 - Retrieval y calidad**. La secuencia reúne embeddings, carga de documentos, chunking, RAG explícito, encapsulación en `RagService`, múltiples documentos, retrieval, relevancia y fuentes.
 
 Lab 10a pasa de un documento a un corpus. Lab 10b trabaja un umbral experimental de similitud, la falta de contexto suficiente y las fuentes recuperadas. Ambos están implementados. `topK` limita la cantidad de resultados; no garantiza relevancia. Un umbral necesita calibración y evaluación con preguntas concretas, y no existe un valor universal.
 
-Al completar ese bloque tendremos una base práctica de RAG. Las técnicas de mayor complejidad quedarán como áreas de profundización posteriores al recorrido principal.
+El bloque implementado ya ofrece una base práctica de RAG. [`reference/rag-vector-store/`](../reference/rag-vector-store/README.md) aplica esa base con Microsoft.Extensions.VectorData y Qdrant persistente, sin incorporar Semantic Kernel. `reference/rag-semantic-kernel/` sigue planificada: estudiará después el aporte adicional del framework al mismo problema. Las técnicas de mayor complejidad quedan como áreas de profundización.
 
 ## Consecuencia en Tools y Agents
 
@@ -79,6 +99,16 @@ Multi-agent llega cuando ya podemos evaluar si conviene repartir responsabilidad
 
 El proyecto final ejercita la elección: RAG, una tool, un workflow, un agente o MCP se incorporan según el problema. También debe poder justificarse que una capacidad no hace falta.
 
+## Estrategia para frameworks en reference
+
+`Microsoft.Extensions.AI` conserva las abstracciones comunes. Semantic Kernel puede aportar integración AI, plugins/functions, vector stores y orquestación; debe aparecer tempranamente en `reference/` cuando exista una necesidad concreta, especialmente en RAG.
+
+Microsoft Agent Framework será la referencia natural para aplicar infraestructura agéntica, sesiones y orquestación después de comprender el Agent Loop. `reference/agent-framework/` retomará la familia de problemas de incidentes de Lab 13 para relacionar el ciclo explícito con lo que delega el framework.
+
+Hay áreas de superposición e interoperabilidad. Semantic Kernel sigue siendo relevante y no se introduce como dependencia obligatoria de Agent Framework. Tampoco se presenta Agent Framework como reemplazo universal de sus componentes. No incorporamos ambos por estar listados en el stack; la [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
+
+La primera referencia de RAG con Qdrant ya es ejecutable y está enlazada desde Labs 07–10. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones. Las candidatas con Semantic Kernel y Agent Framework continúan planificadas.
+
 ## Por qué el recorrido es más gradual
 
 Cada laboratorio plantea una pregunta pequeña y concreta. Hay más pasos para experimentar y reconocer limitaciones antes de combinar capacidades. El alumno puede identificar qué problema apareció, qué solución introducimos y por qué existe.
@@ -89,12 +119,14 @@ Los contrastes entre 09a y 09b y entre 11a y 11b permiten valorar qué aporta en
 
 Las posibles extensiones no tienen numeración ni estructura comprometida. Una **Extensión - RAG avanzado** podría profundizar en:
 
-- bases vectoriales reales y filtros por metadata;
+- filtros por metadata y técnicas de recuperación sobre bases vectoriales reales;
 - hybrid search y BM25;
 - re-ranking, query rewriting y multi-query;
 - chunking semántico;
 - evaluación de retrieval y de respuestas;
 - observabilidad y citaciones avanzadas.
+
+La primera aplicación de infraestructura vectorial ya existe en `reference/` y las referencias con frameworks continúan planificadas, sin esperar a una extensión avanzada. Estas extensiones podrán profundizar después en técnicas más complejas.
 
 También podrán estudiarse Agents avanzado, MCP avanzado, evaluación y observabilidad u otras áreas que surjan. Una vez adquirida la base, estas técnicas pueden explorarse con más contexto y preguntas mejor definidas. La lista permanece abierta.
 

@@ -59,6 +59,12 @@ Lab 09 comprende [09a - RAG explícito](../labs/lab-09-rag-basico/lab-09a-rag-ex
 
 Lab 10 utiliza su ruta definitiva `lab-10-retrieval-calidad/` con ambos sublabs. Lab 11 conserva la carpeta padre `lab-11-tools/`, titulada “Lab 11 - Tools”, y contiene `lab-11a-tool-explicita/` y `lab-11b-tool-invocation/`, cada uno con su proyecto y documentación. Lab 12 conserva `lab-12-function-calling/` y contiene `lab-12a-multiples-tools/`, `lab-12b-decision-y-errores/` y `lab-12c-tool-externa/`, todos implementados. Lab 13 utiliza su ruta definitiva `lab-13-primer-agente/` y completa M7. Los Labs 14–17 continúan pendientes.
 
+## Carril paralelo: implementaciones de referencia
+
+Este documento conserva el recorrido numerado de Labs. [`reference/` — Implementaciones de referencia](../reference/README.md) prepara aplicaciones de los conceptos con herramientas e infraestructura más cercanas a escenarios reales; no son Labs adicionales ni alteran sus estados.
+
+[RAG con Vector Store real](../reference/rag-vector-store/README.md) está implementada y enlazada desde Labs 07–10: aplica el mismo pipeline con Qdrant persistente mediante Microsoft.Extensions.VectorData. Semantic Kernel y Agent Framework siguen planificados en el [roadmap](../ROADMAP.md#implementaciones-de-referencia). Los estados del recorrido numerado permanecen iguales.
+
 ## Posibles extensiones futuras
 
 Fuera del recorrido principal podrán estudiarse **RAG avanzado**, **Agents avanzado**, **MCP avanzado**, evaluación y observabilidad, u otras áreas que surjan. No tienen numeración ni estructura comprometida. El [roadmap](../ROADMAP.md#posibles-extensiones-futuras) enumera posibles técnicas de profundización en RAG.

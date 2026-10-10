@@ -4,6 +4,8 @@
 
 > Roadmap de aprendizaje incremental para construir aplicaciones con IA generativa utilizando herramientas y patrones propios del ecosistema .NET.
 
+El recorrido numerado de `labs/` se complementa con [`reference/` — Implementaciones de referencia](reference/README.md), un carril paralelo para aplicar los conceptos con herramientas e infraestructura más cercanas a escenarios reales.
+
 Primero entender, después abstraer y finalmente integrar. Cada paso permite experimentar y observar limitaciones antes de introducir otra capacidad. El [enfoque pedagógico y la evolución del roadmap](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explican esta maduración del recorrido a partir de los laboratorios implementados.
 
 ---
@@ -666,6 +668,22 @@ validación y límites
 
 ---
 
+## Implementaciones de referencia
+
+En paralelo al recorrido incremental de Labs, el proyecto incorpora un carril de implementaciones aplicadas. Pueden desarrollarse cuando el bloque conceptual correspondiente tenga suficiente madurez, sin esperar a finalizar todos los laboratorios.
+
+No forman parte de la secuencia numerada ni agregan milestones. [RAG con Vector Store real](reference/rag-vector-store/README.md) está implementada y validada con Qdrant; las otras dos candidatas continúan planificadas, sin carpetas creadas.
+
+| Implementación / candidata | Ruta | Problema que resuelve o abordará | Estado |
+|---|---|---|---|
+| RAG con Vector Store real | [`reference/rag-vector-store/`](reference/rag-vector-store/README.md) | Reemplazar `InMemoryVectorStore` y búsqueda lineal por Qdrant persistente mediante Microsoft.Extensions.VectorData | ✅ Implementada |
+| RAG con Semantic Kernel | `reference/rag-semantic-kernel/` | Mostrar qué integra y abstrae Semantic Kernel sobre embeddings, chunking, retrieval y grounding ya comprendidos | ⏳ Planificada |
+| Agente con Microsoft Agent Framework | `reference/agent-framework/` | Retomar incidentes de Lab 13 y delegar infraestructura agéntica después de comprender el Agent Loop | ⏳ Planificada |
+
+Semantic Kernel debe aparecer tempranamente en este carril cuando aporte valor concreto a RAG o integración de infraestructura AI. Microsoft Agent Framework será la referencia natural para el bloque agéntico una vez comprendido su ciclo conceptual. No son dependencias obligatorias entre sí ni deben introducirse juntos sólo por figurar en el stack.
+
+La primera referencia utiliza Qdrant, con ingesta/consulta separadas, embeddings explícitos, metadata, fuentes y tests unitarios. Se verificaron dos ingestas sin duplicados y consulta después de recrear el contenedor conservando el volumen. Semantic Kernel se estudiará por separado. Las [reglas del carril](reference/README.md#documentación-obligatoria-de-cada-implementación) exigen explicar el problema, conocimientos previos, arquitectura, dependencias, preparación del entorno, configuración, ejecución y limitaciones.
+
 ## Dependencias entre hitos
 
 ```mermaid
@@ -719,7 +737,7 @@ Son áreas de profundización fuera de los Labs 00–17, sin numeración ni estr
 
 Posibles temas:
 
-- bases vectoriales reales y filtros por metadata;
+- filtros por metadata y técnicas de recuperación sobre bases vectoriales reales;
 - hybrid search y BM25;
 - re-ranking, query rewriting y multi-query;
 - chunking semántico;
@@ -741,5 +759,7 @@ Posibles temas:
 - visión;
 - GraphRAG;
 - integración con IDEs.
+
+La primera aplicación de infraestructura vectorial ya está implementada en `reference/`; no hace falta esperar una serie de RAG avanzado para estudiar su aporte. Las extensiones podrán profundizar después en técnicas más complejas.
 
 Estas posibilidades podrán tomar forma como series específicas si aportan valor. El [documento de enfoque pedagógico](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explica por qué se separan del recorrido principal.

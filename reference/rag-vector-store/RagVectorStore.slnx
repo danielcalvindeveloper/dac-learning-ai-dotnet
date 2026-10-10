@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/RagVectorStore/RagVectorStore.csproj" />
+  <Project Path="tests/RagVectorStore.Tests/RagVectorStore.Tests.csproj" />
+</Solution>

@@ -4,6 +4,26 @@ Laboratorio incremental para aprender desarrollo de aplicaciones con LLMs en .NE
 
 Este repositorio propone un recorrido incremental y autónomo para aprender integración de modelos de lenguaje utilizando herramientas naturales del ecosistema .NET.
 
+## Cómo recorrer el repositorio
+
+El proyecto ofrece dos recorridos complementarios.
+
+### Labs — comprender
+
+`labs/` contiene el recorrido incremental principal. Cada laboratorio introduce un concepto, intenta mantener visible su mecanismo y limita deliberadamente la infraestructura para facilitar la comprensión.
+
+Podés comenzar por el [recorrido de laboratorios](docs/03-roadmap-labs.md).
+
+### Implementaciones de referencia — aplicar
+
+[`reference/` — Implementaciones de referencia](reference/README.md) aplica los conceptos aprendidos en los labs con librerías e infraestructura más cercanas a escenarios reales. La primera, [RAG con Vector Store real](reference/rag-vector-store/README.md), está implementada: Microsoft.Extensions.AI + Microsoft.Extensions.VectorData + Qdrant persistente, sin Semantic Kernel. Las referencias con Semantic Kernel y Agent Framework siguen planificadas.
+
+Complementan el recorrido conceptual. Actualmente existe sólo su guía: las primeras implementaciones están planificadas.
+
+```text
+comprender el mecanismo → ver una implementación aplicada → relacionar ambos niveles
+```
+
 ## Objetivo
 
 Aprender de forma incremental los conceptos principales necesarios para integrar modelos de lenguaje en aplicaciones .NET:
@@ -33,6 +53,16 @@ El foco está en los conceptos. Las APIs concretas pueden evolucionar.
 - Semantic Kernel, cuando aporte valor al recorrido
 - Microsoft Agent Framework, cuando corresponda
 - OpenAI, Gemini, OpenRouter u otro proveedor compatible según cada laboratorio
+
+| Herramienta | Responsabilidad aproximada en el recorrido |
+|---|---|
+| [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/microsoft-extensions-ai) | Abstracciones comunes para chat y embeddings, con componentes de integración |
+| [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) | Integración de capacidades AI, plugins/functions, vector stores y orquestación cuando aporten valor |
+| [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/) | Infraestructura especializada para agentes, sesiones, workflows y orquestación de agentes |
+
+Estas responsabilidades orientan la selección; no establecen una jerarquía ni una dependencia obligatoria. Existen áreas de superposición e interoperabilidad. Semantic Kernel sigue siendo relevante para componentes concretos, y Agent Framework es la referencia natural del proyecto para nuevos escenarios agénticos después de comprender el Agent Loop.
+
+En `reference/`, Semantic Kernel debe aparecer tempranamente cuando aporte valor concreto, especialmente en RAG e integración AI. Agent Framework retomará conceptos de Lab 13. No es necesario utilizarlos juntos: la [estrategia de frameworks y primeras candidatas](reference/README.md#estrategia-de-librerías-y-frameworks) explica esa elección por problema.
 
 ## Estructura
 
@@ -66,6 +96,9 @@ dac-learning-ai-dotnet/
 │   ├── lab-13-primer-agente/
 │   ├── ...
 │   └── lab-17-final-project/
+├── reference/
+│   ├── README.md
+│   └── rag-vector-store/
 ├── .editorconfig
 ├── .env.example
 ├── .gitignore
@@ -73,6 +106,8 @@ dac-learning-ai-dotnet/
 ├── README.md
 └── ROADMAP.md
 ```
+
+`reference/` es un carril paralelo sin numeración de Lab. Contiene su [guía](reference/README.md) y [RAG con Vector Store real](reference/rag-vector-store/README.md), con comandos de ingesta/consulta, Docker y tests unitarios.
 
 Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Labs 09, 10, 11 y 12, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
 
@@ -233,6 +268,8 @@ Los modelos, planes y límites de cada proveedor pueden cambiar. Para los labora
 
 ## Documentación
 
+- [Implementaciones de referencia](reference/README.md) — RAG con Qdrant implementado, candidatas y reglas para aplicar los conceptos de los labs.
+
 - [`ROADMAP.md`](ROADMAP.md) — visión global, hitos y estado de evolución del proyecto.
 - [`labs/lab-00-introduccion/README.md`](labs/lab-00-introduccion/README.md) — rampa de entrada y mapa de artefactos de Fundamentos.
 - `docs/00-vision-y-alcance.md`
@@ -297,4 +334,4 @@ Primero entender, después abstraer y finalmente integrar. Cada paso permite exp
 
 Tool calling, agente y workflow son conceptos distintos: una tool expone una operación, un agente toma decisiones iterativas hacia un objetivo y un workflow organiza pasos explícitos. El proyecto final permitirá justificar cuáles necesita la solución.
 
-Los frameworks y APIs concretas son herramientas del recorrido, no el objetivo final del aprendizaje.
+Los frameworks y APIs concretas son herramientas del recorrido, no el objetivo final del aprendizaje. Cuando un bloque conceptual alcanza suficiente madurez, `reference/` permite aplicar lo aprendido con infraestructura más cercana a una aplicación real, sin esperar a completar toda la secuencia.

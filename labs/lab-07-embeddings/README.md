@@ -243,3 +243,7 @@ Al finalizar deberías poder explicar:
 **Lab 08 - Document Loading**
 
 El siguiente paso será dejar de trabajar con strings definidos en código y comenzar a incorporar documentos.
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

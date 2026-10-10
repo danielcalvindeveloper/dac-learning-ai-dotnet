@@ -26,3 +26,7 @@ Lab 09 está **implementado mediante 09a y 09b**. Primero comprendemos el mecani
 Lab 07 introduce embeddings y similitud. Lab 08 prepara documentos como chunks. Lab 09a reúne esas capacidades y agrega generación con contexto recuperado.
 
 Cada sublab se ejecuta independientemente y tiene sus propias instrucciones de configuración, ejecución y lecturas opcionales: [Lab 09a](lab-09a-rag-explicito/README.md) y [Lab 09b](lab-09b-rag-service/README.md). [Lab 10 - Retrieval y calidad](../lab-10-retrieval-calidad/README.md) está implementado: 10a trabaja múltiples documentos y 10b agrega un threshold experimental y fuentes del contexto aceptado.
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

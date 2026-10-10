@@ -74,3 +74,7 @@ Las bases vectoriales reales, filtros por metadata, hybrid search, BM25, re-rank
 [Lab 11 - Tools](../lab-11-tools/README.md), implementado: 11a muestra el ciclo explícito y 11b automatiza su coordinación. Ambos conservan la representación nativa recibida del SDK OpenAI sin condiciones por proveedor. Gemini y `thought_signature` son el caso real que hizo visible esa necesidad.
 
 [Roadmap](../../ROADMAP.md) · [Fundamento pedagógico](../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

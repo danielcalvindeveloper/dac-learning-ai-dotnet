@@ -262,3 +262,7 @@ Al finalizar deberías poder explicar:
 **[Lab 10 - Retrieval y calidad](../../lab-10-retrieval-calidad/README.md)**, implementado mediante 10a y 10b.
 
 Después de comprender y encapsular el pipeline básico, [Lab 10a](../../lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) amplía el conocimiento a múltiples documentos y hace visible el origen de los chunks. [Lab 10b](../../lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) distingue `topK` de la aceptación por un threshold experimental y evita generación sin contexto aceptado. RAG avanzado queda como posible extensión fuera del recorrido principal, según el [enfoque pedagógico](../../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

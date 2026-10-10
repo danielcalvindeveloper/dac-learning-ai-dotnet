@@ -258,3 +258,7 @@ Al finalizar deberías poder explicar:
 **[Lab 09b - RAG con RagService](../lab-09b-rag-service/README.md)**, implementado.
 
 El siguiente paso encapsula este mismo pipeline en `IRagService` y `RagService`, revisa la responsabilidad del servicio y reduce el flujo principal. Reutiliza DI para componer las dependencias. Lab 09a conserva su código explícito como referencia del mecanismo.
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.

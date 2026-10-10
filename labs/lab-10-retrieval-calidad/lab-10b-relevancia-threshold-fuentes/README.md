@@ -239,3 +239,7 @@ Podemos observar qué recuperó el sistema, decidir qué contexto aceptamos y ev
 El siguiente laboratorio del recorrido es [Lab 11 - Tools](../../lab-11-tools/README.md), implementado mediante 11a, con el ciclo explícito, y 11b, con invocación automática. Ambos preservan la representación nativa del SDK utilizado sin condiciones por proveedor; el caso observado con Gemini se explica en sus README.
 
 [Volver a Lab 10](../README.md).
+
+## Implementación de referencia
+
+Después de completar el bloque de Labs 07–10 podés recorrer [RAG con Vector Store real](../../../reference/rag-vector-store/README.md). Conserva chunks, embeddings, retrieval y contexto, y delega almacenamiento y búsqueda a Qdrant persistente mediante Microsoft.Extensions.VectorData.
