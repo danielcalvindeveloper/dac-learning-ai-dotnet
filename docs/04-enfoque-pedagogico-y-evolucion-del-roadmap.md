@@ -57,7 +57,7 @@ El bloque principal llega hasta **Lab 10 - Retrieval y calidad**. La secuencia r
 
 Lab 10a pasa de un documento a un corpus. Lab 10b trabaja un umbral experimental de similitud, la falta de contexto suficiente y las fuentes recuperadas. Ambos están implementados. `topK` limita la cantidad de resultados; no garantiza relevancia. Un umbral necesita calibración y evaluación con preguntas concretas, y no existe un valor universal.
 
-El bloque implementado ya ofrece una base práctica de RAG. [`reference/rag-vector-store/`](../reference/rag-vector-store/README.md) aplica esa base con Microsoft.Extensions.VectorData y Qdrant persistente, sin incorporar Semantic Kernel. `reference/rag-semantic-kernel/` sigue planificada: estudiará después el aporte adicional del framework al mismo problema. Las técnicas de mayor complejidad quedan como áreas de profundización.
+El bloque implementado ya ofrece una base práctica de RAG. [`reference/rag-vector-store/`](../reference/rag-vector-store/README.md) aplica esa base con Microsoft.Extensions.AI, Microsoft.Extensions.VectorData y Qdrant persistente. Las técnicas de mayor complejidad quedan como áreas de profundización.
 
 ## Consecuencia en Tools y Agents
 
@@ -101,13 +101,23 @@ El proyecto final ejercita la elección: RAG, una tool, un workflow, un agente o
 
 ## Estrategia para frameworks en reference
 
-`Microsoft.Extensions.AI` conserva las abstracciones comunes. Semantic Kernel puede aportar integración AI, plugins/functions, vector stores y orquestación; debe aparecer tempranamente en `reference/` cuando exista una necesidad concreta, especialmente en RAG.
+`Microsoft.Extensions.AI` conserva las abstracciones base para integrar modelos. Microsoft.Extensions.VectorData aporta contratos de almacenamiento y búsqueda vectorial cuando el caso necesita esa infraestructura.
 
-Microsoft Agent Framework será la referencia natural para aplicar infraestructura agéntica, sesiones y orquestación después de comprender el Agent Loop. `reference/agent-framework/` retomará la familia de problemas de incidentes de Lab 13 para relacionar el ciclo explícito con lo que delega el framework.
+Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos, sesiones, workflows y orquestación después de comprender el Agent Loop. `reference/agent-framework/` retomará la familia de problemas de incidentes de Lab 13 para relacionar el ciclo explícito con lo que delega el framework. Lab 13 mantiene objetivo, estado, decisión, acción, observación, iteración y condición de finalización visibles, sin migrarlo a MAF.
 
-Hay áreas de superposición e interoperabilidad. Semantic Kernel sigue siendo relevante y no se introduce como dependencia obligatoria de Agent Framework. Tampoco se presenta Agent Framework como reemplazo universal de sus componentes. No incorporamos ambos por estar listados en el stack; la [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
+```text
+concepto explícito
+        ↓
+Microsoft.Extensions.AI: abstracciones base
+        ↓
+infraestructura especializada, cuando haga falta
+        ↓
+Microsoft Agent Framework, cuando el problema sea agéntico
+```
 
-La primera referencia de RAG con Qdrant ya es ejecutable y está enlazada desde Labs 07–10. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones. Las candidatas con Semantic Kernel y Agent Framework continúan planificadas.
+Esta progresión orienta decisiones; no obliga a que cada aplicación use todas las capas. MAF complementa Microsoft.Extensions.AI. Para Labs 14–15 se considerará como framework principal de workflows, delegación y coordinación, manteniendo el concepto visible y eligiendo APIs al implementar. La [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
+
+La primera referencia de RAG con Qdrant ya es ejecutable y está enlazada desde Labs 07–10. La siguiente referencia, el agente con Microsoft Agent Framework, continúa planificada. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones.
 
 ## Por qué el recorrido es más gradual
 
@@ -126,7 +136,7 @@ Las posibles extensiones no tienen numeración ni estructura comprometida. Una *
 - evaluación de retrieval y de respuestas;
 - observabilidad y citaciones avanzadas.
 
-La primera aplicación de infraestructura vectorial ya existe en `reference/` y las referencias con frameworks continúan planificadas, sin esperar a una extensión avanzada. Estas extensiones podrán profundizar después en técnicas más complejas.
+La primera aplicación de infraestructura vectorial ya existe en `reference/` y la referencia con Microsoft Agent Framework continúa planificada, sin esperar a una extensión avanzada. Estas extensiones podrán profundizar después en técnicas más complejas.
 
 También podrán estudiarse Agents avanzado, MCP avanzado, evaluación y observabilidad u otras áreas que surjan. Una vez adquirida la base, estas técnicas pueden explorarse con más contexto y preguntas mejor definidas. La lista permanece abierta.
 

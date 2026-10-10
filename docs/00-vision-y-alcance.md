@@ -18,7 +18,7 @@ comprender fundamentos + experimentar implementaciones aplicadas
 
 Ambos niveles se relacionan: primero comprender el mecanismo, después estudiar una implementación aplicada y volver sobre las decisiones de cada una. Las referencias reducen esa distancia sin reemplazar los labs ni tratarlos como implementaciones incorrectas.
 
-La primera referencia, [RAG con Vector Store real](../reference/rag-vector-store/README.md), ya aplica Labs 07–10 con Qdrant persistente. Las candidatas con Semantic Kernel y Agent Framework siguen planificadas.
+La primera referencia, [RAG con Vector Store real](../reference/rag-vector-store/README.md), ya aplica Labs 07–10 con Qdrant persistente. La siguiente candidata, un agente con Microsoft Agent Framework, sigue planificada.
 
 ## Principios
 
@@ -44,6 +44,6 @@ Los labs limitan deliberadamente esa infraestructura. La primera implementación
 
 El recorrido principal conserva los Labs 00–17. El bloque RAG llegará hasta retrieval, múltiples documentos, relevancia y fuentes; RAG avanzado será una posible extensión. Después avanzaremos desde una Tool explícita en 11a hacia su invocación automática en 11b. Lab 12, Function Calling, ya implementa múltiples Tools en 12a, decisión y errores en 12b y una capacidad HTTP externa en 12c; Lab 13 ya implementa un primer agente de soporte, con objetivo, estado, observaciones y decisiones iterativas limitadas. Luego seguiremos con workflow, multi-agent, MCP e integración según el problema.
 
-Microsoft.Extensions.AI conserva el papel de abstracción común. Semantic Kernel debe aparecer tempranamente en referencias de RAG o integración AI cuando aporte valor concreto; Microsoft Agent Framework será la referencia natural para escenarios agénticos después de comprender el loop de Lab 13. Su selección depende del problema, sin exigir combinarlos.
+Microsoft.Extensions.AI es la base de integración con modelos y abstracciones AI. Microsoft.Extensions.VectorData permite incorporar infraestructura vectorial especializada en RAG. Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos después de comprender el loop explícito de Lab 13; complementa las abstracciones base. Primero el problema, después la herramienta.
 
 El [documento de enfoque pedagógico y evolución del roadmap](04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explica el fundamento. [ROADMAP.md](../ROADMAP.md) distingue planificación de implementación.

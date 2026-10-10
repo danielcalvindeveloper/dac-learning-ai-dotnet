@@ -4,6 +4,8 @@ Laboratorio incremental para aprender desarrollo de aplicaciones con LLMs en .NE
 
 Este repositorio propone un recorrido incremental y autónomo para aprender integración de modelos de lenguaje utilizando herramientas naturales del ecosistema .NET.
 
+`Microsoft.Extensions.AI` es la base de integración con modelos. Para nuevos escenarios agénticos, el framework objetivo es `Microsoft Agent Framework`, después de comprender los mecanismos en los labs.
+
 ## Cómo recorrer el repositorio
 
 El proyecto ofrece dos recorridos complementarios.
@@ -16,9 +18,9 @@ Podés comenzar por el [recorrido de laboratorios](docs/03-roadmap-labs.md).
 
 ### Implementaciones de referencia — aplicar
 
-[`reference/` — Implementaciones de referencia](reference/README.md) aplica los conceptos aprendidos en los labs con librerías e infraestructura más cercanas a escenarios reales. La primera, [RAG con Vector Store real](reference/rag-vector-store/README.md), está implementada: Microsoft.Extensions.AI + Microsoft.Extensions.VectorData + Qdrant persistente, sin Semantic Kernel. Las referencias con Semantic Kernel y Agent Framework siguen planificadas.
+[`reference/` — Implementaciones de referencia](reference/README.md) aplica los conceptos aprendidos en los labs con librerías e infraestructura más cercanas a escenarios reales. La primera, [RAG con Vector Store real](reference/rag-vector-store/README.md), está implementada: Microsoft.Extensions.AI + Microsoft.Extensions.VectorData + Qdrant persistente. La siguiente referencia planificada es un agente con Microsoft Agent Framework.
 
-Complementan el recorrido conceptual. Actualmente existe sólo su guía: las primeras implementaciones están planificadas.
+Complementan el recorrido conceptual. La guía de `reference/` distingue la implementación disponible de las candidatas futuras.
 
 ```text
 comprender el mecanismo → ver una implementación aplicada → relacionar ambos niveles
@@ -50,19 +52,18 @@ El foco está en los conceptos. Las APIs concretas pueden evolucionar.
 - C#
 - Visual Studio Code Insiders
 - Microsoft.Extensions.AI
-- Semantic Kernel, cuando aporte valor al recorrido
 - Microsoft Agent Framework, cuando corresponda
 - OpenAI, Gemini, OpenRouter u otro proveedor compatible según cada laboratorio
 
 | Herramienta | Responsabilidad aproximada en el recorrido |
 |---|---|
 | [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/microsoft-extensions-ai) | Abstracciones comunes para chat y embeddings, con componentes de integración |
-| [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) | Integración de capacidades AI, plugins/functions, vector stores y orquestación cuando aporten valor |
+| [Microsoft.Extensions.VectorData](https://learn.microsoft.com/en-us/dotnet/ai/vector-stores/overview) | Abstracciones de almacenamiento y búsqueda vectorial en la referencia RAG |
 | [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/) | Infraestructura especializada para agentes, sesiones, workflows y orquestación de agentes |
 
-Estas responsabilidades orientan la selección; no establecen una jerarquía ni una dependencia obligatoria. Existen áreas de superposición e interoperabilidad. Semantic Kernel sigue siendo relevante para componentes concretos, y Agent Framework es la referencia natural del proyecto para nuevos escenarios agénticos después de comprender el Agent Loop.
+Microsoft.Extensions.AI aporta las abstracciones base; Microsoft Agent Framework agrega una capa especializada para agentes y workflows. Son complementarios: el framework utiliza tipos comunes de Microsoft.Extensions.AI y no lo reemplaza. [Relación documentada por Microsoft](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/).
 
-En `reference/`, Semantic Kernel debe aparecer tempranamente cuando aporte valor concreto, especialmente en RAG e integración AI. Agent Framework retomará conceptos de Lab 13. No es necesario utilizarlos juntos: la [estrategia de frameworks y primeras candidatas](reference/README.md#estrategia-de-librerías-y-frameworks) explica esa elección por problema.
+La progresión agéntica es Lab 13 con Agent Loop explícito → `reference/agent-framework/` con infraestructura delegada al framework. Primero el problema, después la herramienta: la [estrategia de frameworks y primeras candidatas](reference/README.md#estrategia-de-librerías-y-frameworks) explica qué responsabilidad resuelve cada tecnología.
 
 ## Estructura
 

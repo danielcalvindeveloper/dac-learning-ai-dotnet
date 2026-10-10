@@ -25,6 +25,10 @@ Un workflow sigue una estructura explícita; un agente toma decisiones iterativa
 - Observar qué controla la aplicación.
 - Justificar cuándo el proceso no necesita un agente.
 
+## Orientación tecnológica futura
+
+Microsoft Agent Framework será el framework principal a considerar para implementar workflows cuando aporte valor al caso. El foco seguirá en comprender pasos, resultados y bifurcaciones; el proceso no necesita incorporar un agente sólo por usar un framework. Las APIs y el diseño concreto se decidirán al implementar. Microsoft.Extensions.AI conserva su papel de base para integrar modelos.
+
 ## Fuera de alcance
 
 Multi-agent, motores de orquestación complejos y agentes incorporados sin una necesidad concreta.

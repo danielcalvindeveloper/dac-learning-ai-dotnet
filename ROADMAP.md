@@ -561,6 +561,8 @@ flowchart TD
 
 **Objetivo:** estudiar primero un proceso explícito y después la coordinación entre pocos agentes, eligiendo la alternativa que aporte valor.
 
+**Orientación tecnológica futura:** Microsoft Agent Framework será el framework principal a considerar para workflows y coordinación agéntica. El diseño deberá mantener visibles pasos, decisiones y responsabilidades; se elegirán APIs y alcance al implementar, sin agregar agentes a un proceso que no los necesita.
+
 **Estado:** ⏳ Pendiente
 
 ### Lab 14 — Workflow
@@ -581,6 +583,8 @@ Un proceso conocido puede resolverse con pasos y bifurcaciones controlados por l
 **Estado:** ⏳ Pendiente
 
 Introducir especialización, delegación y coordinación después de conocer tools, agentes y workflows. Usar pocos agentes y observar qué aporta la separación: más agentes no implica una mejor solución.
+
+Se considerarán las capacidades de delegación, handoff y orquestación de Microsoft Agent Framework cuando resuelvan el caso didáctico. No se fijan todavía APIs ni se amplía el alcance a todos esos patrones.
 
 | # | Estado | Alcance |
 |---|---|---|
@@ -672,17 +676,16 @@ validación y límites
 
 En paralelo al recorrido incremental de Labs, el proyecto incorpora un carril de implementaciones aplicadas. Pueden desarrollarse cuando el bloque conceptual correspondiente tenga suficiente madurez, sin esperar a finalizar todos los laboratorios.
 
-No forman parte de la secuencia numerada ni agregan milestones. [RAG con Vector Store real](reference/rag-vector-store/README.md) está implementada y validada con Qdrant; las otras dos candidatas continúan planificadas, sin carpetas creadas.
+No forman parte de la secuencia numerada ni agregan milestones. [RAG con Vector Store real](reference/rag-vector-store/README.md) está implementada y validada con Qdrant; el agente con Microsoft Agent Framework continúa planificado, sin carpeta creada.
 
 | Implementación / candidata | Ruta | Problema que resuelve o abordará | Estado |
 |---|---|---|---|
-| RAG con Vector Store real | [`reference/rag-vector-store/`](reference/rag-vector-store/README.md) | Reemplazar `InMemoryVectorStore` y búsqueda lineal por Qdrant persistente mediante Microsoft.Extensions.VectorData | ✅ Implementada |
-| RAG con Semantic Kernel | `reference/rag-semantic-kernel/` | Mostrar qué integra y abstrae Semantic Kernel sobre embeddings, chunking, retrieval y grounding ya comprendidos | ⏳ Planificada |
+| RAG con Vector Store real | [`reference/rag-vector-store/`](reference/rag-vector-store/README.md) | Reemplazar `InMemoryVectorStore` y búsqueda lineal por Qdrant persistente con Microsoft.Extensions.AI y Microsoft.Extensions.VectorData | ✅ Implementada |
 | Agente con Microsoft Agent Framework | `reference/agent-framework/` | Retomar incidentes de Lab 13 y delegar infraestructura agéntica después de comprender el Agent Loop | ⏳ Planificada |
 
-Semantic Kernel debe aparecer tempranamente en este carril cuando aporte valor concreto a RAG o integración de infraestructura AI. Microsoft Agent Framework será la referencia natural para el bloque agéntico una vez comprendido su ciclo conceptual. No son dependencias obligatorias entre sí ni deben introducirse juntos sólo por figurar en el stack.
+Microsoft.Extensions.AI mantiene las abstracciones base. Microsoft.Extensions.VectorData aporta la infraestructura de acceso vectorial. Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos, después del Agent Loop explícito de Lab 13; lo complementa sin migrar ese laboratorio. El orden previsto es RAG con Vector Store real → agente con Microsoft Agent Framework → futuras referencias según el problema.
 
-La primera referencia utiliza Qdrant, con ingesta/consulta separadas, embeddings explícitos, metadata, fuentes y tests unitarios. Se verificaron dos ingestas sin duplicados y consulta después de recrear el contenedor conservando el volumen. Semantic Kernel se estudiará por separado. Las [reglas del carril](reference/README.md#documentación-obligatoria-de-cada-implementación) exigen explicar el problema, conocimientos previos, arquitectura, dependencias, preparación del entorno, configuración, ejecución y limitaciones.
+La primera referencia utiliza Qdrant, con ingesta/consulta separadas, embeddings explícitos, metadata, fuentes y tests unitarios. Se verificaron dos ingestas sin duplicados y consulta después de recrear el contenedor conservando el volumen. Las [reglas del carril](reference/README.md#documentación-obligatoria-de-cada-implementación) exigen explicar el problema, conocimientos previos, arquitectura, dependencias, preparación del entorno, configuración, ejecución y limitaciones.
 
 ## Dependencias entre hitos
 

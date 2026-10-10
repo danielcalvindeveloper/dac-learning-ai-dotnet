@@ -63,7 +63,9 @@ Lab 10 utiliza su ruta definitiva `lab-10-retrieval-calidad/` con ambos sublabs.
 
 Este documento conserva el recorrido numerado de Labs. [`reference/` — Implementaciones de referencia](../reference/README.md) prepara aplicaciones de los conceptos con herramientas e infraestructura más cercanas a escenarios reales; no son Labs adicionales ni alteran sus estados.
 
-[RAG con Vector Store real](../reference/rag-vector-store/README.md) está implementada y enlazada desde Labs 07–10: aplica el mismo pipeline con Qdrant persistente mediante Microsoft.Extensions.VectorData. Semantic Kernel y Agent Framework siguen planificados en el [roadmap](../ROADMAP.md#implementaciones-de-referencia). Los estados del recorrido numerado permanecen iguales.
+[RAG con Vector Store real](../reference/rag-vector-store/README.md) está implementada y enlazada desde Labs 07–10: aplica el mismo pipeline con Microsoft.Extensions.AI, Microsoft.Extensions.VectorData y Qdrant persistente. La siguiente referencia, `reference/agent-framework/`, sigue planificada en el [roadmap](../ROADMAP.md#implementaciones-de-referencia): retomará el problema de Lab 13 con Microsoft Agent Framework, conservando el loop explícito de ese lab. Los estados del recorrido numerado permanecen iguales.
+
+Microsoft.Extensions.AI continúa como base común. Microsoft Agent Framework será el framework principal a considerar para workflows y coordinación multi-agent en Labs 14–15, cuando el diseño lo justifique. Ambos labs siguen pendientes, sin APIs definitivas ni cambios en su secuencia conceptual.
 
 ## Posibles extensiones futuras
 

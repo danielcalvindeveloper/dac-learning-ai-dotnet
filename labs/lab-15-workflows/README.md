@@ -27,6 +27,10 @@ Cada participante tendrá una responsabilidad pequeña y clara. Más agentes no 
 - Intercambiar y consolidar resultados.
 - Evaluar el costo conceptual de la coordinación y su utilidad.
 
+## Orientación tecnológica futura
+
+Microsoft Agent Framework será el framework principal a considerar para coordinación multi-agent, delegación, handoff y orquestación según el problema. No se implementarán todos esos patrones por demostrar el framework. Primero se definirán responsabilidades y límites; después se elegirán las APIs. Microsoft.Extensions.AI sigue siendo la base de integración con modelos.
+
 ## Fuera de alcance
 
 Redes grandes de agentes, arquitecturas distribuidas y abstracciones de orquestación que el ejercicio no necesite.

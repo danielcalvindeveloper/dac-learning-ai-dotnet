@@ -113,11 +113,11 @@ Es una opción adecuada aquí por su ejecución local con Docker, volumen persis
 
 Qdrant se ocupa de almacenamiento e indexación, con configuración HNSW para el vector. Con este corpus pequeño no pretendemos demostrar ventajas de rendimiento ni que cada búsqueda use una estrategia interna particular.
 
-## ¿Por qué no usamos Semantic Kernel aquí?
+## Elección de abstracciones e infraestructura
 
-Primero aislamos **RAG + Vector Store real**. Así podemos reconocer qué responsabilidad asumieron VectorData y Qdrant antes de agregar una capa de framework.
+Esta referencia aplica **RAG + Vector Store real** con Microsoft.Extensions.AI, Microsoft.Extensions.VectorData y Qdrant. Así podemos reconocer qué responsabilidad asume cada pieza: generar embeddings y respuestas, abstraer las operaciones vectoriales y persistir/buscar registros.
 
-`reference/rag-semantic-kernel/` continúa planificada. Estudiará qué responsabilidades agrega o simplifica Semantic Kernel sobre el mismo problema. No necesitamos incorporarlo en esta referencia para usar las abstracciones de IA o VectorData.
+El caso se resuelve con esas responsabilidades. Microsoft Agent Framework se estudiará en `reference/agent-framework/`, aún planificada, después del Agent Loop explícito de Lab 13. La [estrategia de reference/](../README.md#estrategia-de-librerías-y-frameworks) explica cuándo incorporar la capa agéntica.
 
 ## Requisitos previos
 
@@ -478,6 +478,6 @@ No incorporamos Semantic Kernel, Agent Framework, MCP, GraphRAG, reranking, hybr
 
 ## Posibles siguientes pasos
 
-La siguiente referencia planificada, `reference/rag-semantic-kernel/`, permitirá estudiar el aporte adicional del framework sobre un problema ya conocido. Sin implementarlos aquí, evaluación de retrieval y sincronización explícita de documentos son mejoras que responderían a límites observados.
+Evaluación de retrieval y sincronización explícita de documentos son mejoras que responderían a límites observados de esta referencia. En el carril agéntico, la siguiente referencia planificada es `reference/agent-framework/`: aplicará Microsoft Agent Framework al tipo de problema comprendido en Lab 13, sin ampliar aquí el alcance del RAG.
 
 [Índice de implementaciones de referencia](../README.md) · [README principal](../../README.md) · [Roadmap](../../ROADMAP.md#implementaciones-de-referencia).

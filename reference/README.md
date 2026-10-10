@@ -6,7 +6,7 @@ Las implementaciones de referencia muestran cómo aplicar los conceptos de los l
 
 Buscan reducir la distancia entre “entiendo cómo funciona” y “veo cómo podría implementarlo en un proyecto real”. Forman parte del mismo proyecto y complementan el recorrido incremental de `labs/`.
 
-**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md) está implementada y validada con Qdrant. RAG con Semantic Kernel y el agente con Microsoft Agent Framework continúan planificados.
+**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md) está implementada y validada con Qdrant. El agente con Microsoft Agent Framework continúa planificado.
 
 ## Cómo recorrer ambos niveles
 
@@ -47,32 +47,29 @@ Los nombres de carpeta deben ser breves, descriptivos, en minúsculas y con guio
 
 Es la base común de abstracciones del recorrido, como `IChatClient` e `IEmbeddingGenerator`. Permite conservar conceptos compartidos al cambiar el cliente concreto o incorporar componentes de mayor nivel. [Documentación oficial](https://learn.microsoft.com/en-us/dotnet/ai/microsoft-extensions-ai).
 
-### Semantic Kernel
+### Microsoft.Extensions.VectorData y vector stores
 
-Puede aportar integración de servicios AI, plugins/functions, conectores de vector stores y orquestación. Sigue siendo relevante para componentes concretos y también cuenta con capacidades agénticas. [Introducción oficial](https://learn.microsoft.com/en-us/semantic-kernel/overview/), [vector stores](https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors) y [agentes de Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/).
-
-**Debe aparecer tempranamente en `reference/` cuando aporte valor concreto**, especialmente alrededor de RAG e integración de infraestructura AI. La candidata prioritaria es `rag-semantic-kernel/`: observar su aporte a un problema ya comprendido, en lugar de crear un ejemplo genérico sólo para usar el framework.
+Es la abstracción de infraestructura especializada para almacenar registros y buscar vectores en RAG. Complementa los embeddings de Microsoft.Extensions.AI; la persistencia y la búsqueda corresponden al store concreto. `rag-vector-store/` ya utiliza Qdrant mediante este contrato. [Documentación oficial](https://learn.microsoft.com/en-us/dotnet/ai/vector-stores/overview).
 
 ### Microsoft Agent Framework
 
-Es la referencia natural del proyecto para aplicar infraestructura especializada de agentes, sesiones, workflows y orquestación **después de comprender el Agent Loop**. La candidata `agent-framework/` retomará la familia de problemas de soporte de Lab 13. [Descripción oficial](https://learn.microsoft.com/en-us/agent-framework/overview/).
+Es el framework objetivo del proyecto para nuevos escenarios agénticos: agentes, sesiones, workflows y coordinación multi-agent, **después de comprender el Agent Loop**. También ofrece capacidades de harness para tareas de varios pasos; se incorporarán sólo si el problema las necesita. La candidata `agent-framework/` retomará la familia de problemas de soporte de Lab 13. [Descripción oficial](https://learn.microsoft.com/en-us/agent-framework/overview/).
 
-### Relación entre ambos frameworks
+### Relación entre las capas
 
-Semantic Kernel y Microsoft Agent Framework tienen áreas de superposición: ambos pueden trabajar con capacidades AI y Tools. Microsoft orienta los nuevos escenarios agénticos hacia Agent Framework; esto no convierte a Semantic Kernel en obsoleto ni implica un reemplazo universal de todos sus componentes. [Posición oficial sobre ambos frameworks](https://devblogs.microsoft.com/agent-framework/semantic-kernel-and-microsoft-agent-framework/).
+Microsoft.Extensions.AI es la base para chat, embeddings, Tools y salida estructurada. Microsoft.Extensions.VectorData aporta los contratos vectoriales. Microsoft Agent Framework utiliza tipos de Microsoft.Extensions.AI y agrega infraestructura para escenarios agénticos; no reemplaza esa base ni exige introducir una capa intermedia de frameworks.
 
-Puede existir interoperabilidad mediante abstracciones y componentes compatibles del ecosistema .NET; por ejemplo, Agent Framework admite integraciones de vector stores basadas en `Microsoft.Extensions.VectorData`. La compatibilidad concreta se comprobará al implementar cada caso. [Integraciones oficiales de vector stores](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/vector-stores/).
+No todo problema requiere un agente. La referencia RAG resuelve recuperación y generación con sus abstracciones e infraestructura vectorial. La referencia agéntica estudiará qué delegar al framework una vez comprendidos objetivo, estado, decisión, acción, observación, iteración y finalización.
 
-No hay una jerarquía universal entre estas herramientas. Agent Framework no requiere incorporar Semantic Kernel como dependencia obligatoria del diseño: puede utilizar un cliente de chat y Tools mediante `Microsoft.Extensions.AI`. No es obligatorio usarlos juntos ni se agregan ambos por estar listados en el stack. La [guía oficial de transición](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/) muestra las diferencias entre sus APIs.
+Semantic Kernel forma parte de la evolución previa del ecosistema Microsoft AI. Puede aparecer en documentación histórica de conectores o en migraciones de sistemas existentes, pero no es una tecnología objetivo de nuevas implementaciones de este proyecto. La [guía oficial de migración](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/) aporta ese contexto y documenta el uso de tipos comunes de Microsoft.Extensions.AI en Agent Framework.
 
 ## Primeras implementaciones y candidatas
 
-La primera referencia ya es ejecutable. Las otras rutas siguen siendo propuestas, sin carpetas creadas:
+El orden de referencias es RAG con Vector Store real, agente con Microsoft Agent Framework y futuras implementaciones según necesidades concretas. La primera ya es ejecutable; la ruta del agente sigue siendo una propuesta, sin carpeta creada:
 
 | Ruta | Pregunta que resuelve o resolverá | Estado |
 |---|---|---|
 | [`reference/rag-vector-store/`](rag-vector-store/README.md) | ¿Cómo reemplazar `InMemoryVectorStore` y la búsqueda lineal por infraestructura vectorial real? | ✅ Implementada |
-| `reference/rag-semantic-kernel/` | ¿Cómo construir una solución RAG de mayor nivel con Semantic Kernel después de comprender embeddings, chunking, retrieval y grounding? | ⏳ Planificada |
 | `reference/agent-framework/` | ¿Qué infraestructura de un agente de soporte puede delegarse a Microsoft Agent Framework después de comprender el loop explícito? | ⏳ Planificada |
 
 ### RAG con Vector Store real
@@ -86,13 +83,7 @@ Parte de [Lab 07 — Embeddings](../labs/lab-07-embeddings/README.md), [Lab 08 �
 | `topK` y threshold experimental | Recuperación y criterios de aceptación documentados |
 | Origen de los fragmentos y RAG | Metadata y RAG con infraestructura especializada |
 
-La [implementación con Qdrant](rag-vector-store/README.md) conserva embeddings explícitos y delega persistencia y vector search a Microsoft.Extensions.VectorData. Se validaron ingesta, consultas, fuentes, persistencia, IDs estables y tests unitarios. No incorpora Semantic Kernel; la siguiente referencia estudiará su aporte adicional.
-
-### RAG con Semantic Kernel
-
-Aplica el mismo bloque conceptual de Labs 07–10 para mostrar qué integra y abstrae Semantic Kernel, qué código permanece en la aplicación y cómo se conserva el grounding: responder a partir del contexto recuperado.
-
-Su pregunta es el aporte del framework a RAG; la candidata anterior estudia el cambio de infraestructura vectorial. Son problemas relacionados, pero diferentes.
+La [implementación con Qdrant](rag-vector-store/README.md) conserva embeddings explícitos mediante Microsoft.Extensions.AI y delega persistencia y vector search a Microsoft.Extensions.VectorData. Se validaron ingesta, consultas, fuentes, persistencia, IDs estables y tests unitarios.
 
 ### Agente con Microsoft Agent Framework
 
@@ -107,7 +98,7 @@ misma familia de problemas de incidentes
 infraestructura agéntica delegada al framework
 ```
 
-La referencia deberá permitir relacionar el loop conceptual con las responsabilidades asumidas por el framework. No anticipa la implementación de Labs 14 o 15 ni presupone incorporar workflows o múltiples agentes al caso.
+La referencia deberá permitir relacionar el loop conceptual con las responsabilidades asumidas por Microsoft Agent Framework. Lab 13 conserva su implementación explícita, sin migrarlo al framework. Primero entender el loop, después usar el framework. La referencia no anticipa la implementación de Labs 14 o 15 ni presupone incorporar workflows o múltiples agentes al caso.
 
 ## Navegación Labs ↔ Reference
 
