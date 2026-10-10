@@ -194,6 +194,6 @@ No abordamos múltiples Tools, APIs externas, recuperación avanzada de errores,
 
 ## Siguiente laboratorio
 
-[Lab 12 - Function Calling](../../lab-12-function-calling/README.md) continúa pendiente. Ya comprendemos y abstraemos una invocación; el siguiente paso será trabajar con múltiples Tools, selección, argumentos, errores, preguntas sin Tool y una capacidad externa.
+[Lab 12 - Function Calling](../../lab-12-function-calling/README.md) está implementado mediante 12a, 12b y 12c. Ya comprendemos y abstraemos una invocación; el siguiente paso trabaja múltiples Tools, selección, argumentos, errores, preguntas sin Tool y una capacidad HTTP externa.
 
 [Lab 11a](../lab-11a-tool-explicita/README.md) · [Guía de Lab 11](../README.md) · [Roadmap](../../../ROADMAP.md).

@@ -41,7 +41,7 @@ El programa imprime `finalResponse.Text`. El resultado numérico proviene de C#;
 
 ## Límite del ejemplo
 
-Son dos llamadas de chat coordinadas explícitamente. No hay `FunctionInvokingChatClient`, `UseFunctionInvocation()`, un dispatcher ni un bucle genérico. [Lab 11b](../../lab-11b-tool-invocation/README.md) delega este mismo ciclo a `FunctionInvokingChatClient`. Lab 12 estudiará después varias Tools.
+Son dos llamadas de chat coordinadas explícitamente. No hay `FunctionInvokingChatClient`, `UseFunctionInvocation()`, un dispatcher ni un bucle genérico. [Lab 11b](../../lab-11b-tool-invocation/README.md) delega este mismo ciclo a `FunctionInvokingChatClient`. Lab 12 continúa con varias Tools, decisión y errores y una capacidad HTTP externa; sus tres sublabs están implementados.
 
 Como administramos explícitamente la continuación, también debemos conservar la representación nativa necesaria. Antes de guardar los mensajes, `Program.cs` comprueba si cada `ChatMessage.RawRepresentation` contiene un `OpenAI.Chat.ChatCompletion` y construye su `AssistantChatMessage` nativo. El adaptador puede reenviarlo sin reconstruirlo sólo desde los contenidos comunes. No se consulta `AI_PROVIDER`.
 

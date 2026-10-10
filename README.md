@@ -58,6 +58,11 @@ dac-learning-ai-dotnet/
 │   │   ├── README.md
 │   │   ├── lab-11a-tool-explicita/
 │   │   └── lab-11b-tool-invocation/
+│   ├── lab-12-function-calling/
+│   │   ├── README.md
+│   │   ├── lab-12a-multiples-tools/
+│   │   ├── lab-12b-decision-y-errores/
+│   │   └── lab-12c-tool-externa/
 │   ├── ...
 │   └── lab-17-final-project/
 ├── .editorconfig
@@ -68,7 +73,7 @@ dac-learning-ai-dotnet/
 └── ROADMAP.md
 ```
 
-Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Labs 09, 10 y 11, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
+Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Labs 09, 10, 11 y 12, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
 
 ## Lab 00 - Rampa de entrada opcional
 
@@ -105,11 +110,15 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 11 - Tools](labs/lab-11-tools/README.md): implementado mediante 11a y 11b
 - ✅ [Lab 11a - Primer Tool explícito](labs/lab-11-tools/lab-11a-tool-explicita/README.md): implementado
 - ✅ [Lab 11b - Invocación automática de Tools](labs/lab-11-tools/lab-11b-tool-invocation/README.md): implementado
-- ⏳ Labs 12-17: pendientes de implementación
+- ✅ [Lab 12 - Function Calling](labs/lab-12-function-calling/README.md): implementado mediante 12a, 12b y 12c
+- ✅ [Lab 12a - Múltiples Tools](labs/lab-12-function-calling/lab-12a-multiples-tools/README.md): implementado
+- ✅ [Lab 12b - Decisión y errores](labs/lab-12-function-calling/lab-12b-decision-y-errores/README.md): implementado
+- ✅ [Lab 12c - Tool externa](labs/lab-12-function-calling/lab-12c-tool-externa/README.md): implementado
+- ⏳ Labs 13-17: pendientes de implementación
 
-Los Labs 00-11 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b y Lab 11 en 11a y 11b. M5 está implementado, M6 está en progreso y Labs 12-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los dos sublabs de Lab 11 utilizan únicamente chat.
+Los Labs 00-12 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b, Lab 11 en 11a y 11b y Lab 12 en 12a, 12b y 12c. M5 y M6 están implementados; Labs 13-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los sublabs de Labs 11 y 12 utilizan únicamente el modelo de chat; 12c también consulta una API HTTP pública.
 
-**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). Después el recorrido continúa con Function Calling con múltiples Tools → Primer agente → Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
+**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). **Lab 12 - Function Calling** trabaja selección entre varias Tools en 12a, decisión y errores en 12b y una Tool HTTP en 12c; los tres completaron la ejecución real con Gemini. Después el recorrido continúa con Primer agente → Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
 
 ## Configuración común mediante `.env`
 
@@ -228,6 +237,7 @@ Los modelos, planes y límites de cada proveedor pueden cambiar. Para los labora
 - `docs/01-entorno-vscode-insiders.md`
 - `docs/03-roadmap-labs.md` — recorrido pedagógico detallado de los laboratorios.
 - [Enfoque pedagógico y evolución del roadmap](docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md) — fundamento de la progresión y futuras áreas de profundización.
+- [Qué aprendemos en los laboratorios implementados](docs/05-que-aprendemos.md) — aprendizajes de los Labs 00–12 y sus sublaboratorios.
 
 ## Criterio pedagógico
 
@@ -264,7 +274,11 @@ Lab 11a una Tool + ciclo de function calling explícito
    ↓
 Lab 11b la misma Tool + invocación automática
    ↓
-Lab 12  Function Calling: múltiples Tools (pendiente)
+Lab 12a múltiples Tools y selección
+   ↓
+Lab 12b decisión de no usar Tool y errores
+   ↓
+Lab 12c Tool que consulta una API HTTP
    ↓
 Lab 13  Primer agente (pendiente)
    ↓

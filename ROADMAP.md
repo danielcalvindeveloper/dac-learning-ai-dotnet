@@ -44,7 +44,9 @@ timeline
     section Capacidades
         M6 - Herramientas : Lab 11a - Tool explícita
                           : Lab 11b - Invocación automática
-                          : Lab 12 - Function Calling con múltiples Tools
+                          : Lab 12a - Múltiples Tools
+                          : Lab 12b - Decisión y errores
+                          : Lab 12c - Tool externa
         M7 - Agentes : Primer agente
                     : Objetivos
                     : Tools
@@ -71,13 +73,13 @@ timeline
 | M3 | Structured Output y memoria | 05–06 | ✅ Implementado |
 | M4 | Embeddings | 07 | ✅ Implementado |
 | M5 | Documentos y RAG | 08–10 | ✅ Implementado |
-| M6 | Tools y Function Calling | 11–12 | 🚧 En progreso |
+| M6 | Tools y Function Calling | 11–12 | ✅ Implementado |
 | M7 | Primer agente | 13 | ⏳ Pendiente |
 | M8 | Orquestación: Workflow y Multi-agent | 14–15 | ⏳ Pendiente |
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Integración consciente | 17 | ⏳ Pendiente |
 
-Los Labs 00–11 están implementados; Labs 09, 10 y 11 comprenden dos sublaboratorios ejecutables e independientes cada uno. Dentro de M5:
+Los Labs 00–12 están implementados; Labs 09, 10 y 11 comprenden dos sublaboratorios ejecutables e independientes cada uno, y Lab 12 comprende tres. Dentro de M5:
 
 | Laboratorio | Estado |
 |---|---|
@@ -88,7 +90,7 @@ Los Labs 00–11 están implementados; Labs 09, 10 y 11 comprenden dos sublabora
 | [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) | ✅ Implementado |
 | [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) | ✅ Implementado |
 
-M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está en progreso porque Lab 12 sigue pendiente; los Labs 12–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
+M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está implementado: Lab 12a ofrece varias Tools, 12b observa decisión y errores y 12c integra una API HTTP. Los Labs 13–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
 
 
 ### Simplificación transversal de configuración
@@ -457,7 +459,7 @@ El control de relevancia está implementado en Lab 10b; Lab 09 conserva recupera
 
 **Objetivo:** comprender una solicitud de tool y después la selección entre varias herramientas, con ejecución controlada por la aplicación.
 
-**Estado:** 🚧 En progreso
+**Estado:** ✅ Implementado
 
 ### Lab 11 — Tools
 
@@ -485,33 +487,37 @@ Ambos compilan con .NET 10 y completaron el ciclo con Gemini: .NET obtuvo `1210`
 
 ### Lab 12 — Function Calling
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
-Pasar de una Tool a varias operaciones disponibles, con selección, argumentos, errores y casos donde no hace falta ninguna. La invocación automática ya se estudia en 11b. Habrá una Tool local y al menos una que encapsule una capacidad externa, por ejemplo una API HTTP. Tener herramientas no convierte por sí solo la aplicación en un agente.
+[Lab 12](labs/lab-12-function-calling/README.md) continúa desde 11b sin volver al ciclo manual. La aplicación ofrece capacidades; el modelo solicita su uso y el código se ejecuta en .NET.
+
+| Sublaboratorio | Alcance | Estado |
+|---|---|---|
+| [12a - Múltiples Tools](labs/lab-12-function-calling/lab-12a-multiples-tools/README.md) | IVA, descuento y temperatura disponibles simultáneamente | ✅ Implementado |
+| [12b - Decisión y errores](labs/lab-12-function-calling/lab-12b-decision-y-errores/README.md) | Respuesta sin Tool y excepción de validación | ✅ Implementado |
+| [12c - Tool externa](labs/lab-12-function-calling/lab-12c-tool-externa/README.md) | Consulta HTTP de países y errores mínimos | ✅ Implementado |
+
+Los tres compilan con .NET 10 y completaron la ejecución real con Gemini. En 12a se observaron tres selecciones y cálculos; en 12b, respuesta directa y rechazo de un descuento del 150%. El framework devolvió el error al modelo con `IncludeDetailedErrors`. En 12c se verificaron HTTP 200 para Argentina y Uruguay y HTTP 404 para un país inexistente.
+
+12c utiliza `countries.dev` sin autenticación adicional: el endpoint antiguo de REST Countries informó que estaba retirado. Se consulta nombre, capital, región y población publicada; no se presenta esa población como un conteo en tiempo real.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 12.1 | ⏳ | Ofrecer varias tools con finalidades y argumentos claros |
-| 12.2 | ⏳ | Observar cuál se solicita y cuándo no hace falta ninguna |
-| 12.3 | ⏳ | Resolver preguntas que puedan requerir más de una operación |
-| 12.4 | ⏳ | Manejar errores básicos al ejecutar una tool |
-| 12.5 | ⏳ | Diferenciar tool calling de un agente orientado a un objetivo |
-| 12.6 | ⏳ | Contrastar una Tool local con otra que encapsule una capacidad externa |
+| 12.1 | ✅ | Ofrecer varias Tools con finalidades y argumentos claros |
+| 12.2 | ✅ | Observar cuál se solicita y cuándo no hace falta ninguna |
+| 12.3 | ✅ | Conservar argumentos solicitados y validar invariantes de la función |
+| 12.4 | ✅ | Comprobar cómo el framework devuelve un error de Tool al modelo |
+| 12.5 | ✅ | Diferenciar Tool Calling de un agente orientado a un objetivo |
+| 12.6 | ✅ | Contrastar una Tool local con otra que encapsula HTTP |
 
 ```mermaid
-sequenceDiagram
-    participant U as Usuario
-    participant L as LLM
-    participant A as Aplicación
-    participant T as Tool
-
-    U->>L: Pregunta
-    L->>A: Solicitud de función
-    A->>T: Ejecutar
-    T-->>A: Resultado
-    A->>L: Resultado de la tool
-    L-->>U: Respuesta final
+flowchart LR
+    A[12a: varias Tools] --> B[12b: decisión y errores]
+    B --> C[12c: capacidad HTTP externa]
+    C --> D[13: primer agente pendiente]
 ```
+
+Tener Tools, incluso externas, no implementa un agente ni MCP. Lab 13 estudiará decisiones sucesivas hacia un objetivo con estado y límites; continúa pendiente.
 
 ---
 

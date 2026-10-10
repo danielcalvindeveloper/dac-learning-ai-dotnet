@@ -401,6 +401,6 @@ La función hace una cuenta simple sin reglas fiscales, validaciones de negocio 
 
 Ahora que vimos cada intercambio, ¿qué partes de nuestra aplicación desaparecen al delegar la coordinación del protocolo?
 
-Lab 12 continúa pendiente y abordará múltiples Tools, selección, argumentos, errores y una capacidad externa. La automatización de una única Tool se estudia primero en 11b.
+[Lab 12](../../lab-12-function-calling/README.md) está implementado mediante 12a, 12b y 12c: múltiples Tools, decisión y errores y una capacidad HTTP externa. La automatización de una única Tool se estudia primero en 11b.
 
 [Guía de Lab 11](../README.md) · [Roadmap](../../../ROADMAP.md) · [Fundamento pedagógico](../../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).

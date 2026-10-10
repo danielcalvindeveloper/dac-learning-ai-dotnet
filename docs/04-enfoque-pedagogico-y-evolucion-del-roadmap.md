@@ -9,6 +9,7 @@ El roadmap inicial buscaba recorrer LLM, RAG, Tools, Agents y MCP. La experienci
 - En Lab 02 observamos el historial explícito; en Lab 06 organizamos memoria por sesión y una ventana de mensajes.
 - En Lab 09a vemos cada etapa del pipeline RAG en `Program.cs`; en Lab 09b encapsulamos el mismo mecanismo en `RagService`.
 - En Lab 11a observamos el ciclo explícito de una Tool; en Lab 11b mantenemos el ejercicio y delegamos su coordinación a `FunctionInvokingChatClient`.
+- En Lab 12a ofrecemos varias capacidades; 12b observa decisión y errores; 12c conecta una Tool con HTTP. Los tres están implementados y no son agentes.
 - Hasta Lab 06 `AI_MODEL` era suficiente. `AI_EMBEDDING_MODEL` aparece en Lab 07, cuando necesitamos una capacidad distinta.
 
 Estos ejemplos comparten una decisión: introducir una abstracción cuando el alumno ya conoce el problema que resuelve.
@@ -44,7 +45,11 @@ Lab 11a: Primer Tool explícito
     ↓
 Lab 11b: Invocación automática de Tools
     ↓
-Lab 12: Function Calling con múltiples Tools
+Lab 12a: Múltiples Tools
+    ↓
+Lab 12b: Decisión y errores
+    ↓
+Lab 12c: Tool externa
     ↓
 Lab 13: Primer agente
     ↓
@@ -61,7 +66,9 @@ Una tool expone una operación que ejecuta código .NET. Function calling permit
 
 Lab 11 se divide en dos experiencias para comprender, experimentar, observar complejidad e introducir una abstracción. 11a muestra deliberadamente el protocolo y preserva explícitamente la representación nativa cuando reconoce el tipo del SDK utilizado, sin preguntar qué proveedor está configurado. 11b utiliza `UseFunctionInvocation()` para encapsular la coordinación ya comprendida. La función sigue ejecutándose dentro de la aplicación.
 
-La prueba inicial de 11b mostró que automatizar el ciclo no corregía por sí solo la pérdida de metadata en el adaptador. La conservación del mensaje nativo quedó en el cliente base, fuera del ejercicio. Gemini y `thought_signature` fueron el caso real que permitió descubrir el problema. El principio aprendido es trabajar contra el modelo común y conservar información nativa cuando el protocolo la necesita. La implementación concreta pertenece al adaptador del SDK OpenAI; otro SDK puede requerir otro tratamiento. Este contraste ayuda a distinguir la responsabilidad del cliente de invocación de la compatibilidad del adaptador. Ambos sublabs están implementados; Lab 12 continúa pendiente y abordará múltiples capacidades, selección, argumentos, errores y una Tool externa.
+La prueba inicial de 11b mostró que automatizar el ciclo no corregía por sí solo la pérdida de metadata en el adaptador. La conservación del mensaje nativo quedó en el cliente base, fuera del ejercicio. Gemini y `thought_signature` fueron el caso real que permitió descubrir el problema. El principio aprendido es trabajar contra el modelo común y conservar información nativa cuando el protocolo la necesita. La implementación concreta pertenece al adaptador del SDK OpenAI; otro SDK puede requerir otro tratamiento. Este contraste ayuda a distinguir la responsabilidad del cliente de invocación de la compatibilidad del adaptador. Ambos sublabs están implementados. Lab 12 continúa con tres experiencias también implementadas: selección entre capacidades, decisión de responder sin Tool y errores, e integración de una API HTTP.
+
+12b comprueba que una función debe defender sus invariantes y que `IncludeDetailedErrors` permite devolver al modelo el mensaje de una excepción. 12c distingue una API de la Tool que la encapsula; consultar datos publicados no garantiza que describan el presente. M6 queda implementado. Lab 13 sigue pendiente: todavía no coordinamos pasos sucesivos hacia un objetivo con estado y límites.
 
 El primer agente incorpora un objetivo, herramientas, estado/contexto y decisiones iterativas con límites. Después estudiamos workflows: procesos cuyos pasos y bifurcaciones controla la aplicación. Un workflow puede tener una estructura determinista aunque una llamada a un modelo produzca respuestas variables.
 

@@ -15,7 +15,7 @@ Lab 11 está compuesto por dos experiencias sobre el mismo caso: `CalcularTotalC
 | [11a - Primer Tool explícito](lab-11a-tool-explicita/README.md) | Comprender el mecanismo de Tool Calling | ✅ Implementado |
 | [11b - Invocación automática de Tools](lab-11b-tool-invocation/README.md) | Utilizar `FunctionInvokingChatClient` para coordinar el mismo ciclo | ✅ Implementado |
 
-M6 continúa 🚧 En progreso porque Lab 12 sigue pendiente.
+M6 está ✅ Implementado: Lab 12 continúa este recorrido con tres sublabs ejecutables. Lab 13 permanece pendiente.
 
 ## Por qué hay dos sublabs
 
@@ -113,6 +113,6 @@ Al completar las dos experiencias deberías poder explicar qué son Tool, Functi
 
 ## Siguiente laboratorio
 
-[Lab 12 - Function Calling](../lab-12-function-calling/README.md) continúa ⏳ Pendiente. Avanzará hacia múltiples Tools, selección, argumentos, errores, casos sin Tool y una Tool que encapsule una capacidad externa. La invocación automática de una única Tool ya se estudia en 11b.
+[Lab 12 - Function Calling](../lab-12-function-calling/README.md) está ✅ Implementado mediante 12a, 12b y 12c: múltiples Tools, decisión y errores y una capacidad HTTP externa. La invocación automática de una única Tool ya se estudia en 11b.
 
 [Roadmap](../../ROADMAP.md) · [Fundamento pedagógico](../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).
