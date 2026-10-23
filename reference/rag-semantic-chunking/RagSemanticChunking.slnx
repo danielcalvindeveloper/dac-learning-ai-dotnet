@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/RagSemanticChunking/RagSemanticChunking.csproj" />
+  <Project Path="tests/RagSemanticChunking.Tests/RagSemanticChunking.Tests.csproj" />
+</Solution>

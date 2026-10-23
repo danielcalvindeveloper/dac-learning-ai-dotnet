@@ -1,0 +1,15 @@
+{
+  "Version": 1,
+  "Queries": [
+    { "Id": "Q01", "Question": "¿Qué formulario se completa antes del ingreso y con cuánta anticipación se pide la notebook?", "RelevantDocuments": ["incorporacion.md"] },
+    { "Id": "Q02", "Question": "¿Qué puede hacer la persona mentora y puede aprobar permisos de producción?", "RelevantDocuments": ["incorporacion.md"] },
+    { "Id": "Q03", "Question": "Perdí el teléfono de autenticación: ¿qué ticket abro, cómo verifican mi identidad y cuál es el plazo objetivo?", "RelevantDocuments": ["seguridad.md"] },
+    { "Id": "Q04", "Question": "¿Qué hago con un secreto que se publicó en un commit y qué debo quitar de los logs?", "RelevantDocuments": ["seguridad.md"] },
+    { "Id": "Q05", "Question": "El portal está totalmente caído. ¿Qué prioridad tiene, a qué canal aviso y cuándo sale la primera actualización?", "RelevantDocuments": ["incidentes.md"] },
+    { "Id": "Q06", "Question": "Después de recuperar el servicio, ¿cuánto se observa y cuándo se revisa un P1?", "RelevantDocuments": ["incidentes.md"] },
+    { "Id": "Q07", "Question": "¿Cuántos días de vacaciones hay, qué formulario se usa y cuánta anticipación requiere?", "RelevantDocuments": ["licencias.md"] },
+    { "Id": "Q08", "Question": "Tengo guardia durante mis vacaciones: ¿cómo se registra y quién confirma el reemplazo?", "RelevantDocuments": ["licencias.md"] },
+    { "Id": "Q09", "Question": "Durante mi incorporación necesito repositorio y MFA. ¿Qué tickets intervienen para pedir acceso y para recuperar el factor perdido?", "RelevantDocuments": ["incorporacion.md", "seguridad.md"] },
+    { "Id": "Q10", "Question": "¿Cómo se cubre una guardia ante una ausencia imprevista y cómo se comunica una interrupción total del portal?", "RelevantDocuments": ["licencias.md", "incidentes.md"] }
+  ]
+}

@@ -117,7 +117,7 @@ Microsoft Agent Framework, cuando el problema sea agéntico
 
 Esta progresión orienta decisiones; no obliga a que cada aplicación use todas las capas. MAF complementa Microsoft.Extensions.AI. Para Labs 14–15 se considerará como framework principal de workflows, delegación y coordinación, manteniendo el concepto visible y eligiendo APIs al implementar. La [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
 
-Las referencias RAG con Qdrant e [Hybrid Search + BM25](../reference/rag-hybrid-search/README.md) ya son ejecutables. La primera está enlazada desde Labs 07–10; la segunda integra Qdrant y Lucene.NET BM25 mediante RRF propio. Semantic Chunking y el agente con Microsoft Agent Framework continúan planificados. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones, con documentación técnica en `docs/`.
+Las referencias RAG con Qdrant, [Hybrid Search + BM25](../reference/rag-hybrid-search/README.md) y [Semantic Chunking](../reference/rag-semantic-chunking/README.md) ya son ejecutables. La primera está enlazada desde Labs 07–10; la segunda integra Qdrant y Lucene.NET BM25 mediante RRF propio; la tercera compara cuatro estrategias con corpus/retrieval comunes y evaluación básica. Advanced Retrieval, RAG Evaluation y el agente con Microsoft Agent Framework continúan planificados. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones, con documentación técnica en `docs/`.
 
 ## Por qué el recorrido es más gradual
 

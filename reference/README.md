@@ -6,7 +6,7 @@ Las implementaciones de referencia muestran cómo aplicar los conceptos de los l
 
 Buscan reducir la distancia entre “entiendo cómo funciona” y “veo cómo podría implementarlo en un proyecto real”. Forman parte del mismo proyecto y complementan el recorrido incremental de `labs/`.
 
-**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md) y [RAG Hybrid Search + BM25](rag-hybrid-search/README.md) están implementadas y validadas con Qdrant. RAG Semantic Chunking y el agente con Microsoft Agent Framework continúan planificados.
+**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md), [RAG Hybrid Search + BM25](rag-hybrid-search/README.md) y [RAG Semantic Chunking](rag-semantic-chunking/README.md) están implementadas y validadas con Qdrant. Advanced Retrieval, RAG Evaluation y el agente con Microsoft Agent Framework continúan planificados.
 
 ## Cómo recorrer ambos niveles
 
@@ -69,13 +69,15 @@ Semantic Kernel forma parte de la evolución previa del ecosistema Microsoft AI.
 
 ## Primeras implementaciones y candidatas
 
-El carril RAG evoluciona de Vector Store real a Hybrid Search y después a Semantic Chunking. Las dos primeras referencias son ejecutables; Semantic Chunking y el agente con Microsoft Agent Framework siguen siendo propuestas, sin carpetas creadas:
+El carril RAG evoluciona de Vector Store real a Hybrid Search y Semantic Chunking, las tres ejecutables. Advanced Retrieval, Evaluation y el agente con Microsoft Agent Framework siguen planificados, sin carpetas creadas:
 
 | Ruta | Pregunta que resuelve o resolverá | Estado |
 |---|---|---|
 | [`reference/rag-vector-store/`](rag-vector-store/README.md) | ¿Cómo reemplazar `InMemoryVectorStore` y la búsqueda lineal por infraestructura vectorial real? | ✅ Implementada |
 | [`reference/rag-hybrid-search/`](rag-hybrid-search/README.md) | ¿Cuándo combinar similitud semántica con BM25, RRF y filtros por metadata? | ✅ Implementada |
-| `reference/rag-semantic-chunking/` | ¿Qué ocurre si el problema está en cómo construimos los chunks? | ⏳ Planificada |
+| [`reference/rag-semantic-chunking/`](rag-semantic-chunking/README.md) | ¿Cómo cambian retrieval y RAG al comparar cuatro estrategias de chunking sobre el mismo corpus? | ✅ Implementada |
+| `reference/rag-advanced-retrieval/` | ¿Qué ocurre cuando una consulta y un ranking inicial no alcanzan? Rewriting, multi-query y reranking | ⏳ Planificada |
+| `reference/rag-evaluation/` | ¿Cómo profundizar la evaluación de retrieval y respuestas? | ⏳ Planificada |
 | `reference/agent-framework/` | ¿Qué infraestructura de un agente de soporte puede delegarse a Microsoft Agent Framework después de comprender el loop explícito? | ⏳ Planificada |
 
 ### RAG con Vector Store real
@@ -97,7 +99,13 @@ Continúa [rag-vector-store](rag-vector-store/README.md) y el bloque conceptual 
 
 Incluye comparación reproducible de consultas semánticas, códigos exactos y evidencia complementaria, RAG completo con fuentes, unit tests offline y un proyecto separado de integración. Su [documentación técnica](rag-hybrid-search/README.md#documentación-técnica) explica cada componente. Hybrid no garantiza mejorar todas las preguntas.
 
-La siguiente candidata del carril RAG es `reference/rag-semantic-chunking/`, todavía sin implementar: estudiar cómo la construcción de chunks afecta la recuperación.
+### RAG Semantic Chunking
+
+La [comparación de chunking](rag-semantic-chunking/README.md) utiliza el baseline estructural de Hybrid para estudiar **qué unidades indexamos**. Implementa Fixed/Recursive, Structure-aware con Markdig, Embedding semantic y LLM-assisted con límites estructurados/validados. Todas comparten corpus, queries y retrieval dense Qdrant; no arrastra Lucene, BM25 o RRF como otra variable.
+
+Incluye pipeline común, colecciones separadas, manifiestos de texto/rangos/metadata/costos, comparación con Recall@3/MRR, 55 tests offline y una integración separada. Se ejecutaron las cuatro ingestas, compare y RAG con proveedor real. Su [documentación técnica](rag-semantic-chunking/README.md#documentación-técnica) explica artefactos, decisiones, entorno y validación con Mermaid y fuentes oficiales. No hay un ganador universal.
+
+La siguiente candidata es `reference/rag-advanced-retrieval/`, todavía sin implementar: rewriting, multi-query y reranking. `reference/rag-evaluation/` profundizará después la medición de retrieval y respuestas. Ninguna tiene carpeta ni modifica milestones de Labs.
 
 ### Agente con Microsoft Agent Framework
 

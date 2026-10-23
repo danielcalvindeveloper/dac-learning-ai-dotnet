@@ -171,7 +171,9 @@ El Analyzer no traduce ni expande sinónimos; caracteres pueden cortar palabras.
 
 ## Próximo reference
 
-reference/rag-semantic-chunking/ sigue planificado: **¿qué ocurre cuando mejoramos no el motor de búsqueda, sino la forma en que construimos los chunks?** No se implementa aquí.
+[RAG Semantic Chunking](../rag-semantic-chunking/README.md) ya está implementada: compara Fixed/Recursive, Structure-aware, Embedding semantic y LLM-assisted con corpus/queries comunes, Qdrant dense y Recall@3/MRR. Retoma este baseline estructural sin copiar Lucene/BM25/RRF, para aislar qué unidades indexamos.
+
+El próximo reference planificado es `reference/rag-advanced-retrieval/`: query rewriting, multi-query y reranking cuando una consulta y un ranking no alcanzan. `reference/rag-evaluation/` también sigue pendiente, sin carpeta creada.
 
 Query rewriting, multi-query, reranking, evaluación completa, MAF y MCP quedan fuera. Agent Framework conserva su planificación.
 

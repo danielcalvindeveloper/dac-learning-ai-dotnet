@@ -18,7 +18,7 @@ Podés comenzar por el [recorrido de laboratorios](docs/03-roadmap-labs.md).
 
 ### Implementaciones de referencia — aplicar
 
-[`reference/` — Implementaciones de referencia](reference/README.md) aplica los conceptos aprendidos en los labs con librerías e infraestructura más cercanas a escenarios reales. Están implementadas [RAG con Vector Store real](reference/rag-vector-store/README.md) y [RAG Hybrid Search + BM25](reference/rag-hybrid-search/README.md), con Microsoft.Extensions.AI, Microsoft.Extensions.VectorData y Qdrant persistente. Semantic Chunking y el agente con Microsoft Agent Framework siguen planificados.
+[`reference/` — Implementaciones de referencia](reference/README.md) aplica los conceptos aprendidos en los labs con librerías e infraestructura más cercanas a escenarios reales. Están implementadas [RAG con Vector Store real](reference/rag-vector-store/README.md), [RAG Hybrid Search + BM25](reference/rag-hybrid-search/README.md) y [RAG Semantic Chunking](reference/rag-semantic-chunking/README.md), con Microsoft.Extensions.AI, Microsoft.Extensions.VectorData y Qdrant persistente. Advanced Retrieval, RAG Evaluation y el agente con Microsoft Agent Framework siguen planificados.
 
 Complementan el recorrido conceptual. La guía de `reference/` distingue la implementación disponible de las candidatas futuras.
 
@@ -100,7 +100,8 @@ dac-learning-ai-dotnet/
 ├── reference/
 │   ├── README.md
 │   ├── rag-vector-store/
-│   └── rag-hybrid-search/
+│   ├── rag-hybrid-search/
+│   └── rag-semantic-chunking/
 ├── .editorconfig
 ├── .env.example
 ├── .gitignore
@@ -109,7 +110,7 @@ dac-learning-ai-dotnet/
 └── ROADMAP.md
 ```
 
-`reference/` es un carril paralelo sin numeración de Lab. Contiene su [guía](reference/README.md), [RAG con Vector Store real](reference/rag-vector-store/README.md) y [RAG Hybrid Search + BM25](reference/rag-hybrid-search/README.md), con ingesta/consulta, Docker, documentación técnica y tests. Hybrid integra Qdrant dense, Lucene.NET BM25, RRF propio y filtros por metadata.
+`reference/` es un carril paralelo sin numeración de Lab. Contiene su [guía](reference/README.md), [RAG con Vector Store real](reference/rag-vector-store/README.md), [RAG Hybrid Search + BM25](reference/rag-hybrid-search/README.md) y [RAG Semantic Chunking](reference/rag-semantic-chunking/README.md), con ingesta/consulta, Docker, documentación técnica y tests. Hybrid integra Qdrant dense, Lucene.NET BM25, RRF propio y filtros por metadata; Semantic Chunking compara cuatro estrategias con retrieval dense común, Recall@3 y MRR.
 
 Cada laboratorio implementado tiene su propio `README.md` y es autocontenido. En Labs 09, 10, 11 y 12, cada sublaboratorio tiene su propio proyecto ejecutable; la carpeta padre contiene la guía del recorrido.
 
@@ -270,7 +271,7 @@ Los modelos, planes y límites de cada proveedor pueden cambiar. Para los labora
 
 ## Documentación
 
-- [Implementaciones de referencia](reference/README.md) — RAG vectorial e híbrido implementados, candidatas y reglas para aplicar los conceptos de los labs.
+- [Implementaciones de referencia](reference/README.md) — RAG vectorial, híbrido y comparación de chunking implementados, candidatas y reglas para aplicar los conceptos de los labs.
 
 - [`ROADMAP.md`](ROADMAP.md) — visión global, hitos y estado de evolución del proyecto.
 - [`labs/lab-00-introduccion/README.md`](labs/lab-00-introduccion/README.md) — rampa de entrada y mapa de artefactos de Fundamentos.
