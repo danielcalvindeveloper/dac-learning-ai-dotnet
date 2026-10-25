@@ -324,7 +324,7 @@ Lab 12c Tool que consulta una API HTTP
    ↓
 Lab 13  Primer agente: objetivo → decidir → actuar → observar → repetir
    ↓
-Lab 14  Workflow (pendiente)
+Lab 14  Workflow: implementación explícita y con Microsoft Agent Framework
    ↓
 Lab 15  Multi-agent (pendiente)
    ↓

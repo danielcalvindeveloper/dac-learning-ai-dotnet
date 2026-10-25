@@ -283,12 +283,12 @@ Frameworks de agentes, planners, multi-agent, workflows, MCP, RAG, vector stores
 
 ## Siguiente laboratorio
 
-[Lab 14 - Workflow](../lab-14-multi-agent/README.md) continúa ⏳ Pendiente.
+[Lab 14 - Workflows](../lab-14-workflows/README.md) continúa el recorrido.
 
 ¿Todas las decisiones del proceso deberían quedar en manos del agente? Un agente decide dinámicamente qué hacer; un workflow define pasos y transiciones más predecibles. El dominio de incidentes puede ayudarnos a explorar esa diferencia, sin implementarla aquí.
 
 En Lab 13 dejamos que el agente decida el siguiente paso.
 
-En Lab 14 veremos qué ocurre cuando parte del proceso debe seguir un flujo explícito y predecible.
+Lab 14 muestra qué ocurre cuando parte del proceso debe seguir un flujo explícito y predecible.
 
 [Lab 12 - Function Calling](../lab-12-function-calling/README.md) · [Roadmap](../../ROADMAP.md) · [Qué aprendemos](../../docs/05-que-aprendemos.md).

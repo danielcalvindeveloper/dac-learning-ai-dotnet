@@ -561,22 +561,24 @@ flowchart TD
 
 **Objetivo:** estudiar primero un proceso explícito y después la coordinación entre pocos agentes, eligiendo la alternativa que aporte valor.
 
-**Orientación tecnológica futura:** Microsoft Agent Framework será el framework principal a considerar para workflows y coordinación agéntica. El diseño deberá mantener visibles pasos, decisiones y responsabilidades; se elegirán APIs y alcance al implementar, sin agregar agentes a un proceso que no los necesita.
+**Orientación tecnológica:** Microsoft Agent Framework se usa en Lab 14b para ejecutar el workflow explícito. Lab 15 evaluará coordinación agéntica cuando el problema la justifique; el alcance y las APIs se decidirán al implementarlo.
 
-**Estado:** ⏳ Pendiente
+**Estado:** 🟡 En progreso
 
 ### Lab 14 — Workflow
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
-Un proceso conocido puede resolverse con pasos y bifurcaciones controlados por la aplicación. Su estructura puede ser determinista aunque incluya llamadas a modelos. Workflow y agente son conceptos distintos.
+Compara un proceso explícito en C# con el mismo workflow ejecutado mediante Microsoft Agent Framework. Ambos usan los datos de incidentes de Lab 13 y recorren los mismos casos, sin añadir agente ni proveedor LLM. Un proceso conocido puede resolverse con pasos y bifurcaciones controlados por la aplicación; workflow y agente son conceptos distintos.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 14.1 | ⏳ | Definir una secuencia explícita de pasos |
-| 14.2 | ⏳ | Pasar resultados de un paso al siguiente |
-| 14.3 | ⏳ | Incorporar una decisión y bifurcaciones visibles |
-| 14.4 | ⏳ | Justificar cuándo un workflow es suficiente sin incorporar un agente |
+| 14.1 | ✅ | Definir una secuencia explícita de pasos |
+| 14.2 | ✅ | Pasar resultados de un paso al siguiente |
+| 14.3 | ✅ | Incorporar una decisión y bifurcaciones visibles |
+| 14.4 | ✅ | Comparar código explícito con MAF y justificar por qué el proceso no necesita un agente |
+
+El [Lab 14a](labs/lab-14-workflows/lab-14a-workflow-explicito/README.md) muestra métodos y condiciones de C#. El [Lab 14b](labs/lab-14-workflows/lab-14b-workflow-maf/README.md) representa los mismos pasos y rutas con `WorkflowBuilder` y edges condicionales.
 
 ### Lab 15 — Multi-agent
 

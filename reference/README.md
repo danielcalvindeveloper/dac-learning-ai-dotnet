@@ -6,7 +6,7 @@ Las implementaciones de referencia muestran cómo aplicar los conceptos de los l
 
 Buscan reducir la distancia entre “entiendo cómo funciona” y “veo cómo podría implementarlo en un proyecto real”. Forman parte del mismo proyecto y complementan el recorrido incremental de `labs/`.
 
-**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md), [RAG Hybrid Search + BM25](rag-hybrid-search/README.md) y [RAG Semantic Chunking](rag-semantic-chunking/README.md) están implementadas y validadas con Qdrant. Advanced Retrieval, RAG Evaluation y el agente con Microsoft Agent Framework continúan planificados.
+**Estado actual:** [RAG con Vector Store real](rag-vector-store/README.md), [RAG Hybrid Search + BM25](rag-hybrid-search/README.md) y [RAG Semantic Chunking](rag-semantic-chunking/README.md) están implementadas y validadas con Qdrant. Lab 14 también compara un workflow explícito con Microsoft Agent Framework; la referencia aplicada del agente con MAF, Advanced Retrieval y RAG Evaluation continúan planificados.
 
 ## Cómo recorrer ambos niveles
 

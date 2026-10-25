@@ -93,7 +93,7 @@ La prueba inicial de 11b mostró que automatizar el ciclo no corregía por sí s
 
 El primer agente incorpora un objetivo, herramientas, estado/contexto y decisiones iterativas con límites. `UseFunctionInvocation()` conserva el intercambio de funciones; `FunctionInvoker` y `FunctionInvocationContext.Terminate` permiten devolver el control al `while` después de la acción. Function Calling puede estar abstraído; el Agent Loop debe quedar visible. Los escenarios de incidente conocido, error conocido y error desconocido permiten observar caminos distintos, sin routing fijo por reporte. Las decisiones siguen dependiendo del modelo y finalizar no prueba que el diagnóstico sea correcto.
 
-Lab 14 continúa pendiente y prepara la pregunta: ¿todas las decisiones del proceso deberían quedar en manos del agente? Después estudiamos workflows: procesos cuyos pasos y bifurcaciones controla la aplicación. Un workflow puede tener una estructura determinista aunque una llamada a un modelo produzca respuestas variables.
+Lab 14 responde la pregunta: ¿todas las decisiones del proceso deberían quedar en manos del agente? Compara un workflow explícito con el mismo grafo ejecutado por Microsoft Agent Framework. En ambos, la aplicación controla pasos y bifurcaciones; el caso no necesita un agente ni una llamada a un modelo.
 
 Multi-agent llega cuando ya podemos evaluar si conviene repartir responsabilidades entre pocos agentes. Más agentes no implica una mejor solución. MCP aparece después, cuando conocemos la necesidad de exponer y consumir capacidades mediante un protocolo estándar.
 
@@ -103,7 +103,7 @@ El proyecto final ejercita la elección: RAG, una tool, un workflow, un agente o
 
 `Microsoft.Extensions.AI` conserva las abstracciones base para integrar modelos. Microsoft.Extensions.VectorData aporta contratos de almacenamiento y búsqueda vectorial cuando el caso necesita esa infraestructura.
 
-Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos, sesiones, workflows y orquestación después de comprender el Agent Loop. `reference/agent-framework/` retomará la familia de problemas de incidentes de Lab 13 para relacionar el ciclo explícito con lo que delega el framework. Lab 13 mantiene objetivo, estado, decisión, acción, observación, iteración y condición de finalización visibles, sin migrarlo a MAF.
+Microsoft Agent Framework es el framework objetivo para nuevos escenarios agénticos, sesiones, workflows y orquestación después de comprender el Agent Loop. Lab 14b ya compara un workflow con esta infraestructura sin ocultar las reglas del proceso. `reference/agent-framework/` retomará la familia de problemas de incidentes de Lab 13 para relacionar el ciclo explícito con lo que delega el framework. Lab 13 mantiene objetivo, estado, decisión, acción, observación, iteración y condición de finalización visibles, sin migrarlo a MAF.
 
 ```text
 concepto explícito
@@ -115,7 +115,7 @@ infraestructura especializada, cuando haga falta
 Microsoft Agent Framework, cuando el problema sea agéntico
 ```
 
-Esta progresión orienta decisiones; no obliga a que cada aplicación use todas las capas. MAF complementa Microsoft.Extensions.AI. Para Labs 14–15 se considerará como framework principal de workflows, delegación y coordinación, manteniendo el concepto visible y eligiendo APIs al implementar. La [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
+Esta progresión orienta decisiones; no obliga a que cada aplicación use todas las capas. MAF complementa Microsoft.Extensions.AI. Lab 14b usa MAF para ejecutar el grafo definido por la aplicación; Lab 15 sigue pendiente y evaluará delegación y coordinación cuando el problema requiera varios agentes. La [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
 
 Las referencias RAG con Qdrant, [Hybrid Search + BM25](../reference/rag-hybrid-search/README.md) y [Semantic Chunking](../reference/rag-semantic-chunking/README.md) ya son ejecutables. La primera está enlazada desde Labs 07–10; la segunda integra Qdrant y Lucene.NET BM25 mediante RRF propio; la tercera compara cuatro estrategias con corpus/retrieval comunes y evaluación básica. Advanced Retrieval, RAG Evaluation y el agente con Microsoft Agent Framework continúan planificados. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones, con documentación técnica en `docs/`.
 

@@ -1,0 +1,5 @@
+{
+  "503": "Posible indisponibilidad o saturación temporal. Esperar unos minutos y reintentar; si persiste, contactar a soporte.",
+  "401": "Revisar las credenciales y volver a iniciar sesión.",
+  "timeout": "Revisar la conectividad y reintentar la operación."
+}

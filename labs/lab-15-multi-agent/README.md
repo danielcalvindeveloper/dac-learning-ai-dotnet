@@ -39,6 +39,4 @@ Redes grandes de agentes, arquitecturas distribuidas y abstracciones de orquesta
 
 [Lab 16 - MCP](../lab-16-mcp/README.md), pendiente: compartir capacidades mediante un protocolo estándar.
 
-La ruta de esta carpeta pertenece al esqueleto documental previo y se adecuará al alcance al implementar el laboratorio.
-
 [Roadmap](../../ROADMAP.md) · [Fundamento pedagógico](../../docs/04-enfoque-pedagogico-y-evolucion-del-roadmap.md).
