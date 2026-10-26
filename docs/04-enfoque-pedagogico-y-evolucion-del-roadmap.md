@@ -95,7 +95,7 @@ El primer agente incorpora un objetivo, herramientas, estado/contexto y decision
 
 Lab 14 responde la pregunta: ¿todas las decisiones del proceso deberían quedar en manos del agente? Compara un workflow explícito con el mismo grafo ejecutado por Microsoft Agent Framework. En ambos, la aplicación controla pasos y bifurcaciones; el caso no necesita un agente ni una llamada a un modelo.
 
-Multi-agent llega cuando ya podemos evaluar si conviene repartir responsabilidades entre pocos agentes. Más agentes no implica una mejor solución. MCP aparece después, cuando conocemos la necesidad de exponer y consumir capacidades mediante un protocolo estándar.
+Lab 15 convierte esa pregunta en una comparación ejecutable: 15a coordina explícitamente Triage, Diagnosis y Resolution; 15b conecta esos especialistas con `WorkflowBuilder` de Microsoft Agent Framework. Las etapas intercambian resultados estructurados y contexto mínimo, no un historial compartido. No se añade handoff dinámico: para este caso la secuencia es conocida y basta comparar coordinación en código con un workflow MAF. Más agentes no implica una mejor solución. MCP aparece después, cuando conocemos la necesidad de exponer y consumir capacidades mediante un protocolo estándar.
 
 El proyecto final ejercita la elección: RAG, una tool, un workflow, un agente o MCP se incorporan según el problema. También debe poder justificarse que una capacidad no hace falta.
 
@@ -115,7 +115,7 @@ infraestructura especializada, cuando haga falta
 Microsoft Agent Framework, cuando el problema sea agéntico
 ```
 
-Esta progresión orienta decisiones; no obliga a que cada aplicación use todas las capas. MAF complementa Microsoft.Extensions.AI. Lab 14b usa MAF para ejecutar el grafo definido por la aplicación; Lab 15 sigue pendiente y evaluará delegación y coordinación cuando el problema requiera varios agentes. La [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
+Esta progresión orienta decisiones; no obliga a que cada aplicación use todas las capas. MAF complementa Microsoft.Extensions.AI. Lab 14b usa MAF para ejecutar el grafo definido por la aplicación; Lab 15b usa `ChatClientAgent` y `WorkflowBuilder` para ejecutar tres especialistas, mientras 15a hace explícita la misma coordinación sin MAF. El caso conserva el registro bajo control de la aplicación y no usa handoff porque su secuencia no requiere routing dinámico. La [estrategia y sus fuentes oficiales](../reference/README.md#estrategia-de-librerías-y-frameworks) documentan la elección por problema.
 
 Las referencias RAG con Qdrant, [Hybrid Search + BM25](../reference/rag-hybrid-search/README.md) y [Semantic Chunking](../reference/rag-semantic-chunking/README.md) ya son ejecutables. La primera está enlazada desde Labs 07–10; la segunda integra Qdrant y Lucene.NET BM25 mediante RRF propio; la tercera compara cuatro estrategias con corpus/retrieval comunes y evaluación básica. Advanced Retrieval, RAG Evaluation y el agente con Microsoft Agent Framework continúan planificados. Cada implementación debe enlazar sus labs previos, justificar dependencias y explicar preparación, configuración, ejecución, tests, diferencias y limitaciones, con documentación técnica en `docs/`.
 

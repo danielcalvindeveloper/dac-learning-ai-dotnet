@@ -95,6 +95,14 @@ dac-learning-ai-dotnet/
 │   │   ├── lab-12b-decision-y-errores/
 │   │   └── lab-12c-tool-externa/
 │   ├── lab-13-primer-agente/
+│   ├── lab-14-workflows/
+│   │   ├── lab-14a-workflow-explicito/
+│   │   └── lab-14b-workflow-maf/
+│   ├── lab-15-multi-agent/
+│   │   ├── data/
+│   │   ├── lab-15a-multi-agent-explicito/
+│   │   ├── lab-15b-multi-agent-maf/
+│   │   └── Shared/
 │   ├── ...
 │   └── lab-17-final-project/
 ├── reference/
@@ -154,11 +162,17 @@ Si ya conocés esas piezas, podés comenzar directamente por Lab 01.
 - ✅ [Lab 12b - Decisión y errores](labs/lab-12-function-calling/lab-12b-decision-y-errores/README.md): implementado
 - ✅ [Lab 12c - Tool externa](labs/lab-12-function-calling/lab-12c-tool-externa/README.md): implementado
 - ✅ [Lab 13 - Primer agente](labs/lab-13-primer-agente/README.md): implementado
-- ⏳ Labs 14-17: pendientes de implementación
+- ✅ [Lab 14 - Workflows](labs/lab-14-workflows/README.md): comparación explícita y con Microsoft Agent Framework
+- ✅ [Lab 14a - Workflow explícito](labs/lab-14-workflows/lab-14a-workflow-explicito/README.md): implementado
+- ✅ [Lab 14b - Workflow con MAF](labs/lab-14-workflows/lab-14b-workflow-maf/README.md): implementado
+- ✅ [Lab 15 - Multi-agent](labs/lab-15-multi-agent/README.md): coordinación explícita y con Microsoft Agent Framework
+- ✅ [Lab 15a - Multi-agent explícito](labs/lab-15-multi-agent/lab-15a-multi-agent-explicito/README.md): implementado
+- ✅ [Lab 15b - Multi-agent con MAF](labs/lab-15-multi-agent/lab-15b-multi-agent-maf/README.md): implementado
+- ⏳ Labs 16-17: pendientes de implementación
 
-Los Labs 00-13 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b, Lab 11 en 11a y 11b y Lab 12 en 12a, 12b y 12c. M5, M6 y M7 están implementados; Labs 14-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los sublabs de Labs 11 y 12 y Lab 13 utilizan únicamente el modelo de chat; 12c también consulta una API HTTP pública. Las Tools de Lab 13 son locales.
+Los Labs 00-15 están implementados, con Lab 09 dividido en 09a y 09b, Lab 10 en 10a y 10b, Lab 11 en 11a y 11b, Lab 12 en 12a, 12b y 12c, Lab 14 en 14a y 14b y Lab 15 en 15a y 15b. M5, M6, M7 y M8 están implementados; Labs 16-17 continúan pendientes. Lab 08 carga y divide documentos locales sin modelos ni servicios externos. Desde [Lab 07](labs/lab-07-embeddings/README.md), `AI_EMBEDDING_MODEL` configura el modelo de embeddings y `AI_MODEL` conserva el modelo de chat; Labs 09 y 10 utilizan ambos. Los sublabs de Labs 11 y 12 y Labs 13 y 15 utilizan únicamente el modelo de chat; 12c también consulta una API HTTP pública. Las Tools de Lab 13 son locales.
 
-**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). **Lab 12 - Function Calling** trabaja selección entre varias Tools en 12a, decisión y errores en 12b y una Tool HTTP en 12c; los tres completaron la ejecución real con Gemini. **Lab 13 - Primer agente** incorpora diagnóstico de incidentes con objetivo, estado, observaciones y un loop explícito limitado a cinco decisiones. Los tres escenarios completaron caminos diferentes con Gemini. Después el recorrido continúa con Workflow → Multi-agent → MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
+**Lab 10 - Retrieval y calidad** reúne múltiples documentos en 10a y un threshold experimental con fuentes del contexto aceptado en 10b. **Lab 11 - Tools** muestra el ciclo explícito en 11a y resuelve el mismo ejercicio con `FunctionInvokingChatClient` en 11b. Ambos completaron la ejecución con Gemini, el caso que hizo visible la necesidad de conservar metadata nativa. La preservación depende del tipo recibido del SDK OpenAI, sin condiciones por proveedor: es explícita en 11a y queda en el cliente base en 11b, como explica su [validación](labs/lab-11-tools/lab-11b-tool-invocation/README.md#validación-y-compatibilidad). **Lab 12 - Function Calling** trabaja selección entre varias Tools en 12a, decisión y errores en 12b y una Tool HTTP en 12c; los tres completaron la ejecución real con Gemini. **Lab 13 - Primer agente** incorpora diagnóstico de incidentes con objetivo, estado, observaciones y un loop explícito limitado a cinco decisiones. Los tres escenarios completaron caminos diferentes con Gemini. **Lab 14 - Workflows** compara un proceso explícito con el mismo grafo en Microsoft Agent Framework, sin agentes ni LLM. **Lab 15 - Multi-agent** compara coordinación explícita con un grafo MAF de tres agentes especialistas; los tres casos completaron la ejecución en cada variante con Gemini, incluido el registro del caso sin explicación conocida. El recorrido continúa con MCP → Proyecto final, todavía pendientes. El detalle y los estados están en [ROADMAP.md](ROADMAP.md). RAG avanzado queda como posible extensión posterior al recorrido principal.
 
 ## Configuración común mediante `.env`
 
@@ -326,7 +340,7 @@ Lab 13  Primer agente: objetivo → decidir → actuar → observar → repetir
    ↓
 Lab 14  Workflow: implementación explícita y con Microsoft Agent Framework
    ↓
-Lab 15  Multi-agent (pendiente)
+Lab 15  Multi-agent: coordinación explícita y con Microsoft Agent Framework
    ↓
 Lab 16  MCP (pendiente)
    ↓
@@ -335,6 +349,6 @@ Lab 17  Proyecto final: elegir e integrar según el problema (pendiente)
 
 Primero entender, después abstraer y finalmente integrar. Cada paso permite experimentar y observar limitaciones antes de introducir una nueva abstracción. Lab 09a y Lab 09b contrastan el pipeline explícito con `RagService`; Lab 11a y Lab 11b aplican la misma progresión a Tool Calling.
 
-Tool calling, agente y workflow son conceptos distintos: una tool expone una operación, un agente toma decisiones iterativas hacia un objetivo y un workflow organiza pasos explícitos. El proyecto final permitirá justificar cuáles necesita la solución.
+Tool calling, agente, workflow y multi-agent son conceptos distintos: una tool expone una operación, un agente toma decisiones iterativas hacia un objetivo, un workflow organiza pasos explícitos y multi-agent reparte responsabilidades entre varios agentes. El proyecto final permitirá justificar cuáles necesita la solución.
 
 Los frameworks y APIs concretas son herramientas del recorrido, no el objetivo final del aprendizaje. Cuando un bloque conceptual alcanza suficiente madurez, `reference/` permite aplicar lo aprendido con infraestructura más cercana a una aplicación real, sin esperar a completar toda la secuencia.

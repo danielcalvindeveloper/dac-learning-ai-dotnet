@@ -77,11 +77,11 @@ timeline
 | M5 | Documentos y RAG | 08–10 | ✅ Implementado |
 | M6 | Tools y Function Calling | 11–12 | ✅ Implementado |
 | M7 | Primer agente | 13 | ✅ Implementado |
-| M8 | Orquestación: Workflow y Multi-agent | 14–15 | ⏳ Pendiente |
+| M8 | Orquestación: Workflow y Multi-agent | 14–15 | ✅ Implementado |
 | M9 | MCP | 16 | ⏳ Pendiente |
 | M10 | Integración consciente | 17 | ⏳ Pendiente |
 
-Los Labs 00–13 están implementados; Labs 09, 10 y 11 comprenden dos sublaboratorios ejecutables e independientes cada uno, y Lab 12 comprende tres. Dentro de M5:
+Los Labs 00–15 están implementados; Labs 09, 10, 11, 14 y 15 comprenden dos sublaboratorios ejecutables cada uno, y Lab 12 comprende tres. Dentro de M5:
 
 | Laboratorio | Estado |
 |---|---|
@@ -92,7 +92,7 @@ Los Labs 00–13 están implementados; Labs 09, 10 y 11 comprenden dos sublabora
 | [Lab 10a - Múltiples documentos](labs/lab-10-retrieval-calidad/lab-10a-multiples-documentos/README.md) | ✅ Implementado |
 | [Lab 10b - Relevancia, threshold y fuentes](labs/lab-10-retrieval-calidad/lab-10b-relevancia-threshold-fuentes/README.md) | ✅ Implementado |
 
-M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está implementado: Lab 12a ofrece varias Tools, 12b observa decisión y errores y 12c integra una API HTTP. M7 está implementado: [Lab 13](labs/lab-13-primer-agente/README.md) diagnostica incidentes con tres Tools locales, estado explícito y un máximo de cinco iteraciones. Los Labs 14–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
+M5 está implementado: Labs 08, 09a, 09b, 10a y 10b cuentan con proyectos ejecutables y documentación. Lab 11 incorpora una Tool local: 11a muestra el ciclo explícito y 11b delega su coordinación a `FunctionInvokingChatClient`. M6 está implementado: Lab 12a ofrece varias Tools, 12b observa decisión y errores y 12c integra una API HTTP. M7 está implementado: [Lab 13](labs/lab-13-primer-agente/README.md) diagnostica incidentes con tres Tools locales, estado explícito y un máximo de cinco iteraciones. M8 está implementado: Lab 14 compara workflows explícitos y MAF; Lab 15 compara coordinación multi-agent explícita y un workflow MAF de agentes especialistas. Labs 16–17 continúan pendientes. La [validación de Lab 11](labs/lab-11-tools/README.md#validación-y-compatibilidad) documenta el ciclo completo de ambos sublabs con Gemini y la conservación de metadata necesaria en cada caso.
 
 
 ### Simplificación transversal de configuración
@@ -561,15 +561,15 @@ flowchart TD
 
 **Objetivo:** estudiar primero un proceso explícito y después la coordinación entre pocos agentes, eligiendo la alternativa que aporte valor.
 
-**Orientación tecnológica:** Microsoft Agent Framework se usa en Lab 14b para ejecutar el workflow explícito. Lab 15 evaluará coordinación agéntica cuando el problema la justifique; el alcance y las APIs se decidirán al implementarlo.
+**Orientación tecnológica:** Microsoft Agent Framework ejecuta el workflow explícito en Lab 14b y coordina los agentes especialistas en Lab 15b. Lab 15a conserva la coordinación visible en la aplicación.
 
-**Estado:** 🟡 En progreso
+**Estado:** ✅ Implementado
 
 ### Lab 14 — Workflow
 
 **Estado:** ✅ Implementado
 
-Compara un proceso explícito en C# con el mismo workflow ejecutado mediante Microsoft Agent Framework. Ambos usan los datos de incidentes de Lab 13 y recorren los mismos casos, sin añadir agente ni proveedor LLM. Un proceso conocido puede resolverse con pasos y bifurcaciones controlados por la aplicación; workflow y agente son conceptos distintos.
+Compara un proceso explícito en C# con el mismo workflow ejecutado mediante Microsoft Agent Framework. Ambos mantienen datos locales propios del laboratorio y recorren los mismos casos, sin añadir agente ni proveedor LLM. Un proceso conocido puede resolverse con pasos y bifurcaciones controlados por la aplicación; workflow y agente son conceptos distintos.
 
 | # | Estado | Alcance |
 |---|---|---|
@@ -582,18 +582,18 @@ El [Lab 14a](labs/lab-14-workflows/lab-14a-workflow-explicito/README.md) muestra
 
 ### Lab 15 — Multi-agent
 
-**Estado:** ⏳ Pendiente
+**Estado:** ✅ Implementado
 
-Introducir especialización, delegación y coordinación después de conocer tools, agentes y workflows. Usar pocos agentes y observar qué aporta la separación: más agentes no implica una mejor solución.
+Compara dos coordinaciones del mismo caso de soporte. Triage extrae servicio y código de error; Diagnosis interpreta observaciones locales; Resolution redacta la respuesta. Los agentes intercambian records pequeños con structured outputs, no el historial conversacional completo. La aplicación consulta datos ficticios y sólo registra un incidente si no hay incidente conocido ni solución. Cada variante ejecutó los tres escenarios con Gemini.
 
-Se considerarán las capacidades de delegación, handoff y orquestación de Microsoft Agent Framework cuando resuelvan el caso didáctico. No se fijan todavía APIs ni se amplía el alcance a todos esos patrones.
+El [Lab 15a](labs/lab-15-multi-agent/lab-15a-multi-agent-explicito/README.md) coordina llamadas consecutivas desde `Program.cs` sin usar Microsoft Agent Framework. El [Lab 15b](labs/lab-15-multi-agent/lab-15b-multi-agent-maf/README.md) usa `ChatClientAgent` y `WorkflowBuilder` de Microsoft Agent Framework 1.26.0 para ejecutar las etapas en secuencia. No se implementan handoff dinámico, agent-as-tool, MCP ni una red de agentes: el propósito es comparar la coordinación explícita con la delegada en MAF.
 
 | # | Estado | Alcance |
 |---|---|---|
-| 15.1 | ⏳ | Definir responsabilidades para pocos agentes especializados |
-| 15.2 | ⏳ | Delegar tareas desde un coordinador |
-| 15.3 | ⏳ | Intercambiar y consolidar resultados |
-| 15.4 | ⏳ | Evaluar si la coordinación agrega valor frente a una solución más simple |
+| 15.1 | ✅ | Definir tres especialidades con responsabilidades distintas |
+| 15.2 | ✅ | Coordinar explícitamente y con WorkflowBuilder de MAF |
+| 15.3 | ✅ | Transferir resultados estructurados y contexto mínimo entre agentes |
+| 15.4 | ✅ | Comparar variantes, identificar las llamadas adicionales y proteger el registro con datos locales |
 
 ### Diferencia conceptual
 
@@ -606,6 +606,9 @@ Agente
 
 Workflow
   sigue pasos y bifurcaciones definidos por la aplicación
+
+Multi-agent
+  reparte responsabilidades entre varios agentes y coordina sus resultados
 ```
 
 ---

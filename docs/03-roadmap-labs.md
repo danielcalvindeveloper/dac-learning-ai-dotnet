@@ -2,7 +2,7 @@
 
 El recorrido principal conserva los Labs 00–17. Primero entendemos y experimentamos, después abstraemos cuando aparece una necesidad y finalmente integramos. El [enfoque pedagógico y la evolución del roadmap](04-enfoque-pedagogico-y-evolucion-del-roadmap.md) explican esa progresión.
 
-Lab 00 es la rampa de entrada opcional. Los Labs 00–13, M5, M6 y M7 están implementados, incluyendo los sublabs 09a, 09b, 10a, 10b, 11a, 11b, 12a, 12b y 12c. Los Labs 14–17 continúan pendientes.
+Lab 00 es la rampa de entrada opcional. Los Labs 00–15, M5, M6, M7 y M8 están implementados, incluyendo los sublabs 09a, 09b, 10a, 10b, 11a, 11b, 12a, 12b, 12c, 14a, 14b, 15a y 15b. Los Labs 16–17 continúan pendientes.
 
 ## Bloque 1 - Fundamentos
 
@@ -30,10 +30,10 @@ Este bloque ofrece una base práctica de RAG: embeddings → documentos → chun
 12. [Function Calling](../labs/lab-12-function-calling/README.md) — ✅ Implementado mediante [12a - Múltiples Tools](../labs/lab-12-function-calling/lab-12a-multiples-tools/README.md), [12b - Decisión y errores](../labs/lab-12-function-calling/lab-12b-decision-y-errores/README.md) y [12c - Tool externa](../labs/lab-12-function-calling/lab-12c-tool-externa/README.md). Se verificaron selección, respuesta sin Tool, error de validación y consulta HTTP con Gemini. La invocación automática ya se estudia en 11b.
 13. [Primer agente](../labs/lab-13-primer-agente/README.md) — ✅ Implementado: diagnóstico de incidentes con tres Tools locales, AgentState, observaciones y un Agent Loop explícito de hasta cinco iteraciones. Function Calling sigue abstraído; las decisiones dependen de los resultados.
 14. [Workflows](../labs/lab-14-workflows/README.md) — ✅ Implementado: comparación del proceso explícito con Microsoft Agent Framework.
-15. [Multi-agent](../labs/lab-15-multi-agent/README.md) — ⏳ Pendiente: especialización y coordinación entre pocos agentes, evaluando su aporte.
+15. [Multi-agent](../labs/lab-15-multi-agent/README.md) — ✅ Implementado mediante [15a - Coordinación explícita](../labs/lab-15-multi-agent/lab-15a-multi-agent-explicito/README.md) y [15b - Coordinación con Microsoft Agent Framework](../labs/lab-15-multi-agent/lab-15b-multi-agent-maf/README.md). Ambos coordinan tres agentes especialistas y transfieren resultados estructurados mínimos; 15a muestra la secuencia en `Program.cs` y 15b la conecta con `WorkflowBuilder`.
 16. [MCP](../labs/lab-16-mcp/README.md) — ⏳ Pendiente: exponer y consumir capacidades mediante un protocolo estándar; estructura por definir.
 
-Tool calling no equivale a un agente. Un workflow controla explícitamente el proceso; más agentes no implica una mejor solución.
+Tool calling no equivale a un agente. Un workflow controla explícitamente el proceso; multi-agent reparte responsabilidades entre agentes y coordina sus resultados. Más agentes no implica una mejor solución.
 
 ## Bloque 4 - Integración
 
@@ -43,7 +43,7 @@ Tool calling no equivale a un agente. Un workflow controla explícitamente el pr
 
 Hasta Lab 06 `AI_MODEL` cubre las capacidades generativas/chat. Desde Lab 07 agregamos `AI_EMBEDDING_MODEL` para generar vectores, porque la compatibilidad con chat no implica soporte de embeddings. Esta distinción aparece cuando se necesita, siguiendo KISS.
 
-Ambos modelos pueden coexistir y compartir `AI_PROVIDER`, `AI_API_KEY` y `AI_URL`. Lab 09a utiliza embeddings para recuperar contenido y chat para generar respuestas; Lab 09b encapsula ese mismo pipeline en un servicio. Lab 10a amplía la búsqueda a un corpus y 10b decide qué candidatos acepta antes de generar. Lab 08 carga y divide documentos locales sin configuración de IA. Lab 11 utiliza únicamente chat para solicitar una Tool local y recibir su resultado: primero explícitamente en 11a y después con invocación automática en 11b. Lab 12 mantiene esa abstracción y agrega selección entre capacidades, decisión y errores y consulta HTTP. Lab 13 utiliza chat con Tools locales para perseguir un objetivo; no requiere embeddings ni nuevas variables. M5, M6 y M7 están implementados; Labs 14 en adelante continúan pendientes. El estado detallado se encuentra en [ROADMAP.md](../ROADMAP.md).
+Ambos modelos pueden coexistir y compartir `AI_PROVIDER`, `AI_API_KEY` y `AI_URL`. Lab 09a utiliza embeddings para recuperar contenido y chat para generar respuestas; Lab 09b encapsula ese mismo pipeline en un servicio. Lab 10a amplía la búsqueda a un corpus y 10b decide qué candidatos acepta antes de generar. Lab 08 carga y divide documentos locales sin configuración de IA. Lab 11 utiliza únicamente chat para solicitar una Tool local y recibir su resultado: primero explícitamente en 11a y después con invocación automática en 11b. Lab 12 mantiene esa abstracción y agrega selección entre capacidades, decisión y errores y consulta HTTP. Lab 13 utiliza chat con Tools locales para perseguir un objetivo; Lab 15 utiliza chat con tres agentes especialistas y no requiere embeddings ni nuevas variables. M5, M6, M7 y M8 están implementados; Labs 16 en adelante continúan pendientes. El estado detallado se encuentra en [ROADMAP.md](../ROADMAP.md).
 
 Cada laboratorio debería contener, cuando se implemente:
 
@@ -57,7 +57,7 @@ Cada laboratorio debería contener, cuando se implemente:
 
 Lab 09 comprende [09a - RAG explícito](../labs/lab-09-rag-basico/lab-09a-rag-explicito/README.md) y [09b - RAG con RagService](../labs/lab-09-rag-basico/lab-09b-rag-service/README.md). Primero comprendemos el pipeline y después encapsulamos su coordinación. `topK` ya está implementado; Lab 10a busca en múltiples documentos y Lab 10b muestra qué hacer cuando los mejores resultados no alcanzan el mínimo de similitud elegido.
 
-Lab 10 utiliza su ruta definitiva `lab-10-retrieval-calidad/` con ambos sublabs. Lab 11 conserva la carpeta padre `lab-11-tools/`, titulada “Lab 11 - Tools”, y contiene `lab-11a-tool-explicita/` y `lab-11b-tool-invocation/`, cada uno con su proyecto y documentación. Lab 12 conserva `lab-12-function-calling/` y contiene `lab-12a-multiples-tools/`, `lab-12b-decision-y-errores/` y `lab-12c-tool-externa/`, todos implementados. Lab 13 utiliza su ruta definitiva `lab-13-primer-agente/` y completa M7. Los Labs 14–17 continúan pendientes.
+Lab 10 utiliza su ruta definitiva `lab-10-retrieval-calidad/` con ambos sublabs. Lab 11 conserva la carpeta padre `lab-11-tools/`, titulada “Lab 11 - Tools”, y contiene `lab-11a-tool-explicita/` y `lab-11b-tool-invocation/`, cada uno con su proyecto y documentación. Lab 12 conserva `lab-12-function-calling/` y contiene `lab-12a-multiples-tools/`, `lab-12b-decision-y-errores/` y `lab-12c-tool-externa/`, todos implementados. Lab 13 utiliza su ruta definitiva `lab-13-primer-agente/` y completa M7. Lab 14 compara coordinación explícita y MAF; Lab 15 compara coordinación multi-agent explícita y con MAF en `lab-15a-multi-agent-explicito/` y `lab-15b-multi-agent-maf/`. Labs 16–17 continúan pendientes.
 
 ## Carril paralelo: implementaciones de referencia
 
@@ -65,7 +65,7 @@ Este documento conserva el recorrido numerado de Labs. [`reference/` — Impleme
 
 [RAG con Vector Store real](../reference/rag-vector-store/README.md) está implementada y enlazada desde Labs 07–10: aplica el mismo pipeline con Microsoft.Extensions.AI, Microsoft.Extensions.VectorData y Qdrant persistente. [RAG Hybrid Search + BM25](../reference/rag-hybrid-search/README.md) continúa esa base con Lucene.NET, RRF propio y filtros nativos. [RAG Semantic Chunking](../reference/rag-semantic-chunking/README.md) compara cuatro estrategias sobre el mismo corpus y retrieval dense, con Recall@3/MRR. Advanced Retrieval, RAG Evaluation y `reference/agent-framework/` siguen planificados en el [roadmap](../ROADMAP.md#implementaciones-de-referencia); el agente retomará el problema de Lab 13, conservando el loop explícito de ese lab. Los estados del recorrido numerado permanecen iguales.
 
-Microsoft.Extensions.AI continúa como base común. Microsoft Agent Framework será el framework principal a considerar para workflows y coordinación multi-agent en Labs 14–15, cuando el diseño lo justifique. Ambos labs siguen pendientes, sin APIs definitivas ni cambios en su secuencia conceptual.
+Microsoft.Extensions.AI continúa como base común. Microsoft Agent Framework se usa en Lab 14b para ejecutar el workflow y en Lab 15b para coordinar agentes especialistas; 14a y 15a mantienen visible la coordinación explícita. Los dos labs conservan el mismo dominio entre variantes para que la comparación se centre en quién coordina.
 
 ## Posibles extensiones futuras
 

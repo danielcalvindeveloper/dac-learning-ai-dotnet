@@ -1,0 +1,9 @@
+{
+  "pagos": {
+    "status": "operativo"
+  },
+  "transferencias": {
+    "status": "degradado",
+    "incident": "Demoras en procesamiento"
+  }
+}
